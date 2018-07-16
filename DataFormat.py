@@ -1,4 +1,4 @@
-class DataFormat():
+class PatientInfo():
 	def __init__(self, name, pid, birthday, address, timestamp, utc):
 		
 		self.name = name
@@ -15,3 +15,6 @@ class DataFormat():
 
 	def setutc(self, utc):
 		self.utc = utc
+
+	def getName():
+		return self.name
