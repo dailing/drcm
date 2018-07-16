@@ -1,8 +1,9 @@
 class PatientInfo():
-	def __init__(self, name, pid, birthday, address, timestamp, utc):
+	def __init__(self, name, pid, gender, birthday, address, timestamp, utc):
 		
 		self.name = name
 		self.pid = pid
+		self.gender = gender
 		self.birthday = birthday
 		self.address = address
 		self.timestamp = timestamp
@@ -13,7 +14,7 @@ class PatientInfo():
 		self.timestamp = timestamp
 		return self
 
-	def setutc(self, utc):
+	def setUtc(self, utc):
 		self.utc = utc
 
 	def getName():
