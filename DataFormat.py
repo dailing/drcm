@@ -1,5 +1,5 @@
 class PatientInfo():
-	def __init__(self, name, pid, gender, birthday, address, timestamp, uuid):
+	def __init__(self, name, pid, gender, birthday, address, timestamp, uuid, data):
 		
 		self.name = name
 		self.pid = pid
@@ -8,6 +8,7 @@ class PatientInfo():
 		self.address = address
 		self.timestamp = timestamp
 		self.uuid = uuid
+		self.data = data
 		
 
 	def setTime(self, timestamp):
@@ -17,5 +18,8 @@ class PatientInfo():
 	def setUUID(self, uuid):
 		self.uuid = uuid
 
-	def getName():
+	def setData(self, data):
+		self.data = data
+
+	def getName(self):
 		return self.name
