@@ -41,7 +41,7 @@ class ImageCapture(QtGui.QMainWindow):
 		self.thread = Uploader()
 		self.thread.start()
 		self.connect(self.thread, 
-			SIGNAL("pic_upload_finished(bool)"), 
+			QtCore.SIGNAL("pic_upload_finished(bool)"), 
 			self.saveImageCallBack)
 		
 	def initUI(self):
@@ -181,7 +181,7 @@ class ImageCapture(QtGui.QMainWindow):
 			shortcut="Ctrl+I", slot=self.snapShot, tip="take a picture")
 		
 		exit_action = self.create_action("E&xit", slot=self.exitElegantly, 
-			shortcut="Ctrl+X", tip="Exit the application")
+			shortcut="Ctrl+W", tip="Exit the application")
 
 		
 		self.add_actions(self.file_menu, 
