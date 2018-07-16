@@ -46,7 +46,7 @@ class ImageCapture(QtGui.QMainWindow):
 		
 	def initUI(self):
 		self.setWindowTitle('Image UI')
-		self.setGeometry(300, 300, 800, 600)
+		self.setGeometry(0, 0, 800, 480)
 		self.create_menu()
 		self.createMainGui()
 		self.show()
