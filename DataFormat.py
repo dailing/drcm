@@ -9,5 +9,9 @@ class DataFormat():
 		self.utc = utc
 		
 
-	def setFields(self, patientInfo, timestamp, utc):
-		pass
+	def setTime(self, timestamp):
+		self.timestamp = timestamp
+		return self
+
+	def setutc(self, utc):
+		self.utc = utc
