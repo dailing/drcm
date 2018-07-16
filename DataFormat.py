@@ -1,4 +1,4 @@
-class DataFormat():
+class PatientInfo():
 	def __init__(self, name, pid, birthday, address, timestamp, utc):
 		
 		self.name = name
@@ -9,5 +9,12 @@ class DataFormat():
 		self.utc = utc
 		
 
-	def setFields(self, patientInfo, timestamp, utc):
-		pass
+	def setTime(self, timestamp):
+		self.timestamp = timestamp
+		return self
+
+	def setutc(self, utc):
+		self.utc = utc
+
+	def getName():
+		return self.name
