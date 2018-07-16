@@ -14,7 +14,7 @@ class PatientInfo():
 		self.timestamp = timestamp
 		return self
 
-	def setUtc(self, utc):
+	def setUTC(self, utc):
 		self.utc = utc
 
 	def getName():
