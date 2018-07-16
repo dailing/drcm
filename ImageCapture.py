@@ -125,6 +125,7 @@ class ImageCapture(QtGui.QMainWindow):
 		ret, frame = self.camera.read()
 		if not ret:
 			return
+		frame = cv2.resize(frame, (400, 300))
 		if saveTodisk:
 			self.saveImage(frame)
 		mQImage = cv2ImagaeToQtImage(frame)
