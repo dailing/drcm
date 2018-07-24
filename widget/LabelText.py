@@ -13,3 +13,6 @@ class LabelText(QtGui.QWidget):
 
 	def getText(self):
 		return self.editText.text()
+
+	def setText(self, text):
+		self.editText.setText(text)

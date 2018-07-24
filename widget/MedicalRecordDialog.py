@@ -4,31 +4,47 @@ from LabelDate import LabelDate
 
 from SingleChoiceButton import SingleChoiceButton
 
-from DataFormat import PatientInfo
+from PatientDataFormat import PatientInfo
 
 
 class MedicalRecordDialog(QtGui.QDialog):
-	def __init__(self, parent = None):
+	def __init__(self, default, parent = None):
 		super(MedicalRecordDialog, self).__init__(parent)
 
 		layout = QtGui.QVBoxLayout(self)
 
-		self.patientName = LabelText('name')
+		self.patientName = LabelText(
+			' name '
+			)
+		self.patientName.setText(
+			'' if default is None else default.getName()
+			)
 		layout.addWidget(self.patientName)
-		self.patientId = LabelText('ID_No')
+		self.patientId = LabelText(
+			'  ID  '
+			)
+		self.patientId.setText('' if default is None else default.getPid())
 		layout.addWidget(self.patientId)
 
+
 		self.gender = SingleChoiceButton('gender',  ['male', 'female'])
+		if default is not None:
+			self.gender.setOption(default.isMale())
 		layout.addWidget(self.gender)
+
+		#patient address
+		self.eye = SingleChoiceButton("eye", ['left', 'right'])
+		if default is not None:
+			self.eye.setOption(default.isLeftEye())
+		layout.addWidget(self.eye)
 
 		# nice widget for editing the date
 		self.patientBirthDay = LabelDate('birthDay')
 		layout.addWidget(self.patientBirthDay)
 
 
-		#patient address
-		self.address = LabelText("address")
-		layout.addWidget(self.address)
+		
+
 
 		# OK and Cancel buttons
 		buttons = QtGui.QDialogButtonBox(
@@ -39,15 +55,18 @@ class MedicalRecordDialog(QtGui.QDialog):
 		layout.addWidget(buttons)
 
 	def getPatientInfo(self):
+		'''
+			name, pid, gender, birthday, leftEye, timestamp, uuid, data
+		'''
 		return PatientInfo(self.patientName.getText(), 
 			self.patientId.getText(),
-			self.gender.getOption(),
+			self.gender.getOption() == 'male' ,
 			self.patientBirthDay.getTime(),
-			self.address.getText(), None, None, None)
+			self.eye.getOption() == 'left', None, None, None)
 
 	@staticmethod
-	def newRecord(parent = None):
-		dialog = MedicalRecordDialog(parent)
+	def newRecord(default, parent = None):
+		dialog = MedicalRecordDialog(default, parent)
 		result = dialog.exec_()
 		if result == QtGui.QDialog.Accepted:
 			return (dialog.getPatientInfo()), True

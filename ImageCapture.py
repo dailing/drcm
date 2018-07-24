@@ -13,39 +13,60 @@ import sys
 from PyQt4 import QtGui, QtCore
 import cv2
 
+from widget.PainterWidget import PainterWidget
+from widget.MedicalRecordDialog  import MedicalRecordDialog
 
-from PainterGui import PainterGui
-from MedicalRecordDialog  import MedicalRecordDialog
-
-from utils import getTimeStamp, getDateTimeFromTS, getUUID
+from utils import *
+from ViewModel import ViewModel
 
 from conn.conn import Uploader
 
+from sql.sqlConn import SqlConn
+from sql.RunnableFunc import RunnableFunc
+from sql.PoolWrapper import PoolWrapper
+from sql.DataBaseManager import DataBaseManager
+
+class VideoReader():
+	def __init__(self):
+		pass
+		self.reader = cv2.VideoCapture("F:\TDDOWNLOAD\open courses\Justice_ What's the right thing to do\Lecture04.mp4")
+
+	def read(self):
+		return self.reader.read()
 
 				
 class ImageCapture(QtGui.QMainWindow):
 
-	FRAME_PER_SECOND = 12
+	FRAME_PER_SECOND = 24
 	UPDATE_FREQ = 1000.0 / FRAME_PER_SECOND
+	LAST_PATIENT = 'patientInfo.pkl'
+
+
+	dbInsertSignal = QtCore.pyqtSignal(bool)
 	
 	def __init__(self):
 		super(ImageCapture, self).__init__()
 		self.initEnv()
 		self.initUI()
+		self.timer.start(ImageCapture.UPDATE_FREQ)
 
 	def initEnv(self):
+		self.pw = PoolWrapper()
+		self.dbManager = DataBaseManager('patientRecord.db')
+		self.patientInfo = loadObj(ImageCapture.LAST_PATIENT)
 		self.timer = QtCore.QTimer()
 		self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.updateFrame)
-		self.camera = cv2.VideoCapture(0)
-		self.model = QtGui.QStandardItemModel()
-		self.thread = Uploader()
-		self.thread.start()
-		self.connect(self.thread, 
-			QtCore.SIGNAL("pic_upload_finished(bool)"), 
-			self.saveImageCallBack)
+		self.camera = VideoReader()
+		self.model = ViewModel()
+
+		#register callback
+		# self.thread = Uploader()
+		# self.thread.start()
+		
+		self.dbInsertSignal.connect(self.saveImageCallBack)
 		
 	def initUI(self):
-		self.setWindowTitle('Image UI')
+		self.setWindowTitle('DRCM')
 		self.setGeometry(0, 0, 800, 480)
 		self.create_menu()
 		self.createMainGui()
@@ -60,63 +81,93 @@ class ImageCapture(QtGui.QMainWindow):
 			bottomLayout.addWidget(button)
 			self.connect(button, QtCore.SIGNAL("clicked()"),
 					action)
+			return button
 			
-		captureButton = addButton('Capture', self.snapShot)
+		self.captureButton = addButton('Capture', self.snapShot)
 		pageButton = addButton('newRecord', self.newRecord)
 		uploadButton  = addButton('Upload', self.uploadImages)
-
-		self.patientName = QtGui.QLabel('name')
-		bottomLayout.addWidget(self.patientName)
-
-		buttonGroupBox = QtGui.QGroupBox('Button group')
+		bottomLayout.addStretch(1)
+		self.patientIdentify = QtGui.QLabel(
+			'name' if self.patientInfo is None else self.patientInfo.getPid()
+			)
+		bottomLayout.addWidget(self.patientIdentify)
+		buttonGroupBox = QtGui.QGroupBox()
 		buttonGroupBox.setLayout(bottomLayout)
-
-		self.timer.start(ImageCapture.UPDATE_FREQ)
-		
 		return buttonGroupBox
 
 	def uploadImages(self):
 		print('upload images')
+
+
+	def clearListView(self):
+		self.model.clear()
 		
 
 	def uploadCallBack(self):
 		#retrive data
-		#update list view
-		pass
+
+		#clear and update list view
+		self.model.clearListView()
+		for row in res:
+			self.model.pushFront(row)
 
 
 	def snapShot(self):
 		self.scheduleUpdating()
-		self.updateFrame(True)
-
 		
 
 	def saveImage(self, imageData):
-		ts = getTimeStamp()
-		dt = getDateTimeFromTS(ts)
-		foo = '{}_{}'.format(self.patientInfo[0], dt)
-		self.insertFrontToList(foo)
-		self.patientInfo.setUTC(ts)
+		if self.patientInfo is None:
+			return
+
+		
+		self.patientInfo.setTime(getTimeStamp())
 		self.patientInfo.setUUID(getUUID())
-		self.patientInfo.setData(imageData)
+		self.patientInfo.setData(
+			encodeImageToDBdata(imageData)
+			)
 		# to do: push to DB
+		# self.pw.start(
+		# 	RunnableFunc(
+		# 		self.dbManager.insertRecord,
+		# 		self.patientInfo,
+		# 		self.dbInsertSignal
+		# 		)
+		# 	)
+		self.dbManager.insertRecord(self.patientInfo, self.dbInsertSignal)
 
 
 	def saveImageCallBack(self, isSucceed):
 		print(isSucceed)
+		if isSucceed:
+			ts = self.patientInfo.getTimeId()
+			print(ts, type(ts))
+			dt = getDateTimeFromTS(ts)
+			foo = '{} {}'.format(self.patientInfo.getPid(), dt)
+			self.model.pushFront(foo)
+		else :
+			QtGui.QMessageBox.warning(
+				QtGui.QWidget(), "Error", "save data failed!")
+
+		self.captureButton.setEnabled(True)
 
 
 	def newRecord(self):
-		reply, okPressed = MedicalRecordDialog.newRecord();
+		reply, okPressed = MedicalRecordDialog.newRecord(self.patientInfo);
 		print(reply)
 		if okPressed:
 			self.patientInfo = reply
-			self.patientName.setText(self.patientInfo.getName())
-			self.imCnt = 0
+			self.patientIdentify.setText(self.patientInfo.getPid())
+			saveObj(ImageCapture.LAST_PATIENT,
+				self.patientInfo)
+			
 
 	def scheduleUpdating(self):
 		if self.timer.isActive():
+			self.captureButton.setEnabled(False)
+
 			self.timer.stop()
+			self.updateFrame(True)
 		else :
 			self.timer.start(ImageCapture.UPDATE_FREQ)
 
@@ -125,38 +176,29 @@ class ImageCapture(QtGui.QMainWindow):
 		ret, frame = self.camera.read()
 		if not ret:
 			return
-		frame = cv2.resize(frame, (400, 300))
+		frame = cv2.resize(frame, (620, 372))
 		if saveTodisk:
+			
 			self.saveImage(frame)
 		mQImage = cv2ImagaeToQtImage(frame)
 		self.painter.setImageData(mQImage)
-
-	def insertFrontToList(data):
-		if self.model:
-			self.model.insetRow(0, QtGui.QStandardItem(data))
-
-	def appendLastToList(data):
-		if self.model:
-			self.model.appendRow(QtGui.QStandardItem(data))
 
 	def createListView(self):
 		listView = QtGui.QListView()
 		entries = ['one',u'\u2713' + 'two', 'three']
 		listView.setModel(self.model)
 		for i in entries:
-			item = QtGui.QStandardItem(i)
-			self.model.appendRow(item)
+			self.model.pushBack(i)
 		return listView
 
 		
 
 	def createImageBox(self):
-		self.painter = PainterGui()
+		self.painter = PainterWidget()
 		wrapperLayout = QtGui.QGridLayout()
-		wrapperLayout.addWidget(self.painter, 0, 0, 12, 12)
-		wrapperLayout.addWidget(self.createListView(), 0, 13, 12, 4)
-
-		self.wrapperBox 	= QtGui.QGroupBox("Image")
+		wrapperLayout.addWidget(self.painter, 0, 0, 12, 10)
+		wrapperLayout.addWidget(self.createListView(), 0, 13, 12, 2)
+		self.wrapperBox 	= QtGui.QGroupBox()
 		self.wrapperBox.setLayout(wrapperLayout)
 		return self.wrapperBox
 
@@ -165,9 +207,8 @@ class ImageCapture(QtGui.QMainWindow):
 		imageGroupBox = self.createImageBox()
 		layout = QtGui.QGridLayout()
 		layout.addWidget(imageGroupBox, 0, 0, 12, 12)
-		layout.addWidget(buttonGroupBox, 13, 0, 1, 1)
+		layout.addWidget(buttonGroupBox, 13, 0, 1, 12)
 		self.main_frame = QtGui.QWidget()
-		# self.setLayout(layout)
 		self.main_frame.setLayout(layout)
 		self.setCentralWidget(self.main_frame)
 

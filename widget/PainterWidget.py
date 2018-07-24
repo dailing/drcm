@@ -1,8 +1,8 @@
 from PyQt4 import QtGui, QtCore
 
-class PainterGui(QtGui.QWidget):
+class PainterWidget(QtGui.QWidget):
 		def __init__(self, parent=None):
-				super(PainterGui, self).__init__(parent)
+				super(PainterWidget, self).__init__(parent)
 				self.image = QtGui.QImage()
 				self._width = 2
 				self._min_size = (30, 30)
@@ -16,8 +16,6 @@ class PainterGui(QtGui.QWidget):
 
 		def paintEvent(self, event):
 				painter = QtGui.QPainter(self)
-				painter.begin(self)
-				if self:
-					pass
+				# painter.begin(self)
 				painter.drawImage(0, 0, self.image)
-				painter.end()
+				# painter.end()

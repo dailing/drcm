@@ -23,12 +23,16 @@ class SingleChoiceButton(QtGui.QWidget):
 			hlayout.addWidget(optionButton)
 
 		self.setLayout(hlayout)
+		self.optionButtons = optionButtons
 
 	# button_clicked slot
 	@pyqtSlot(QtGui.QAbstractButton)
 	def button_clicked(self, button):
 		print(button.text())
 		self.optionText = button.text()
+
+	def setOption(self, isFirst):
+		self.optionButtons[0 if isFirst else 1].setChecked(True)
 
 	def getOption(self):
 		return self.optionText

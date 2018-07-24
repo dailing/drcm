@@ -4,8 +4,6 @@ import sys
 import time
 import random
 import logging
-import gridfs
-import pymongo
 import cv2
 import logging
 import sys
@@ -49,7 +47,7 @@ class Uploader(QThread):
 
     def _save_file(self, pid, arr, uuid):
         cv2.imencode('png', arr)
-        gfs = gridfs.GridFS(self.db)
+        # gfs = gridfs.GridFS(self.db)
             # gfs.put(
             #     open(f, 'rb').read(),
             #     pid=pid,
