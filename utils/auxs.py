@@ -1,8 +1,10 @@
 from time import gmtime, strftime, time
 import datetime
 import uuid
-
+import logging
 import pickle
+from hashlib import md5
+import base64
 
 import numpy as np
 
@@ -16,7 +18,10 @@ def saveObj(fname, obj):
 		pickle.dump(obj, output)
 
 def encodeImageToDBdata(imageData):
-	return cv2.imencode('.png', imageData)[-1]
+	res = cv2.imencode('.png', imageData)[-1]
+	jpg_as_text = base64.b64encode(res)
+	logging.getLogger('root.utils').info(type(jpg_as_text))
+	return jpg_as_text
 
 def loadObj(fname):
 	fname = 'state/' + fname
@@ -66,6 +71,5 @@ if __name__ == '__main__':
 	# print(
 	# 	'name' if uuidStr is None else uuidStr
 	# 	)
-	# data = md5(encodeImageToDBdata(cv2.imread('logo.png'))).hexdigest()
-	# print(type(data))
+	
 	

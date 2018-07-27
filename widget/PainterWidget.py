@@ -2,7 +2,7 @@ from PyQt4 import QtGui, QtCore
 
 class PainterWidget(QtGui.QWidget):
 		def __init__(self, parent=None):
-				super(PainterWidget, self).__init__(parent)
+				QtGui.QWidget.__init__(self, parent)
 				self.image = QtGui.QImage()
 				self._width = 2
 				self._min_size = (30, 30)

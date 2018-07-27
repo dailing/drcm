@@ -4,7 +4,7 @@ from PyQt4.QtCore import pyqtSlot
 class SingleChoiceButton(QtGui.QWidget):
 	"""docstring for SingleChoiceButton"""
 	def __init__(self, label, options, parent = None):
-		super(SingleChoiceButton, self).__init__()
+		QtGui.QWidget.__init__(self, parent)
 		self.parent = parent
 		optionButtons = [QtGui.QRadioButton(option) for option in options]
 		optionButtons[0].setChecked(True)

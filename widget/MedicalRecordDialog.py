@@ -9,7 +9,7 @@ from PatientDataFormat import PatientInfo
 
 class MedicalRecordDialog(QtGui.QDialog):
 	def __init__(self, default, parent = None):
-		super(MedicalRecordDialog, self).__init__(parent)
+		QtGui.QDialog.__init__(self, parent)
 
 		layout = QtGui.QVBoxLayout(self)
 

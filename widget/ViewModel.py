@@ -3,7 +3,7 @@ from PyQt4 import QtGui
 class ViewModel(QtGui.QStandardItemModel):
 	"""list view model"""
 	def __init__(self):
-		super(ViewModel, self).__init__()
+		QtGui.QStandardItem.__init__(self)
 		pass
 
 	def pushBack(self, data):

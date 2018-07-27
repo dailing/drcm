@@ -8,28 +8,30 @@ capture, save and upload frame
 author: knowthy
 last edited: july 2018
 """
-
 import sys
 from PyQt4 import QtGui, QtCore
 import cv2
 
 from widget.PainterWidget import PainterWidget
 from widget.MedicalRecordDialog  import MedicalRecordDialog
-
-from utils import *
-from ViewModel import ViewModel
-
-from conn.conn import Uploader
+from widget.SplashScreen import SplashScreen
+from widget.ViewModel import ViewModel
 
 from sql.sqlConn import SqlConn
 from sql.RunnableFunc import RunnableFunc
 from sql.PoolWrapper import PoolWrapper
 from sql.DataBaseManager import DataBaseManager
 
+from network.uploadClient import uploadClient
+
+from utils.logFormatter import setupLogger
+from utils.auxs import *
+
+
 class VideoReader():
 	def __init__(self):
 		pass
-		self.reader = cv2.VideoCapture("F:\TDDOWNLOAD\open courses\Justice_ What's the right thing to do\Lecture04.mp4")
+		self.reader = cv2.VideoCapture("britney_spears_-_lucky_1280x720.mp4")
 
 	def read(self):
 		return self.reader.read()
@@ -43,9 +45,13 @@ class ImageCapture(QtGui.QMainWindow):
 
 
 	dbInsertSignal = QtCore.pyqtSignal(bool)
+	uploadSignal = QtCore.pyqtSignal(list)
+	queryTableSignal = QtCore.pyqtSignal(list)
 	
-	def __init__(self):
+	def __init__(self, logger):
 		super(ImageCapture, self).__init__()
+		self.logger = logger
+		self.logger.info('logging started in {}'.format(self.__class__.__name__))
 		self.initEnv()
 		self.initUI()
 		self.timer.start(ImageCapture.UPDATE_FREQ)
@@ -60,10 +66,12 @@ class ImageCapture(QtGui.QMainWindow):
 		self.model = ViewModel()
 
 		#register callback
-		# self.thread = Uploader()
-		# self.thread.start()
 		
 		self.dbInsertSignal.connect(self.saveImageCallBack)
+		self.uploadSignal.connect(self.uploadCallBack)
+		self.queryTableSignal.connect(self.appendDataToModel)
+		#get all previous captured image to list view
+		self.dbManager.getAllRows(self.queryTableSignal)
 		
 	def initUI(self):
 		self.setWindowTitle('DRCM')
@@ -97,19 +105,31 @@ class ImageCapture(QtGui.QMainWindow):
 
 	def uploadImages(self):
 		print('upload images')
+		self.pw.start(
+			RunnableFunc(
+				uploadClient(self.dbManager).getDataAndUpload,
+				self.uploadSignal
+				)
+			)
 
 
 	def clearListView(self):
 		self.model.clear()
-		
 
-	def uploadCallBack(self):
-		#retrive data
+	def appendDataToModel(self, items):
+		for item in items:
+			patiendName = item[1]
+			recordTime = getDateTimeFromTS(item[2])
+			if item[0] == 0:
+				foo = '{} {}'.format(patiendName, recordTime)
+			else :
+				foo = u'\u2713 {} {}'.format(patiendName, recordTime)
+			self.model.pushBack(foo)
 
+	def uploadCallBack(self, items):
 		#clear and update list view
-		self.model.clearListView()
-		for row in res:
-			self.model.pushFront(row)
+		self.clearListView()
+		self.appendDataToModel(items)
 
 
 	def snapShot(self):
@@ -172,23 +192,19 @@ class ImageCapture(QtGui.QMainWindow):
 			self.timer.start(ImageCapture.UPDATE_FREQ)
 
 	def updateFrame(self, saveTodisk = False):
-		# Capture frame-by-frame
 		ret, frame = self.camera.read()
 		if not ret:
+			print(ret)
 			return
-		frame = cv2.resize(frame, (620, 372))
+		frame_to_display = cv2.resize(frame, (620, 372))
 		if saveTodisk:
-			
 			self.saveImage(frame)
-		mQImage = cv2ImagaeToQtImage(frame)
+		mQImage = cv2ImagaeToQtImage(frame_to_display)
 		self.painter.setImageData(mQImage)
 
 	def createListView(self):
 		listView = QtGui.QListView()
-		entries = ['one',u'\u2713' + 'two', 'three']
 		listView.setModel(self.model)
-		for i in entries:
-			self.model.pushBack(i)
 		return listView
 
 		
@@ -260,13 +276,19 @@ class ImageCapture(QtGui.QMainWindow):
 	#-----------------------------------------------
 		
 		
-def main():
+def main(logger):
 	
 	app = QtGui.QApplication(sys.argv)
+	# splash= SplashScreen("logo.png")  
+	# splash.effect()
+	# app.processEvents() 
 	# MedicalRecordDialog.newRecord()
-	ex = ImageCapture()
+	ex = ImageCapture(logger)
+	ex.show()
+	# splash.finish(ex)
 	sys.exit(app.exec_())
 
 
 if __name__ == '__main__':
-	main()
+	logger = setupLogger('root')
+	main(logger)

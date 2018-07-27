@@ -5,7 +5,6 @@ from datetime import datetime, date
 class SqlConn():
 	"""sql operation wrapper"""
 	def __init__(self, db):
-		super(SqlConn, self).__init__()
 		self.db = db
 		self.conn = sqlite3.connect(self.db)
 		SqlConn.createTabelIfNotExist(self.conn)

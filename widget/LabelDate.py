@@ -3,7 +3,7 @@ from PyQt4 import QtGui, QtCore
 class LabelDate(QtGui.QWidget):
 	"""edit text box with label"""
 	def __init__(self, label):
-		super(LabelDate, self).__init__()
+		QtGui.QWidget.__init__(self)
 		dateEdit = QtGui.QDateTimeEdit()
 		dateEdit.setDisplayFormat("yyyy.MM.dd")
 		dateEdit.setCalendarPopup(True)
