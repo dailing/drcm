@@ -3,7 +3,7 @@
 
 """
 show video from camera 
-capture, save and upload frame
+capture, save and upload video frame
 
 author: knowthy
 last edited: july 2018
@@ -212,6 +212,7 @@ class ImageCapture(QtGui.QMainWindow):
 	def createImageBox(self):
 		self.painter = PainterWidget()
 		wrapperLayout = QtGui.QGridLayout()
+		
 		wrapperLayout.addWidget(self.painter, 0, 0, 12, 10)
 		wrapperLayout.addWidget(self.createListView(), 0, 13, 12, 2)
 		self.wrapperBox 	= QtGui.QGroupBox()
@@ -257,7 +258,8 @@ class ImageCapture(QtGui.QMainWindow):
 				target.addAction(action)
 	#-----------------------------------------------
 
-	def create_action(  self, text, slot=None, shortcut=None, 
+	def create_action(
+		self, text, slot=None, shortcut=None, 
 						icon=None, tip=None, checkable=False, 
 						signal="triggered()"):
 		action = QtGui.QAction(text, self)
@@ -279,13 +281,12 @@ class ImageCapture(QtGui.QMainWindow):
 def main(logger):
 	
 	app = QtGui.QApplication(sys.argv)
-	# splash= SplashScreen("logo.png")  
-	# splash.effect()
-	# app.processEvents() 
-	# MedicalRecordDialog.newRecord()
+	splash= SplashScreen("logo.png")  
+	splash.effect()
+	app.processEvents() 
 	ex = ImageCapture(logger)
 	ex.show()
-	# splash.finish(ex)
+	splash.finish(ex)
 	sys.exit(app.exec_())
 
 
