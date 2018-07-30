@@ -1,43 +1,22 @@
 import sqlite3
 import logging
-
-pip install pywifi==1.1.6
+#https://wifi.readthedocs.io/en/latest/scanning.html
+from wifi import Cell, Scheme
 
 logger = logging.getLogger('root.wifiManager')
 class wifiManager():
 	"""manage wifi connection"""
 	CUR_SSID = None
-	SSID_MAP = {}
-	initialized = False
+	CELLS = None
 	isConnecting = False
 	def __init__(self):
 		pass
 
 
 	@staticmethod
-	def initState():
-		if wifiManager.initialized:
-			return
-		wifiManager.initialized = True
-		logger.debug('init')
-		sqlCreateTabel = 'CREATE TABLE IF NOT EXISTS wifiInfo' \
-			'(ssid TEXT NOT NULL,'\
-			'user TEXT   NOT NULL,'\
-			'pwd TEXT NOT NULL, UNIQUE(ssid))'
-		try:
-			with sqlite3.connect('state.db') as conn:
-				conn.execute(sqlCreateTabel)
-		except Exception as e:
-			logging.exeption("wifi init error")
-
-		ssidQuerySql = "select * from wifiInfo"
-		try:
-			with sqlite3.connect('state.db') as conn:
-				res = conn.execute(ssidQuerySql)
-				for row in res:
-					wifiManager.SSID_MAP[row[0]] = (row[1], row[2])
-		except Exception as e:
-			logging.exeption("wifi init error")
+	def getWifiList():
+		wifiManager.CELLS = Cell.all('wlan0')
+		return [(c.quality, c.ssid, '******' if Scheme.find('wlan0', c.ssid) is not None else '------') for c in wifiManager.CELLS]
 
 	@staticmethod
 	def isConnected():
@@ -45,12 +24,40 @@ class wifiManager():
 
 	@staticmethod
 	def connectDefault():
-		wifiManager.initState()
-		wifiManager.isConnecting = True;
+		if wifiManager.CELLS is None:
+			wifiManager.getWifiList()
+		interface = 'wlan0'
+		wifiManager.isConnecting = True
+		cells = wifiManager.CELLS
+		for c in cells:
+			scheme = Scheme.find(interface, c.ssid)
+			if scheme is not None:
+				try:
+					scheme.activate()
+				except Exception as e:
+					continue
+				else :
+					break
+		wifiManager.isConnecting = False
+
+	@staticmethod
+	def connectWifi(ssid, pwd):
+		if wifiManager.CELLS is None:
+			wifiManager.getWifiList()
+		for c in wifiManager.CELLS :
+			if c.ssid == ssid:
+				try:
+					scheme = Scheme.for_cell('wlan0', ssid, c, pwd)
+					scheme.activate()
+				except Exception as e:
+					raise e
+					return False
+				else :
+					scheme.save()
+					return True
 
 def main():
-	print(wifiManager.isConnected())
-	wifiManager.connectDefault()
+	print(wifiManager.connectWifi('sbsbsbs', '12345678'))
 
 
 if __name__ == '__main__':

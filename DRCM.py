@@ -33,7 +33,7 @@ from utils.folderUtils import ensurePath
 class VideoReader():
 	def __init__(self):
 		pass
-		self.reader = cv2.VideoCapture("F:\TDDOWNLOAD\open courses\Justice_ What's the right thing to do\Lecture01.mp4")
+		self.reader = cv2.VideoCapture(0)
 
 	def read(self):
 		return self.reader.read()
