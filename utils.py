@@ -1,13 +1,11 @@
 from time import gmtime, strftime, time
 import datetime
 import uuid
-import logging
+
 import pickle
-from hashlib import md5
-import base64
 
 import numpy as np
-
+import logging
 import cv2
 from PyQt4 import QtGui
 
@@ -17,16 +15,9 @@ def saveObj(fname, obj):
 	with open(fname, 'wb') as output:
 		pickle.dump(obj, output)
 
-def decodeDBImage(dbData):
-	bytesImage =base64.b64decode(dbData)
-	nparr = np.frombuffer(bytesImage, np.uint8)
-	image = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
-	return image
-
 def encodeImageToDBdata(imageData):
 	res = cv2.imencode('.png', imageData)[-1]
-	pngBytes = base64.b64encode(res)
-	return pngBytes
+	logging.getLogger('root.utils')
 
 def loadObj(fname):
 	fname = 'state/' + fname
@@ -66,9 +57,6 @@ def getContrast(imageData):
 
 if __name__ == '__main__':
 	pass
-	code = encodeImageToDBdata(cv2.imread('../logo.png'))
-	ori = decodeDBImage(code)
-	cv2.imwrite('decoded.png', ori)
 	# print(getTimeStamp())
 	# uuidStr = str(getUUID())
 	# print(uuidStr)
@@ -79,5 +67,6 @@ if __name__ == '__main__':
 	# print(
 	# 	'name' if uuidStr is None else uuidStr
 	# 	)
-	
+	# data = md5(encodeImageToDBdata(cv2.imread('logo.png'))).hexdigest()
+	# print(type(data))
 	

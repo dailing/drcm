@@ -33,7 +33,7 @@ from utils.folderUtils import ensurePath
 class VideoReader():
 	def __init__(self):
 		pass
-		self.reader = cv2.VideoCapture(0)
+		self.reader = cv2.VideoCapture("F:\TDDOWNLOAD\open courses\Justice_ What's the right thing to do\Lecture01.mp4")
 
 	def read(self):
 		return self.reader.read()
@@ -49,6 +49,7 @@ class ImageCapture(QtGui.QMainWindow):
 	dbInsertSignal = QtCore.pyqtSignal(bool)
 	uploadSignal = QtCore.pyqtSignal(list)
 	queryTableSignal = QtCore.pyqtSignal(list)
+	remoteProcessSignal = QtCore.pyqtSignal(bytes)
 	
 	def __init__(self, logger):
 		super(ImageCapture, self).__init__()
@@ -59,6 +60,7 @@ class ImageCapture(QtGui.QMainWindow):
 		self.timer.start(ImageCapture.UPDATE_FREQ)
 
 	def initEnv(self):
+		self.preImageData = None
 		self.pw = PoolWrapper()
 		self.dbManager = DataBaseManager('patientRecord.db')
 		self.patientInfo = loadObj(ImageCapture.LAST_PATIENT)
@@ -72,6 +74,7 @@ class ImageCapture(QtGui.QMainWindow):
 		self.dbInsertSignal.connect(self.saveImageCallBack)
 		self.uploadSignal.connect(self.uploadCallBack)
 		self.queryTableSignal.connect(self.appendDataToModel)
+		self.remoteProcessSignal.connect(self.processImageCallBack)
 		#get all previous captured image to list view
 		self.dbManager.getAllRows(self.queryTableSignal)
 		
@@ -82,6 +85,24 @@ class ImageCapture(QtGui.QMainWindow):
 		self.createMainGui()
 		self.show()
 		
+
+
+	def processImage(self):
+		if self.timer.isActive() or self.preImageData is None:
+			return
+		self.pw.start(
+			RunnableFunc(
+				uploadClient(self.dbManager).remoteProcess,
+				self.preImageData,
+				self.remoteProcessSignal
+				)
+			)
+
+	def processImageCallBack(self, imageData):
+		image = decodeDBImage(imageData)
+		frame_to_display = cv2.resize(image, (640, 480))
+		mQImage = cv2ImagaeToQtImage(frame_to_display)
+		self.painter.setImageData(mQImage)
 
 	def createBottomGroupBox(self):
 		bottomLayout = QtGui.QVBoxLayout()
@@ -97,6 +118,7 @@ class ImageCapture(QtGui.QMainWindow):
 		pageButton = addButton('newRecord', self.newRecord)
 		uploadButton  = addButton('Upload', self.uploadImages)
 		addButton('IMAGE', self.switchToImageView)
+		addButton('PROCESS', self.processImage)
 		addButton('INFO', self.switchToInfoView)
 		addButton('WLAN', self.switchToWlanView)
 		bottomLayout.addStretch(1)
@@ -202,6 +224,7 @@ class ImageCapture(QtGui.QMainWindow):
 			return
 		frame_to_display = cv2.resize(frame, (640, 480))
 		if saveTodisk:
+			self.preImageData = frame
 			self.saveImage(frame)
 		mQImage = cv2ImagaeToQtImage(frame_to_display)
 		self.painter.setImageData(mQImage)
