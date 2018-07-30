@@ -107,6 +107,12 @@ class ImageCapture(QtGui.QMainWindow):
 	def createBottomGroupBox(self):
 		bottomLayout = QtGui.QVBoxLayout()
 
+		self.patientIdentify = QtGui.QLabel(
+			'name' if self.patientInfo is None else self.patientInfo.getPid()
+			)
+		bottomLayout.addWidget(self.patientIdentify)
+
+		bottomLayout.addStretch(1)
 		def addButton(label, action):
 			button = QtGui.QPushButton(label)
 			bottomLayout.addWidget(button)
@@ -117,15 +123,15 @@ class ImageCapture(QtGui.QMainWindow):
 		self.captureButton = addButton('Capture', self.snapShot)
 		pageButton = addButton('newRecord', self.newRecord)
 		uploadButton  = addButton('Upload', self.uploadImages)
+		addButton('process', self.processImage)
+
+		bottomLayout.addStretch(1)
+
 		addButton('IMAGE', self.switchToImageView)
-		addButton('PROCESS', self.processImage)
 		addButton('INFO', self.switchToInfoView)
 		addButton('WLAN', self.switchToWlanView)
+		
 		bottomLayout.addStretch(1)
-		self.patientIdentify = QtGui.QLabel(
-			'name' if self.patientInfo is None else self.patientInfo.getPid()
-			)
-		bottomLayout.addWidget(self.patientIdentify)
 		buttonGroupBox = QtGui.QGroupBox()
 		buttonGroupBox.setLayout(bottomLayout)
 		return buttonGroupBox
