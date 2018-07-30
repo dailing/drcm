@@ -297,7 +297,6 @@ class ImageCapture(QtGui.QMainWindow):
 		
 		
 def main(logger):
-	ensurePath()
 	app = QtGui.QApplication(sys.argv)
 	# splash= SplashScreen("logo.png")  
 	# splash.effect()
@@ -309,5 +308,6 @@ def main(logger):
 
 
 if __name__ == '__main__':
+	ensurePath()
 	logger = setupLogger('root')
 	main(logger)
