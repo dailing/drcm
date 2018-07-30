@@ -1,11 +1,15 @@
+import sys
+from wifi import Cell, Scheme
 
 from PyQt4 import QtCore, QtGui
 from time import sleep
 from random import randint
 
+import logging
+
 class Worker(QtCore.QRunnable):
 	def __init__(self, func, msgSignal):
-		super(Worker, self).__init__()
+		QtCore.QRunnable.__init__(self)
 		self.func = func
 		self.msgSignal = msgSignal
 
@@ -16,7 +20,6 @@ class Worker(QtCore.QRunnable):
 
 class PoolWrapper():
 	def __init__(self):
-		super(PoolWrapper, self).__init__()
 		self.pool = QtCore.QThreadPool.globalInstance()
 		self.pool.setMaxThreadCount(2)
 
@@ -61,6 +64,7 @@ class MyWidget(QtGui.QWidget):
 		self.b = QtGui.QPushButton("Emit your signal!", self)
 		self.label = QtGui.QLabel('ini')
 		self.hlayout.addWidget(self.b)
+		print(Cell.all('wlan0'))
 		self.hlayout.addWidget(self.label)
 		self.b.clicked.connect(self.clickHandler)
 		self.randSignal.connect(self.mySignalHandler)
@@ -83,9 +87,17 @@ def caller(func, *arg):
 
 if __name__ == '__main__':
 	pass
-	caller(printmsg, ['first'])
-	caller(defaultPrint)
-	# import sys
+	cells = Cell.all('wlan0')
+	print (cells[0].__dict__)
+	for cell in cells :
+		print (cell.address, str(cell.ssid))
+	cell = cells[0]
+	scheme = Scheme.for_cell('wlan0', 'home', cell, '12345678')
+	try:
+		scheme.activate()
+	except Exception as e:
+		logging.exception("error in network connection {}".format(cell.ssid))
+		pass
 	# app = QtGui.QApplication(sys.argv)
 	# w = MyWidget()
 	# w.show()

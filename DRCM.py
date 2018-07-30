@@ -23,15 +23,17 @@ from sql.PoolWrapper import PoolWrapper
 from sql.DataBaseManager import DataBaseManager
 
 from network.uploadClient import uploadClient
+from network.wifiWidget import WifiTableView
 
 from utils.logFormatter import setupLogger
 from utils.auxs import *
+from utils.folderUtils import ensurePath
 
 
 class VideoReader():
 	def __init__(self):
 		pass
-		self.reader = cv2.VideoCapture("britney_spears_-_lucky_1280x720.mp4")
+		self.reader = cv2.VideoCapture("F:\TDDOWNLOAD\open courses\Justice_ What's the right thing to do\Lecture01.mp4")
 
 	def read(self):
 		return self.reader.read()
@@ -82,7 +84,7 @@ class ImageCapture(QtGui.QMainWindow):
 		
 
 	def createBottomGroupBox(self):
-		bottomLayout = QtGui.QHBoxLayout()
+		bottomLayout = QtGui.QVBoxLayout()
 
 		def addButton(label, action):
 			button = QtGui.QPushButton(label)
@@ -94,6 +96,9 @@ class ImageCapture(QtGui.QMainWindow):
 		self.captureButton = addButton('Capture', self.snapShot)
 		pageButton = addButton('newRecord', self.newRecord)
 		uploadButton  = addButton('Upload', self.uploadImages)
+		addButton('IMAGE', self.switchToImageView)
+		addButton('INFO', self.switchToInfoView)
+		addButton('WLAN', self.switchToWlanView)
 		bottomLayout.addStretch(1)
 		self.patientIdentify = QtGui.QLabel(
 			'name' if self.patientInfo is None else self.patientInfo.getPid()
@@ -185,7 +190,6 @@ class ImageCapture(QtGui.QMainWindow):
 	def scheduleUpdating(self):
 		if self.timer.isActive():
 			self.captureButton.setEnabled(False)
-
 			self.timer.stop()
 			self.updateFrame(True)
 		else :
@@ -196,7 +200,7 @@ class ImageCapture(QtGui.QMainWindow):
 		if not ret:
 			print(ret)
 			return
-		frame_to_display = cv2.resize(frame, (620, 372))
+		frame_to_display = cv2.resize(frame, (640, 480))
 		if saveTodisk:
 			self.saveImage(frame)
 		mQImage = cv2ImagaeToQtImage(frame_to_display)
@@ -209,22 +213,36 @@ class ImageCapture(QtGui.QMainWindow):
 
 		
 
-	def createImageBox(self):
+	def createLeftPanelView(self):
 		self.painter = PainterWidget()
-		wrapperLayout = QtGui.QGridLayout()
-		
-		wrapperLayout.addWidget(self.painter, 0, 0, 12, 10)
-		wrapperLayout.addWidget(self.createListView(), 0, 13, 12, 2)
-		self.wrapperBox 	= QtGui.QGroupBox()
-		self.wrapperBox.setLayout(wrapperLayout)
-		return self.wrapperBox
+		self.stacked_widget = QtGui.QStackedWidget()
+		self.stacked_widget.addWidget(self.painter)
+		self.stacked_widget.addWidget(self.createListView())
+		self.stacked_widget.addWidget(WifiTableView())
+		return self.stacked_widget
+
+	def switchToImageView(self):
+		if self.stacked_widget.currentIndex() == 0:
+			return
+		self.stacked_widget.setCurrentIndex(0)
+
+	def switchToInfoView(self):
+		if self.stacked_widget.currentIndex() == 1:
+			return
+		self.stacked_widget.setCurrentIndex(1)
+
+	def switchToWlanView(self):
+		if self.stacked_widget.currentIndex() == 2:
+			return
+		self.stacked_widget.setCurrentIndex(2)
 
 	def createMainGui(self):
+
 		buttonGroupBox = self.createBottomGroupBox()
-		imageGroupBox = self.createImageBox()
+		leftPanelView = self.createLeftPanelView()
 		layout = QtGui.QGridLayout()
-		layout.addWidget(imageGroupBox, 0, 0, 12, 12)
-		layout.addWidget(buttonGroupBox, 13, 0, 1, 12)
+		layout.addWidget(leftPanelView, 0, 0, 4, 3)
+		layout.addWidget(buttonGroupBox, 0, 4, 1, 3)
 		self.main_frame = QtGui.QWidget()
 		self.main_frame.setLayout(layout)
 		self.setCentralWidget(self.main_frame)
@@ -279,14 +297,14 @@ class ImageCapture(QtGui.QMainWindow):
 		
 		
 def main(logger):
-	
+	ensurePath()
 	app = QtGui.QApplication(sys.argv)
-	splash= SplashScreen("logo.png")  
-	splash.effect()
-	app.processEvents() 
+	# splash= SplashScreen("logo.png")  
+	# splash.effect()
+	# app.processEvents() 
 	ex = ImageCapture(logger)
 	ex.show()
-	splash.finish(ex)
+	# splash.finish(ex)
 	sys.exit(app.exec_())
 
 
