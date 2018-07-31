@@ -281,18 +281,20 @@ class ImageCapture(QtGui.QMainWindow):
 		self.close()
 
 	def create_menu(self):
-		self.file_menu = self.menuBar().addMenu("&File")
+		pass
+		self.connect(QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Escape), self), QtCore.SIGNAL('activated()'), self.exitElegantly)
+		# self.file_menu = self.menuBar().addMenu("&File")
 		
-		getImageAction = self.create_action("snapShot",
-			shortcut="Ctrl+I", slot=self.snapShot, tip="take a picture")
+		# getImageAction = self.create_action("snapShot",
+		# 	shortcut="Ctrl+I", slot=self.snapShot, tip="take a picture")
 		
-		exit_action = self.create_action("E&xit", slot=self.exitElegantly, 
-			shortcut="Ctrl+W", tip="Exit the application")
+		# exit_action = self.create_action("E&xit", slot=self.exitElegantly, 
+		# 	shortcut="Ctrl+W", tip="Exit the application")
 
 		
-		self.add_actions(self.file_menu, 
-			(   getImageAction,
-				None, exit_action))
+		# self.add_actions(self.file_menu, 
+		# 	(   getImageAction,
+		# 		None, exit_action))
 		
 	# The following two methods are utilities for simpler creation
 	# and assignment of actions
