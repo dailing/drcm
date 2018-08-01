@@ -45,8 +45,11 @@ def setBackGroundColor(aWidget, color):
 	pal.setColor(aWidget.backgroundRole(), color)
 	aWidget.setPalette(pal)
 
-def setTextColor(aWidget, color):
-	aWidget.setStyleSheet("color:white;");
+def setLabelStyle(label):
+	label.setStyleSheet("QLabel{background:black;}" \
+		"QLabel{color:rgb(255,255,255,250); Alignment : center}"\
+		"QLabel{font-size:15px;font-weight:bold;font-family:Serif;};}"
+		);
 
 		
 class ImageCapture(QtGui.QMainWindow):
@@ -124,7 +127,7 @@ class ImageCapture(QtGui.QMainWindow):
 		self.patientIdentify = QtGui.QLabel(
 			'name' if self.patientInfo is None else self.patientInfo.getPid()
 			)
-		setTextColor(self.patientIdentify, QtCore.Qt.white)
+		setLabelStyle(self.patientIdentify)
 		bottomLayout.addWidget(self.patientIdentify)
 
 		bottomLayout.addStretch(1)
