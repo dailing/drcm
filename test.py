@@ -1,11 +1,15 @@
 import sys
-from wifi import Cell, Scheme
 
 from PyQt4 import QtCore, QtGui
 from time import sleep
 from random import randint
 
 import logging
+
+from profilehooks import profile
+import cv2
+from utils.auxs import cv2ImagaeToQtImage
+from widget.PainterWidget import PainterWidget
 
 class Worker(QtCore.QRunnable):
 	def __init__(self, func, msgSignal):
@@ -54,8 +58,18 @@ def defaultPrint():
 class MyWidget(QtGui.QWidget):
 	randSignal = QtCore.pyqtSignal(int, list)
 
+	@profile
 	def __init__(self, parent=None):
 		super(MyWidget, self).__init__(parent)
+		self.setGeometry(0, 0, 800, 480)
+		print(self.x())
+		print(self.frameGeometry())
+
+		self.resize(800, 480)
+		print(self.x())
+		print(self.geometry().x())
+		print(self.frameGeometry())
+
 		task = Task()
 		self.pw = PoolWrapper()
 		
@@ -64,8 +78,10 @@ class MyWidget(QtGui.QWidget):
 		self.b = QtGui.QPushButton("Emit your signal!", self)
 		self.label = QtGui.QLabel('ini')
 		self.hlayout.addWidget(self.b)
-		print(Cell.all('wlan0'))
 		self.hlayout.addWidget(self.label)
+		self.painter = PainterWidget()
+		self.hlayout.addWidget(self.painter)
+		self.painter.setImageData(cv2ImagaeToQtImage(cv2.imread('logo.png')))
 		self.b.clicked.connect(self.clickHandler)
 		self.randSignal.connect(self.mySignalHandler)
 
@@ -86,22 +102,11 @@ def caller(func, *arg):
 	func(*arg)
 
 if __name__ == '__main__':
-	pass
-	cells = Cell.all('wlan0')
-	print (cells[0].__dict__)
-	for cell in cells :
-		print (cell.address, str(cell.ssid))
-	cell = cells[0]
-	scheme = Scheme.for_cell('wlan0', 'home', cell, '12345678')
-	try:
-		scheme.activate()
-	except Exception as e:
-		logging.exception("error in network connection {}".format(cell.ssid))
-		pass
-	# app = QtGui.QApplication(sys.argv)
-	# w = MyWidget()
-	# w.show()
-	# sys.exit(app.exec_())
+
+	app = QtGui.QApplication(sys.argv)
+	w = MyWidget()
+	w.show()
+	sys.exit(app.exec_())
 	
 # if __name__ == '__main__':
 	# msgSignal = QtCore.pyqtSignal()

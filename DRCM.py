@@ -33,12 +33,22 @@ from utils.folderUtils import ensurePath
 class VideoReader():
 	def __init__(self):
 		pass
-		self.reader = cv2.VideoCapture("F:\TDDOWNLOAD\open courses\Justice_ What's the right thing to do\Lecture01.mp4")
+		self.reader = cv2.VideoCapture(0)
 
 	def read(self):
 		return self.reader.read()
 
-				
+
+def setBackGroundColor(aWidget, color):
+	aWidget.setAutoFillBackground(True)
+	pal = aWidget.palette()
+	pal.setColor(aWidget.backgroundRole(), color)
+	aWidget.setPalette(pal)
+
+def setTextColor(aWidget, color):
+	aWidget.setStyleSheet("color:white;");
+
+		
 class ImageCapture(QtGui.QMainWindow):
 
 	FRAME_PER_SECOND = 24
@@ -52,7 +62,7 @@ class ImageCapture(QtGui.QMainWindow):
 	remoteProcessSignal = QtCore.pyqtSignal(bytes)
 	
 	def __init__(self, logger):
-		super(ImageCapture, self).__init__()
+		QtGui.QMainWindow.__init__(self, None)
 		self.logger = logger
 		self.logger.info('logging started in {}'.format(self.__class__.__name__))
 		self.initEnv()
@@ -80,7 +90,11 @@ class ImageCapture(QtGui.QMainWindow):
 		
 	def initUI(self):
 		self.setWindowTitle('DRCM')
+		# self.showMaximized()
 		self.setGeometry(0, 0, 800, 480)
+		self.resize(800, 480)
+
+
 		self.create_menu()
 		self.createMainGui()
 		self.show()
@@ -110,20 +124,22 @@ class ImageCapture(QtGui.QMainWindow):
 		self.patientIdentify = QtGui.QLabel(
 			'name' if self.patientInfo is None else self.patientInfo.getPid()
 			)
+		setTextColor(self.patientIdentify, QtCore.Qt.white)
 		bottomLayout.addWidget(self.patientIdentify)
 
 		bottomLayout.addStretch(1)
 		def addButton(label, action):
 			button = QtGui.QPushButton(label)
+			# button.setContentsMargins(2, 2, 2, 2)
 			bottomLayout.addWidget(button)
 			self.connect(button, QtCore.SIGNAL("clicked()"),
 					action)
 			return button
 			
 		self.captureButton = addButton('Capture', self.snapShot)
-		pageButton = addButton('newRecord', self.newRecord)
+		pageButton = addButton('NewRecord', self.newRecord)
 		uploadButton  = addButton('Upload', self.uploadImages)
-		addButton('process', self.processImage)
+		addButton('Process', self.processImage)
 
 		bottomLayout.addStretch(1)
 
@@ -134,6 +150,8 @@ class ImageCapture(QtGui.QMainWindow):
 		bottomLayout.addStretch(1)
 		buttonGroupBox = QtGui.QGroupBox()
 		buttonGroupBox.setLayout(bottomLayout)
+
+		setBackGroundColor(buttonGroupBox, QtCore.Qt.black)
 		return buttonGroupBox
 
 	def uploadImages(self):
@@ -248,6 +266,8 @@ class ImageCapture(QtGui.QMainWindow):
 		self.stacked_widget.addWidget(self.painter)
 		self.stacked_widget.addWidget(self.createListView())
 		self.stacked_widget.addWidget(WifiTableView())
+		# self.stacked_widget.setCurrentIndex(1)
+		setBackGroundColor(self.stacked_widget, QtCore.Qt.black)
 		return self.stacked_widget
 
 	def switchToImageView(self):
@@ -270,10 +290,11 @@ class ImageCapture(QtGui.QMainWindow):
 		buttonGroupBox = self.createBottomGroupBox()
 		leftPanelView = self.createLeftPanelView()
 		layout = QtGui.QGridLayout()
-		layout.addWidget(leftPanelView, 0, 0, 4, 3)
-		layout.addWidget(buttonGroupBox, 0, 4, 1, 3)
+		layout.addWidget(leftPanelView, 0, 0, 4, 1)
+		layout.addWidget(buttonGroupBox, 0, 4, 4, 1)
 		self.main_frame = QtGui.QWidget()
 		self.main_frame.setLayout(layout)
+		setBackGroundColor(self.main_frame, QtCore.Qt.black)
 		self.setCentralWidget(self.main_frame)
 
 	def exitElegantly(self):
