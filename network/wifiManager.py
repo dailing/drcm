@@ -297,7 +297,13 @@ class wifiManager():
     def isConnected(self):
         return self.CUR_SSID != None
 
+    def getCurrentWifi(self):
+        return self.CUR_SSID
+
+
+
     def connectWifi(self, ssid, pwd=None):
+        print ('connect to wifi', ssid)
         if self.CELLS is None:
             self.getWifiList()
         if ssid in self.CELLS:
@@ -321,9 +327,9 @@ def main():
     # # Try a not encrypted network
     # man.connectWifi('ddy7')
     # Try a wpa network
-    man.connectWifi('ddy8', '12345678')
+    man.connectWifi('JinJiangHotel', '4008209999')
     # Connect again Using saved password
-    man.connectWifi('ddy8')
+    # man.connectWifi('ddy8')
 
 
 # print(wifiManager.connectWifi('ddd', '12345678'))
