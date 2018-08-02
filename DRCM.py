@@ -46,8 +46,9 @@ def setBackGroundColor(aWidget, color):
 	aWidget.setPalette(pal)
 
 def setLabelStyle(label):
+	label.setAlignment(QtCore.Qt.AlignCenter)
 	label.setStyleSheet("QLabel{background:black;}" \
-		"QLabel{color:rgb(255,255,255,250); Alignment : center}"\
+		"QLabel{color:rgb(255,255,255,250);}"\
 		"QLabel{font-size:15px;font-weight:bold;font-family:Serif;};}"
 		);
 
@@ -121,9 +122,8 @@ class ImageCapture(QtGui.QMainWindow):
 		mQImage = cv2ImagaeToQtImage(frame_to_display)
 		self.painter.setImageData(mQImage)
 
-	def createBottomGroupBox(self):
+	def createButtonLayout(self):
 		bottomLayout = QtGui.QVBoxLayout()
-
 		self.patientIdentify = QtGui.QLabel(
 			'name' if self.patientInfo is None else self.patientInfo.getPid()
 			)
@@ -151,11 +151,7 @@ class ImageCapture(QtGui.QMainWindow):
 		addButton('WLAN', self.switchToWlanView)
 		
 		bottomLayout.addStretch(1)
-		buttonGroupBox = QtGui.QGroupBox()
-		buttonGroupBox.setLayout(bottomLayout)
-
-		setBackGroundColor(buttonGroupBox, QtCore.Qt.black)
-		return buttonGroupBox
+		return bottomLayout
 
 	def uploadImages(self):
 		print('upload images')
@@ -247,7 +243,7 @@ class ImageCapture(QtGui.QMainWindow):
 	def updateFrame(self, saveTodisk = False):
 		ret, frame = self.camera.read()
 		if not ret:
-			print(ret)
+			# self.camera = VideoReader()
 			return
 		frame_to_display = cv2.resize(frame, (640, 480))
 		if saveTodisk:
@@ -290,11 +286,11 @@ class ImageCapture(QtGui.QMainWindow):
 
 	def createMainGui(self):
 
-		buttonGroupBox = self.createBottomGroupBox()
+		buttonLayout = self.createButtonLayout()
 		leftPanelView = self.createLeftPanelView()
 		layout = QtGui.QGridLayout()
 		layout.addWidget(leftPanelView, 0, 0, 4, 1)
-		layout.addWidget(buttonGroupBox, 0, 4, 4, 1)
+		layout.addLayout(buttonLayout, 0, 4, 4, 1)
 		self.main_frame = QtGui.QWidget()
 		self.main_frame.setLayout(layout)
 		setBackGroundColor(self.main_frame, QtCore.Qt.black)
