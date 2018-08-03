@@ -1,4 +1,5 @@
 from PyQt4 import QtGui, QtCore
+import subprocess
 
 class MatchBoxLineEdit(QtGui.QLineEdit):
 	def focusInEvent(self, e):
