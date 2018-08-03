@@ -47,9 +47,7 @@ def setBackGroundColor(aWidget, color):
 
 def setLabelStyle(label):
 	label.setAlignment(QtCore.Qt.AlignCenter)
-	label.setStyleSheet("QLabel{background:black;}" \
-		"QLabel{color:rgb(255,255,255,250);}"\
-		"QLabel{font-size:15px;font-weight:bold;font-family:Serif;};}"
+	label.setStyleSheet("QLabel{color:rgb(255,255,255);font-size:24px;}"
 		);
 
 		
@@ -94,9 +92,9 @@ class ImageCapture(QtGui.QMainWindow):
 		
 	def initUI(self):
 		self.setWindowTitle('DRCM')
-		# self.showMaximized()
-		self.setGeometry(0, 0, 800, 480)
-		self.resize(800, 480)
+		self.showFullScreen()
+		# self.setGeometry(200, 200, 800, 480)
+		# self.resize(800, 480)
 
 
 		self.create_menu()
@@ -124,6 +122,9 @@ class ImageCapture(QtGui.QMainWindow):
 
 	def createButtonLayout(self):
 		bottomLayout = QtGui.QVBoxLayout()
+
+		bottomLayout.addStretch(1)
+		
 		self.patientIdentify = QtGui.QLabel(
 			'name' if self.patientInfo is None else self.patientInfo.getPid()
 			)
@@ -133,7 +134,7 @@ class ImageCapture(QtGui.QMainWindow):
 		bottomLayout.addStretch(1)
 		def addButton(label, action):
 			button = QtGui.QPushButton(label)
-			# button.setContentsMargins(2, 2, 2, 2)
+			button.setStyleSheet('QPushButton {font-size:24px;};')
 			bottomLayout.addWidget(button)
 			self.connect(button, QtCore.SIGNAL("clicked()"),
 					action)
