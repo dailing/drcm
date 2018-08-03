@@ -47,7 +47,7 @@ def setBackGroundColor(aWidget, color):
 
 def setLabelStyle(label):
 	label.setAlignment(QtCore.Qt.AlignCenter)
-	label.setStyleSheet("QLabel{background:black;color:rgba(255,255,255,250);font-size:18px;font-weight:bold;font-family:Times Roman;};}"
+	label.setStyleSheet("QLabel{color:rgb(255,255,255);font-size:24px;}"
 		);
 
 		
@@ -122,6 +122,9 @@ class ImageCapture(QtGui.QMainWindow):
 
 	def createButtonLayout(self):
 		bottomLayout = QtGui.QVBoxLayout()
+
+		bottomLayout.addStretch(1)
+		
 		self.patientIdentify = QtGui.QLabel(
 			'name' if self.patientInfo is None else self.patientInfo.getPid()
 			)
