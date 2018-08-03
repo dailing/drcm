@@ -94,7 +94,7 @@ class ImageCapture(QtGui.QMainWindow):
 		
 	def initUI(self):
 		self.setWindowTitle('DRCM')
-		self.showMaximized()
+		self.showFullScreen()
 		# self.setGeometry(0, 0, 800, 480)
 		# self.resize(800, 480)
 
