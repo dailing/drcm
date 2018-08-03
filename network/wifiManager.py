@@ -63,6 +63,7 @@ class Cell(object):
 
     @staticmethod
     def _save(ssid, psw):
+        print('saving wifi', ssid, psw)
         if Cell._saved_wifi is None:
             Cell._get_psw(None)
         Cell._saved_wifi[ssid] = psw
@@ -128,6 +129,8 @@ class Cell(object):
         Returns a list of all cells extracted from the output of iwlist.
         """
         try:
+            if not Cell._try_cmd('ip link set {} up'.format(interface)):
+                print("Error, cannot set link up")
             iwlist_scan = check_output(['/sbin/iwlist', interface, 'scan'],
                                        stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
@@ -300,7 +303,14 @@ class wifiManager():
     def getCurrentWifi(self):
         return self.CUR_SSID
 
-
+    def connect_saved(self):
+        if self.CELLS is None:
+            self.getWifiList()
+        for i in self.CELLS.values():
+            if i.saved:
+                if self.connectWifi(i.ssid):
+                    return True
+        return False
 
     def connectWifi(self, ssid, pwd=None):
         print ('connect to wifi', ssid)
@@ -322,14 +332,15 @@ def main():
     for i in man.getWifiList():
         print(i)
     # # Try a WEP2 network
-    # man.connectWifi('California Nights', 'mooshmooshak')
-    # man.connectWifi('California Nights')
+    man.connectWifi('California Nights', 'mooshmooshak')
+    # man.connectWifi('California Nights', '12345678')
     # # Try a not encrypted network
     # man.connectWifi('ddy7')
     # Try a wpa network
-    man.connectWifi('JinJiangHotel', '4008209999')
+    # man.connectWifi('JinJiangHotel', '4008209999')
     # Connect again Using saved password
     # man.connectWifi('ddy8')
+    man.connect_saved()
 
 
 # print(wifiManager.connectWifi('ddd', '12345678'))
