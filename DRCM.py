@@ -47,9 +47,7 @@ def setBackGroundColor(aWidget, color):
 
 def setLabelStyle(label):
 	label.setAlignment(QtCore.Qt.AlignCenter)
-	label.setStyleSheet("QLabel{background:black;}" \
-		"QLabel{color:rgb(255,255,255,250);}"\
-		"QLabel{font-size:15px;font-weight:bold;font-family:Serif;};}"
+	label.setStyleSheet("QLabel{background:black;color:rgba(255,255,255,250);font-size:18px;font-weight:bold;font-family:Times Roman;};}"
 		);
 
 		
@@ -94,9 +92,9 @@ class ImageCapture(QtGui.QMainWindow):
 		
 	def initUI(self):
 		self.setWindowTitle('DRCM')
-		self.showFullScreen()
-		# self.setGeometry(0, 0, 800, 480)
-		# self.resize(800, 480)
+		# self.showFullScreen()
+		self.setGeometry(200, 200, 800, 480)
+		self.resize(800, 480)
 
 
 		self.create_menu()
@@ -133,7 +131,7 @@ class ImageCapture(QtGui.QMainWindow):
 		bottomLayout.addStretch(1)
 		def addButton(label, action):
 			button = QtGui.QPushButton(label)
-			# button.setContentsMargins(2, 2, 2, 2)
+			button.setStyleSheet('QPushButton {font-size:24px;};')
 			bottomLayout.addWidget(button)
 			self.connect(button, QtCore.SIGNAL("clicked()"),
 					action)
