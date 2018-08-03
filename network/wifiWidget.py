@@ -90,7 +90,11 @@ class WifiTableView(QtGui.QTableWidget):
 	def asynFillTableCallBack(self, wifiList):
 		for w in wifiList:
 			self.appendStrRow(visulizeSignal(w))
-		
+		self.pw.start(
+			RunnableFunc(
+				wifiManager().connect_saved
+				)
+			)
 
 	def appendStrRow(self, data):
 		x = self.rowCount()

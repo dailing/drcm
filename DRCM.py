@@ -24,7 +24,6 @@ from sql.DataBaseManager import DataBaseManager
 
 from network.uploadClient import uploadClient
 from network.wifiWidget import WifiTableView
-from network.wifiManager import wifiManager
 
 from utils.logFormatter import setupLogger
 from utils.auxs import *
@@ -90,11 +89,7 @@ class ImageCapture(QtGui.QMainWindow):
 		self.remoteProcessSignal.connect(self.processImageCallBack)
 		#get all previous captured image to list view
 		self.dbManager.getAllRows(self.queryTableSignal)
-		self.pw.start(
-			RunnableFunc(
-				wifiManager().connect_saved
-				)
-			)
+		
 		
 	def initUI(self):
 		self.setWindowTitle('DRCM')
