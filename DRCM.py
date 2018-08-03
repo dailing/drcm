@@ -47,7 +47,7 @@ def setBackGroundColor(aWidget, color):
 
 def setLabelStyle(label):
 	label.setAlignment(QtCore.Qt.AlignCenter)
-	label.setStyleSheet("QLabel{color:white;font-size:24px;}"
+	label.setStyleSheet("QLabel{color:white;font-size:24px}"
 		);
 
 DISPLAY_SIZE = (640, 480)
