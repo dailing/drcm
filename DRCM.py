@@ -50,7 +50,7 @@ def setLabelStyle(label):
 	label.setStyleSheet("QLabel{color:white;font-size:24px;}"
 		);
 
-		
+DISPLAY_SIZE = (640, 480)
 class ImageCapture(QtGui.QMainWindow):
 
 	FRAME_PER_SECOND = 24
@@ -117,7 +117,7 @@ class ImageCapture(QtGui.QMainWindow):
 
 	def processImageCallBack(self, imageData):
 		image = decodeDBImage(imageData)
-		frame_to_display = cv2.resize(image, (640, 480))
+		frame_to_display = cv2.resize(image, DISPLAY_SIZE)
 		mQImage = cv2ImagaeToQtImage(frame_to_display)
 		self.painter.setImageData(mQImage)
 
@@ -247,7 +247,7 @@ class ImageCapture(QtGui.QMainWindow):
 		if not ret:
 			# self.camera = VideoReader()
 			return
-		frame_to_display = cv2.resize(frame, (640, 480))
+		frame_to_display = cv2.resize(frame, DISPLAY_SIZE)
 		if saveTodisk:
 			self.preImageData = frame
 			self.saveImage(frame)
@@ -291,7 +291,7 @@ class ImageCapture(QtGui.QMainWindow):
 		buttonLayout = self.createButtonLayout()
 		leftPanelView = self.createLeftPanelView()
 		layout = QtGui.QGridLayout()
-		layout.addWidget(leftPanelView, 0, 0, 4, 1)
+		layout.addWidget(leftPanelView, 0, 0, 4, 4)
 		layout.addLayout(buttonLayout, 0, 4, 4, 1)
 		self.main_frame = QtGui.QWidget()
 		self.main_frame.setLayout(layout)
