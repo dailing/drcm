@@ -24,7 +24,6 @@ from sql.DataBaseManager import DataBaseManager
 
 from network.uploadClient import uploadClient
 from network.wifiWidget import WifiTableView
-from network.wifiManager import wifiManager
 
 from utils.logFormatter import setupLogger
 from utils.auxs import *
@@ -48,10 +47,10 @@ def setBackGroundColor(aWidget, color):
 
 def setLabelStyle(label):
 	label.setAlignment(QtCore.Qt.AlignCenter)
-	label.setStyleSheet("QLabel{color:white;font-size:24px;}"
+	label.setStyleSheet("QLabel{color:white;font-size:24px}"
 		);
 
-		
+DISPLAY_SIZE = (640, 480)
 class ImageCapture(QtGui.QMainWindow):
 
 	FRAME_PER_SECOND = 24
@@ -90,11 +89,7 @@ class ImageCapture(QtGui.QMainWindow):
 		self.remoteProcessSignal.connect(self.processImageCallBack)
 		#get all previous captured image to list view
 		self.dbManager.getAllRows(self.queryTableSignal)
-		self.pw.start(
-			RunnableFunc(
-				wifiManager().connect_saved
-				)
-			)
+		
 		
 	def initUI(self):
 		self.setWindowTitle('DRCM')
@@ -122,7 +117,7 @@ class ImageCapture(QtGui.QMainWindow):
 
 	def processImageCallBack(self, imageData):
 		image = decodeDBImage(imageData)
-		frame_to_display = cv2.resize(image, (640, 480))
+		frame_to_display = cv2.resize(image, DISPLAY_SIZE)
 		mQImage = cv2ImagaeToQtImage(frame_to_display)
 		self.painter.setImageData(mQImage)
 
@@ -252,7 +247,7 @@ class ImageCapture(QtGui.QMainWindow):
 		if not ret:
 			# self.camera = VideoReader()
 			return
-		frame_to_display = cv2.resize(frame, (640, 480))
+		frame_to_display = cv2.resize(frame, DISPLAY_SIZE)
 		if saveTodisk:
 			self.preImageData = frame
 			self.saveImage(frame)
@@ -296,7 +291,7 @@ class ImageCapture(QtGui.QMainWindow):
 		buttonLayout = self.createButtonLayout()
 		leftPanelView = self.createLeftPanelView()
 		layout = QtGui.QGridLayout()
-		layout.addWidget(leftPanelView, 0, 0, 4, 1)
+		layout.addWidget(leftPanelView, 0, 0, 4, 4)
 		layout.addLayout(buttonLayout, 0, 4, 4, 1)
 		self.main_frame = QtGui.QWidget()
 		self.main_frame.setLayout(layout)
