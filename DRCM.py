@@ -200,6 +200,9 @@ class ImageCapture(QtGui.QMainWindow):
 		return bottomLayout
 
 	def uploadImages(self):
+		ipadd = socket.gethostbyname(socket.gethostname())
+		self.patientIdentify.setText(ipadd)
+		return
 		print('upload images')
 		self.pw.start(
 			RunnableFunc(
