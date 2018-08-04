@@ -28,15 +28,65 @@ from network.wifiWidget import WifiTableView
 from utils.logFormatter import setupLogger
 from utils.auxs import *
 from utils.folderUtils import ensurePath
+from utils.singleShotTimer import SingleShotTimer
 
+try:
+	from gpiozero import LED
+except Exception as e:
+	pass
 
+import socket
+
+def get_host_ip():
+    """
+    查询本机ip地址
+    :return: ip
+    """
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8', 80))
+        ip = s.getsockname()[0]
+    finally:
+        s.close()
+
+    return ip
 class VideoReader():
 	def __init__(self):
 		pass
-		self.reader = cv2.VideoCapture(0)
+		self.reader = cv2.VideoCapture(1)
 
 	def read(self):
 		return self.reader.read()
+#13,26
+FIXED_LED = [5,6,13,19,26,17,27,22]
+def switchFixedLed():
+	try:
+		for l in FIXED_LED:
+			LED(l).toggle()
+	except Exception as e:
+		pass
+
+# def infraredLed():
+# 	LED(2).toggle()
+
+# def flashLed():
+# 	LED(3).toggle()
+
+def focusLedOn():
+	try:
+		LED(3).off()
+		LED(2).on()
+	except Exception as e:
+		pass
+
+def exposureOn():
+	try:
+		LED(2).off()
+		LED(3).on()
+	except Exception as e:
+		pass
+
+
 
 
 def setBackGroundColor(aWidget, color):
@@ -70,6 +120,7 @@ class ImageCapture(QtGui.QMainWindow):
 		self.initEnv()
 		self.initUI()
 		self.timer.start(ImageCapture.UPDATE_FREQ)
+		focusLedOn()
 
 	def initEnv(self):
 		self.preImageData = None
@@ -77,7 +128,9 @@ class ImageCapture(QtGui.QMainWindow):
 		self.dbManager = DataBaseManager('patientRecord.db')
 		self.patientInfo = loadObj(ImageCapture.LAST_PATIENT)
 		self.timer = QtCore.QTimer()
+		self.ledTimer = SingleShotTimer()
 		self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.updateFrame)
+		self.ledTimer.connect(self, focusLedOn)
 		self.camera = VideoReader()
 		self.model = ViewModel()
 
@@ -125,9 +178,10 @@ class ImageCapture(QtGui.QMainWindow):
 		bottomLayout = QtGui.QVBoxLayout()
 
 		bottomLayout.addStretch(1)
-
+		ipadd = get_host_ip()
+		print(ipadd, type(ipadd))
 		self.patientIdentify = QtGui.QLabel(
-			'name' if self.patientInfo is None else self.patientInfo.getPid()
+			ipadd
 			)
 		setLabelStyle(self.patientIdentify)
 		bottomLayout.addWidget(self.patientIdentify)
@@ -142,8 +196,10 @@ class ImageCapture(QtGui.QMainWindow):
 			return button
 			
 		self.captureButton = addButton('Capture', self.snapShot)
-		pageButton = addButton('NewRecord', self.newRecord)
 		uploadButton  = addButton('Upload', self.uploadImages)
+		ledButton = addButton('Led', switchFixedLed)
+		pageButton = addButton('NewRecord', self.newRecord)
+		
 		addButton('Process', self.processImage)
 
 		bottomLayout.addStretch(1)
@@ -156,6 +212,9 @@ class ImageCapture(QtGui.QMainWindow):
 		return bottomLayout
 
 	def uploadImages(self):
+		ipadd = get_host_ip()
+		self.patientIdentify.setText(ipadd)
+		return
 		print('upload images')
 		self.pw.start(
 			RunnableFunc(
@@ -185,7 +244,9 @@ class ImageCapture(QtGui.QMainWindow):
 
 
 	def snapShot(self):
-		self.scheduleUpdating()
+		exposureOn()
+		# self.scheduleUpdating()
+		self.ledTimer.start(3)
 		
 
 	def saveImage(self, imageData):

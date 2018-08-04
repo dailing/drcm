@@ -1,5 +1,6 @@
 import sys
 import logging
+import subprocess
 
 from PyQt4 import QtGui, QtCore
 
@@ -10,6 +11,26 @@ try:
 	from sql.PoolWrapper import PoolWrapper
 except Exception as e:
 	pass
+
+class MatchBoxLineEdit(QtGui.QLineEdit):
+	def focusInEvent(self, e):
+		try:
+			subprocess.Popen(["matchbox-keyboard"])
+		except FileNotFoundError:
+			pass
+
+	def focusOutEvent(self,e):
+		subprocess.Popen(["killall","matchbox-keyboard"])
+
+def showKeyBoard():
+	try:
+		subprocess.Popen(["matchbox-keyboard"])
+	except FileNotFoundError:
+		pass
+def hideKeyBoard():
+	pass
+	subprocess.Popen(["killall","matchbox-keyboard"])
+
 
 
 def visulizeSignal(wifiData):
@@ -38,7 +59,8 @@ class WifiTableView(QtGui.QTableWidget):
 		self.initTable()
 		
 	def tabCellClicked(self, i, j):
-		if j != 1:
+		
+		if j != 1: # 
 			return
 		ssid = str(self.item(i, j).text())
 		if ssid == self.wifiManager.getCurrentWifi():
@@ -60,19 +82,21 @@ class WifiTableView(QtGui.QTableWidget):
 		self.wifiManager = wifiManager()
 		# table.itemClicked.connect(self.tabItemDoubleClicked)
 		self.cellClicked.connect(self.tabCellClicked)
-		tableItem 	= QtGui.QTableWidgetItem()
+		# tableItem 	= QtGui.QTableWidgetItem()
 		self.setWindowTitle("WIFI LIST")
 		#quality, ssid, user, pwd
 		self.setColumnCount(3)
 
 		self.verticalHeader().hide()
-		self.horizontalHeader().hide()
+		self.setHorizontalHeaderLabels(['quality', 'wifi', 'password'])
 		self.setShowGrid(False)
 		# table.setEditTriggers(QtGui.QAbstractItemView.NoEditTriggers)
 		self.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
 
 		#[[quality, name, pwd]]
-		self.appendStrRow(['quality', 'wifi', 'password'])
+		# self.appendStrRow(['quality', 'wifi', 'password'])
+		# self.item(0, 2).setFlags(self.item(0, 2).flags() ^ QtCore.Qt.ItemIsEditable)
+
 		self.pw.start(
 			RunnableFunc(
 				self.asynFillTable
@@ -100,7 +124,12 @@ class WifiTableView(QtGui.QTableWidget):
 		x = self.rowCount()
 		self.insertRow(x)
 		for i, v in enumerate(data) :
-			item = QtGui.QTableWidgetItem(v)
+			if i < 2:
+				pass
+				item = QtGui.QTableWidgetItem(v)
+			else :
+				item = MatchBoxLineEdit()
+				item.setText(v)
 			item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 			if i < 2 :
 				item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
