@@ -37,7 +37,19 @@ except Exception as e:
 
 import socket
 
+def get_host_ip():
+    """
+    查询本机ip地址
+    :return: ip
+    """
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(('8.8.8.8', 80))
+        ip = s.getsockname()[0]
+    finally:
+        s.close()
 
+    return ip
 class VideoReader():
 	def __init__(self):
 		pass
@@ -45,7 +57,7 @@ class VideoReader():
 
 	def read(self):
 		return self.reader.read()
-
+#13,26
 FIXED_LED = [5,6,13,19,26,17,27,22]
 def switchFixedLed():
 	try:
@@ -166,7 +178,7 @@ class ImageCapture(QtGui.QMainWindow):
 		bottomLayout = QtGui.QVBoxLayout()
 
 		bottomLayout.addStretch(1)
-		ipadd = socket.gethostbyname(socket.gethostname())
+		ipadd = get_host_ip()
 		print(ipadd, type(ipadd))
 		self.patientIdentify = QtGui.QLabel(
 			ipadd
@@ -200,7 +212,7 @@ class ImageCapture(QtGui.QMainWindow):
 		return bottomLayout
 
 	def uploadImages(self):
-		ipadd = socket.gethostbyname(socket.gethostname())
+		ipadd = get_host_ip()
 		self.patientIdentify.setText(ipadd)
 		return
 		print('upload images')
