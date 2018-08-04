@@ -1,3 +1,5 @@
+from __future__ import print_function
+from __future__ import print_function
 import logging
 # https://wifi.readthedocs.io/en/latest/scanning.html
 # from wifi import Scheme
@@ -239,6 +241,27 @@ class Cell(object):
             return False
         return True
 
+    def _connect_wpa(self, psw):
+        cmd = "wpa_supplicant -D nl80211 -i {interface} -c <(wpa_passphrase '{ssid}' '{psw}')".format(
+            interface=self.interface,
+            ssid=self.ssid,
+            psw=psw
+        )
+        wpa_process = subprocess.Popen(
+            ["bash", "-c", cmd],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+        )
+        while True:
+            line = wpa_process.stdout.readline()
+            print ('read from line', line)
+            if 'CTRL-EVENT-CONNECTED' in line:
+                return True
+            if ('CTRL-EVENT-SSID-TEMP-DISABLED' in line) and ('WRONG_KEY' in line or 'CONN_FAILED' in line):
+                wpa_process.kill()
+                wpa_process.wait()
+                return False
+
     def connect(self, psw=None):
         # shut down all wpa_supplicant process
         try:
@@ -259,20 +282,20 @@ class Cell(object):
         # Check if there is any saved password
         if psw is None:
             psw = Cell._get_psw(self.ssid)
-            print('Got password:', psw, 'for wifi:',self.ssid)
+            print('Got password:', psw, 'for wifi:', self.ssid)
+
         if self.encryption_type in ['wpa2', 'wpa']:
-            cmd = "wpa_supplicant -D nl80211 -i {interface} -B -c <(wpa_passphrase '{ssid}' '{psw}')".format(
-                interface=self.interface,
-                ssid=self.ssid,
-                psw=psw
-            )
-            if not Cell._try_cmd(cmd): return False
+            if psw is None:
+                return False
+            if not self._connect_wpa(psw):
+                return False
         elif self.encryption_type is None:
             cmd = 'iw dev {interface} connect "{ssid}"'.format(
                 interface=self.interface,
                 ssid=self.ssid,
             )
-            if not Cell._try_cmd(cmd): return False
+            if not Cell._try_cmd(cmd):
+                return False
         else:
             print('ERROR: encryption_type not supported')
             return False
@@ -328,23 +351,31 @@ class wifiManager():
 
 
 def main():
+    import time
     man = wifiManager()
     for i in man.getWifiList():
         print(i)
     # # Try a WEP2 network
-    man.connectWifi('California Nights', 'mooshmooshak')
+    # man.connectWifi('California Nights', 'mooshmooshak')
     # man.connectWifi('California Nights', '12345678')
     # # Try a not encrypted network
     # man.connectWifi('ddy7')
     # Try a wpa network
     # man.connectWifi('JinJiangHotel', '4008209999')
     # Connect again Using saved password
-    # man.connectWifi('ddy8')
-    man.connect_saved()
-
+    if man.connectWifi('ddy8', '12345679'):
+        print('Connected')
+    else:
+        print('Disconnected')
+    connected = man.connect_saved()
+    if connected:
+        print('connected')
+    # put sleep here so that the process does not end
+    time.sleep(10000)
 
 # print(wifiManager.connectWifi('ddd', '12345678'))
 
 
 if __name__ == '__main__':
     main()
+
