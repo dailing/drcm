@@ -12,6 +12,16 @@ try:
 except Exception as e:
 	pass
 
+class MatchBoxLineEdit(QtGui.QLineEdit):
+	def focusInEvent(self, e):
+		try:
+			subprocess.Popen(["matchbox-keyboard"])
+		except FileNotFoundError:
+			pass
+
+	def focusOutEvent(self,e):
+		subprocess.Popen(["killall","matchbox-keyboard"])
+
 def showKeyBoard():
 	try:
 		subprocess.Popen(["matchbox-keyboard"])
@@ -72,7 +82,7 @@ class WifiTableView(QtGui.QTableWidget):
 		self.wifiManager = wifiManager()
 		# table.itemClicked.connect(self.tabItemDoubleClicked)
 		self.cellClicked.connect(self.tabCellClicked)
-		tableItem 	= QtGui.QTableWidgetItem()
+		# tableItem 	= QtGui.QTableWidgetItem()
 		self.setWindowTitle("WIFI LIST")
 		#quality, ssid, user, pwd
 		self.setColumnCount(3)
@@ -118,7 +128,8 @@ class WifiTableView(QtGui.QTableWidget):
 				pass
 				item = QtGui.QTableWidgetItem(v)
 			else :
-				item = MatchBoxTabelItem(v)
+				item = QtGui.MatchBoxLineEdit()
+				item.setText(v)
 			item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 			if i < 2 :
 				item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
