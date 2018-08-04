@@ -28,8 +28,12 @@ from network.wifiWidget import WifiTableView
 from utils.logFormatter import setupLogger
 from utils.auxs import *
 from utils.folderUtils import ensurePath
+from utils.singleShotTimer import SingleShotTimer
 
-from gpiozero import LED
+try:
+	from gpiozero import LED
+except Exception as e:
+	pass
 
 class VideoReader():
 	def __init__(self):
@@ -39,10 +43,35 @@ class VideoReader():
 	def read(self):
 		return self.reader.read()
 
-def ledButton():
-	#if on, turn off
-	LED(17).toggle()
-	#else, turn on
+FIXED_LED = [5,6,13,19,26,17,27,22]
+def switchFixedLed():
+	try:
+		for l in FIXED_LED:
+			LED(l).toggle()
+	except Exception as e:
+		pass
+
+# def infraredLed():
+# 	LED(2).toggle()
+
+# def flashLed():
+# 	LED(3).toggle()
+
+def focusLedOn():
+	try:
+		LED(3).off()
+		LED(2).on()
+	except Exception as e:
+		pass
+
+def exposureOn():
+	try:
+		LED(2).off()
+		LED(3).on()
+	except Exception as e:
+		pass
+
+
 
 
 def setBackGroundColor(aWidget, color):
@@ -76,6 +105,7 @@ class ImageCapture(QtGui.QMainWindow):
 		self.initEnv()
 		self.initUI()
 		self.timer.start(ImageCapture.UPDATE_FREQ)
+		focusLedOn()
 
 	def initEnv(self):
 		self.preImageData = None
@@ -83,7 +113,9 @@ class ImageCapture(QtGui.QMainWindow):
 		self.dbManager = DataBaseManager('patientRecord.db')
 		self.patientInfo = loadObj(ImageCapture.LAST_PATIENT)
 		self.timer = QtCore.QTimer()
+		self.ledTimer = SingleShotTimer()
 		self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.updateFrame)
+		self.ledTimer.connect(self, focusLedOn)
 		self.camera = VideoReader()
 		self.model = ViewModel()
 
@@ -149,7 +181,7 @@ class ImageCapture(QtGui.QMainWindow):
 			
 		self.captureButton = addButton('Capture', self.snapShot)
 		uploadButton  = addButton('Upload', self.uploadImages)
-		ledButton = addButton('Led', switchLed)
+		ledButton = addButton('Led', switchFixedLed)
 		pageButton = addButton('NewRecord', self.newRecord)
 		
 		addButton('Process', self.processImage)
@@ -193,7 +225,9 @@ class ImageCapture(QtGui.QMainWindow):
 
 
 	def snapShot(self):
-		self.scheduleUpdating()
+		exposureOn()
+		# self.scheduleUpdating()
+		self.ledTimer.start(3)
 		
 
 	def saveImage(self, imageData):
