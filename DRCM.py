@@ -29,14 +29,20 @@ from utils.logFormatter import setupLogger
 from utils.auxs import *
 from utils.folderUtils import ensurePath
 
+from gpiozero import LED
 
 class VideoReader():
 	def __init__(self):
 		pass
-		self.reader = cv2.VideoCapture(0)
+		self.reader = cv2.VideoCapture(1)
 
 	def read(self):
 		return self.reader.read()
+
+def ledButton():
+	#if on, turn off
+	LED(17).toggle()
+	#else, turn on
 
 
 def setBackGroundColor(aWidget, color):
@@ -142,8 +148,10 @@ class ImageCapture(QtGui.QMainWindow):
 			return button
 			
 		self.captureButton = addButton('Capture', self.snapShot)
-		pageButton = addButton('NewRecord', self.newRecord)
 		uploadButton  = addButton('Upload', self.uploadImages)
+		ledButton = addButton('Led', switchLed)
+		pageButton = addButton('NewRecord', self.newRecord)
+		
 		addButton('Process', self.processImage)
 
 		bottomLayout.addStretch(1)
