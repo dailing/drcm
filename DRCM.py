@@ -35,6 +35,9 @@ try:
 except Exception as e:
 	pass
 
+import socket
+
+
 class VideoReader():
 	def __init__(self):
 		pass
@@ -163,9 +166,10 @@ class ImageCapture(QtGui.QMainWindow):
 		bottomLayout = QtGui.QVBoxLayout()
 
 		bottomLayout.addStretch(1)
-
+		ipadd = socket.gethostbyname(socket.gethostname())
+		print(ipadd, type(ipadd))
 		self.patientIdentify = QtGui.QLabel(
-			'name' if self.patientInfo is None else self.patientInfo.getPid()
+			ipadd
 			)
 		setLabelStyle(self.patientIdentify)
 		bottomLayout.addWidget(self.patientIdentify)
