@@ -128,7 +128,7 @@ class WifiTableView(QtGui.QTableWidget):
 				pass
 				item = QtGui.QTableWidgetItem(v)
 			else :
-				item = QtGui.MatchBoxLineEdit()
+				item = MatchBoxLineEdit()
 				item.setText(v)
 			item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 			if i < 2 :
