@@ -60,7 +60,7 @@ def get_host_ip():
 class VideoReader():
 	def __init__(self):
 		pass
-		self.reader = cv2.VideoCapture(0)
+		self.reader = cv2.VideoCapture(1)
 
 	def read(self):
 		return self.reader.read()
