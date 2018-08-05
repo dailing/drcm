@@ -8,13 +8,12 @@ from PatientDataFormat import PatientInfo
 
 
 class LineEditDialog(QtGui.QDialog):
-	def __init__(self, default, parent = None):
+	def __init__(self, defaultLabel, parent = None):
 		QtGui.QDialog.__init__(self, parent)
 
 		layout = QtGui.QVBoxLayout(self)
-
 		self.editInput = LabelText(
-			'input' if not default else default
+			defaultLabel
 			)
 		
 		layout.addWidget(self.editInput)
@@ -27,6 +26,9 @@ class LineEditDialog(QtGui.QDialog):
 		buttons.rejected.connect(self.reject)
 		layout.addWidget(buttons)
 
+	def setText(self, text):
+		self.editInput.setText(text)
+
 	def getText(self):
 		'''
 			name, pid, gender, birthday, leftEye, timestamp, uuid, data
@@ -34,8 +36,9 @@ class LineEditDialog(QtGui.QDialog):
 		return self.editInput.getText()
 
 	@staticmethod
-	def newInstance(default, parent = None):
-		dialog = LineEditDialog(default, parent)
+	def newInstance(defaultLabel, defaultText = '', parent = None):
+		dialog = LineEditDialog(defaultLabel, parent)
+		dialog.setText(defaultText)
 		result = dialog.exec_()
 		if result == QtGui.QDialog.Accepted:
 			return str(dialog.getText()), True

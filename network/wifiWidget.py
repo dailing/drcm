@@ -61,7 +61,9 @@ class WifiTableView(QtGui.QTableWidget):
 			return
 
 		pwd = str(self.item(i, 2).text())
-		pwd, isOkay = LineEditDialog.newInstance(pwd)
+		pwd, isOkay = LineEditDialog.newInstance('password',pwd)
+		if not isOkay:
+			return
 		self.item(i, 2).setText(pwd)
 		if pwd == '******':
 			pwd = None
