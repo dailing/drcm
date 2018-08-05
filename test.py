@@ -15,7 +15,7 @@ from widget.PainterWidget import PainterWidget
 
 def timeWork():
 	vreader = cv2.VideoCapture(0)
-	end = time.time() + 60 * 9
+	end = time.time() + 9
 	vdata = []
 	while time.time() < end :
 		ret, frame = vreader.read()
