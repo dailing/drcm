@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=pprompt
+Comment=Prompt to change default password if ssh enabled
+NoDisplay=false
+Exec=bash -c 'python /home/pi/drcm/DRCM.py &> /tmp/drcm.log'
+NotShowIn=GNOME;KDE;XFCE;
