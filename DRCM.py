@@ -67,6 +67,20 @@ class VideoReader():
 		return self.reader.read()
 #13,26
 FIXED_LED = [5,6,13,19,26,12,27,22]
+def offFixedLed():
+	try:
+		for l in FIXED_LED:
+			LED(l).off()
+	except Exception as e:
+		pass
+try:
+	led5 = LED(5)
+except Exception as e:
+	pass
+
+def toggleFixedLed():
+	led5.toggle()
+
 def switchFixedLed():
 	try:
 		for l in FIXED_LED:
@@ -88,13 +102,16 @@ def focusLedOn():
 	try:
 		flashLed.off()
 		infraredLed.on()
+		led5.on()
 	except Exception as e:
 		pass
 
 def exposureOn():
 	try:
 		infraredLed.off()
+		led5.off()
 		flashLed.on()
+
 	except Exception as e:
 		pass
 
@@ -135,6 +152,7 @@ class ImageCapture(QtGui.QMainWindow):
 		focusLedOn()
 
 	def initEnv(self):
+
 		self.preImageData = None
 		self.pw = PoolWrapper()
 		self.dbManager = DataBaseManager('patientRecord.db')
@@ -209,7 +227,7 @@ class ImageCapture(QtGui.QMainWindow):
 			
 		self.captureButton = addButton('Capture', self.snapShot)
 		uploadButton  = addButton('Upload', self.uploadImages)
-		ledButton = addButton('Led', switchFixedLed)
+		ledButton = addButton('Led', toggleFixedLed)
 		pageButton = addButton('NewRecord', self.newRecord)
 		
 		addButton('Process', self.processImage)
@@ -444,6 +462,7 @@ class ImageCapture(QtGui.QMainWindow):
 		
 		
 def main(logger):
+	offFixedLed()
 	app = QtGui.QApplication(sys.argv)
 	# splash= SplashScreen("logo.png")  
 	# splash.effect()
