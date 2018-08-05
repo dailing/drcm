@@ -58,7 +58,7 @@ class VideoReader():
 	def read(self):
 		return self.reader.read()
 #13,26
-FIXED_LED = [5,6,13,19,26,17,27,22]
+FIXED_LED = [5,6,13,19,26,12,27,22]
 def switchFixedLed():
 	try:
 		for l in FIXED_LED:
@@ -74,15 +74,15 @@ def switchFixedLed():
 
 def focusLedOn():
 	try:
-		LED(3).off()
-		LED(2).on()
+		LED(4).off()
+		LED(17).on()
 	except Exception as e:
 		pass
 
 def exposureOn():
 	try:
-		LED(2).off()
-		LED(3).on()
+		LED(17).off()
+		LED(4).on()
 	except Exception as e:
 		pass
 
@@ -212,10 +212,10 @@ class ImageCapture(QtGui.QMainWindow):
 		return bottomLayout
 
 	def uploadImages(self):
-		ipadd = get_host_ip()
-		self.patientIdentify.setText(ipadd)
-		return
-		print('upload images')
+		# ipadd = get_host_ip()
+		# self.patientIdentify.setText(ipadd)
+		# return
+		self.logger.debug('upload images')
 		self.pw.start(
 			RunnableFunc(
 				uploadClient(self.dbManager).getDataAndUpload,
@@ -245,7 +245,7 @@ class ImageCapture(QtGui.QMainWindow):
 
 	def snapShot(self):
 		exposureOn()
-		# self.scheduleUpdating()
+		self.scheduleUpdating()
 		self.ledTimer.start(3)
 		
 

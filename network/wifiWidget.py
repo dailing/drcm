@@ -12,15 +12,7 @@ try:
 except Exception as e:
 	pass
 
-class MatchBoxLineEdit(QtGui.QLineEdit):
-	def focusInEvent(self, e):
-		try:
-			subprocess.Popen(["matchbox-keyboard"])
-		except FileNotFoundError:
-			pass
-
-	def focusOutEvent(self,e):
-		subprocess.Popen(["killall","matchbox-keyboard"])
+from widget.MatchBoxLineEdit import MatchBoxLineEdit
 
 def showKeyBoard():
 	try:
@@ -57,6 +49,7 @@ class WifiTableView(QtGui.QTableWidget):
 		QtGui.QTableWidget.__init__(self)
 		self.pw = PoolWrapper()
 		self.initTable()
+		self.setEditTriggers(QtGui.QAbstractItemView.CurrentChanged)
 		
 	def tabCellClicked(self, i, j):
 		
@@ -127,13 +120,17 @@ class WifiTableView(QtGui.QTableWidget):
 			if i < 2:
 				pass
 				item = QtGui.QTableWidgetItem(v)
+				item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 			else :
 				item = MatchBoxLineEdit()
 				item.setText(v)
-			item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
+			
 			if i < 2 :
 				item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-			self.setItem(x, i, item)
+
+				self.setItem(x, i, item)
+			else :
+				self.setCellWidget(x, i, item)
 
 if __name__ == '__main__':
 	try:
