@@ -5,11 +5,24 @@ from time import sleep
 from random import randint
 
 import logging
+import time
 
-from profilehooks import profile
+
 import cv2
 from utils.auxs import cv2ImagaeToQtImage
 from widget.PainterWidget import PainterWidget
+
+
+def timeWork():
+	vreader = cv2.VideoCapture(0)
+	end = time.time() + 60 * 9
+	vdata = []
+	while time.time() < end :
+		ret, frame = vreader.read()
+		print(ret)
+		vdata.append(frame)
+	print (len(vdata), len(vdata) / 9)
+
 
 class Worker(QtCore.QRunnable):
 	def __init__(self, func, msgSignal):
@@ -58,7 +71,6 @@ def defaultPrint():
 class MyWidget(QtGui.QWidget):
 	randSignal = QtCore.pyqtSignal(int, list)
 
-	@profile
 	def __init__(self, parent=None):
 		super(MyWidget, self).__init__(parent)
 		self.setGeometry(0, 0, 800, 480)
@@ -101,12 +113,15 @@ def caller(func, *arg):
 	print(arg)
 	func(*arg)
 
-if __name__ == '__main__':
-
+def main():
 	app = QtGui.QApplication(sys.argv)
 	w = MyWidget()
 	w.show()
 	sys.exit(app.exec_())
+
+if __name__ == '__main__':
+	timeWork()
+	
 	
 # if __name__ == '__main__':
 	# msgSignal = QtCore.pyqtSignal()

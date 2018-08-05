@@ -262,6 +262,7 @@ class ImageCapture(QtGui.QMainWindow):
 
 	def saveImage(self, imageData):
 		if self.patientInfo is None:
+			self.captureButton.setEnabled(True)
 			return
 
 		
@@ -317,8 +318,8 @@ class ImageCapture(QtGui.QMainWindow):
 	def updateFrame(self, saveTodisk = False):
 		ret, frame = self.camera.read()
 		if not ret:
-			self.camera = VideoReader()
-			
+			# self.camera = VideoReader()
+			self.captureButton.setEnabled(True)
 			return
 		frame_to_display = cv2.resize(frame, DISPLAY_SIZE)
 		if saveTodisk:
