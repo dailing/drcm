@@ -11,3 +11,7 @@ copy ```/home/pi/.Xauthority```
 to  ```/root/.Xauthority```
 
 The output of DRCM.py will be writen to ```/tmp/drcm.log```
+
+If the auto start not work, check the environment variable. 
+Add ```export XDG_CONFIG_DIRS=/etc/xdg``` to ```/etc/profile``` 
+to solve this problem. 
