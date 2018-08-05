@@ -317,7 +317,8 @@ class ImageCapture(QtGui.QMainWindow):
 	def updateFrame(self, saveTodisk = False):
 		ret, frame = self.camera.read()
 		if not ret:
-			# self.camera = VideoReader()
+			self.camera = VideoReader()
+			
 			return
 		frame_to_display = cv2.resize(frame, DISPLAY_SIZE)
 		if saveTodisk:
