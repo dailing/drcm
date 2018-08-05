@@ -316,7 +316,7 @@ class ImageCapture(QtGui.QMainWindow):
 			try:
 				self.flashFrame()
 			except Exception as e:
-				self.logger.exception('flsh Frame')
+				self.logger.exception('flash Frame')
 				pass
 			finally :
 				self.captureButton.setEnabled(True)
