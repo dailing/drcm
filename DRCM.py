@@ -38,18 +38,20 @@ except Exception as e:
 import socket
 
 def get_host_ip():
-    """
-    查询本机ip地址
-    :return: ip
-    """
-    try:
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(('8.8.8.8', 80))
-        ip = s.getsockname()[0]
-    finally:
-        s.close()
+	"""
+	查询本机ip地址
+	:return: ip
+	"""
+	try:
+		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		s.connect(('8.8.8.8', 80))
+		ip = s.getsockname()[0]
+	except Exception as e :
+		pass
+	finally:
+		s.close()
 
-    return ip
+	return ip
 class VideoReader():
 	def __init__(self):
 		pass
