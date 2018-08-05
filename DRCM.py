@@ -256,7 +256,7 @@ class ImageCapture(QtGui.QMainWindow):
 
 
 	def snapShot(self):
-		exposureOn()
+		
 		self.scheduleUpdating()
 		
 		
@@ -312,6 +312,7 @@ class ImageCapture(QtGui.QMainWindow):
 		if self.timer.isActive():
 			self.captureButton.setEnabled(False)
 			self.timer.stop()
+			exposureOn()
 			try:
 				self.flashFrame()
 			except Exception as e:
@@ -319,6 +320,7 @@ class ImageCapture(QtGui.QMainWindow):
 				pass
 			finally :
 				self.captureButton.setEnabled(True)
+				focusLedOn()
 		else :
 			self.timer.start(ImageCapture.UPDATE_FREQ)
 
