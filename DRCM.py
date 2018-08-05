@@ -29,6 +29,7 @@ from utils.logFormatter import setupLogger
 from utils.auxs import *
 from utils.folderUtils import ensurePath
 from utils.singleShotTimer import SingleShotTimer
+from subprocess import Popen, PIPE
 
 try:
 	from gpiozero import LED
@@ -43,15 +44,18 @@ def get_host_ip():
 	:return: ip
 	"""
 	try:
-		s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-		s.connect(('8.8.8.8', 80))
-		ip = s.getsockname()[0]
+		process = Popen(['ip','addr','show'],stdout=PIPE)
+		olines = process.stdout.read().splitlines()
+		addresses = []
+		for line in olines:
+			line = line.strip()
+			if line.startswith('inet '):
+				line = line.split()[1]
+				addresses.append(line)
 	except Exception as e :
-		pass
-	finally:
-		s.close()
+		print(e)
+	return '\n'.join(addresses[1:])
 
-	return ip
 class VideoReader():
 	def __init__(self):
 		pass
