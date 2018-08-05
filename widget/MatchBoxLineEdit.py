@@ -3,9 +3,9 @@ import subprocess
 class MatchBoxLineEdit(QtGui.QLineEdit):
 	def focusInEvent(self, e):
 		try:
-			subprocess.Popen(["matchbox-keyboard"])
+			subprocess.Popen(["wmctrl -r keyboard -e"])
 		except FileNotFoundError:
 			pass
 
 	def focusOutEvent(self,e):
-		subprocess.Popen(["killall","matchbox-keyboard"])
+		subprocess.Popen(["killall","wmctrl"])
