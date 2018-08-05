@@ -357,7 +357,8 @@ class ImageCapture(QtGui.QMainWindow):
 	def updateFrame(self, saveTodisk = False):
 		ret, frame = self.camera.read()
 		if not ret:
-			# self.camera = VideoReader()
+			if not sys.platform.startswith('win'):
+				self.camera = VideoReader()
 			self.captureButton.setEnabled(True)
 			return
 		frame_to_display = cv2.resize(frame, DISPLAY_SIZE)
