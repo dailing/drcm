@@ -54,6 +54,7 @@ def get_host_ip():
 				addresses.append(line)
 	except Exception as e :
 		print(e)
+		return 'None'
 	return '\n'.join(addresses[1:])
 
 class VideoReader():

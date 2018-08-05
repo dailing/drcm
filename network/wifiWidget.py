@@ -12,7 +12,7 @@ try:
 except Exception as e:
 	pass
 
-from widget.MatchBoxLineEdit import MatchBoxLineEdit
+from widget.LineEditDialog import LineEditDialog
 
 def showKeyBoard():
 	try:
@@ -59,7 +59,10 @@ class WifiTableView(QtGui.QTableWidget):
 		if ssid == self.wifiManager.getCurrentWifi():
 			print ('is connected')
 			return
+
 		pwd = str(self.item(i, 2).text())
+		pwd, isOkay = LineEditDialog.newInstance(pwd)
+		self.item(i, 2).setText(pwd)
 		if pwd == '******':
 			pwd = None
 		pwd = self.pw.start(
@@ -87,7 +90,7 @@ class WifiTableView(QtGui.QTableWidget):
 		self.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
 
 		#[[quality, name, pwd]]
-		# self.appendStrRow(['quality', 'wifi', 'password'])
+		self.appendStrRow(['quality', 'wifi', 'password'])
 		# self.item(0, 2).setFlags(self.item(0, 2).flags() ^ QtCore.Qt.ItemIsEditable)
 
 		self.pw.start(
@@ -117,20 +120,12 @@ class WifiTableView(QtGui.QTableWidget):
 		x = self.rowCount()
 		self.insertRow(x)
 		for i, v in enumerate(data) :
-			if i < 2:
-				pass
-				item = QtGui.QTableWidgetItem(v)
-				item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
-			else :
-				item = MatchBoxLineEdit()
-				item.setText(v)
+			item = QtGui.QTableWidgetItem(v)
+			item.setTextAlignment(QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 			
-			if i < 2 :
-				item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
-
-				self.setItem(x, i, item)
-			else :
-				self.setCellWidget(x, i, item)
+			item.setFlags(item.flags() ^ QtCore.Qt.ItemIsEditable)
+			self.setItem(x, i, item)
+			
 
 if __name__ == '__main__':
 	try:
