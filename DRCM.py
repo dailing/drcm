@@ -11,6 +11,7 @@ last edited: july 2018
 import sys
 from PyQt4 import QtGui, QtCore
 import cv2
+import numpy as np
 
 from widget.PainterWidget import PainterWidget
 from widget.MedicalRecordDialog  import MedicalRecordDialog
@@ -257,7 +258,7 @@ class ImageCapture(QtGui.QMainWindow):
 	def snapShot(self):
 		exposureOn()
 		self.scheduleUpdating()
-		self.ledTimer.start(3)
+		
 		
 
 	def saveImage(self, imageData):
@@ -311,9 +312,27 @@ class ImageCapture(QtGui.QMainWindow):
 		if self.timer.isActive():
 			self.captureButton.setEnabled(False)
 			self.timer.stop()
-			self.updateFrame(True)
+			try:
+				self.flashFrame()
+			except Exception as e:
+				self.logger.exception('flsh Frame')
+				pass
+			finally :
+				self.captureButton.setEnabled(True)
 		else :
 			self.timer.start(ImageCapture.UPDATE_FREQ)
+
+	def flashFrame(self, num = 3):
+		#exposure
+		data = [self.camera.read()[1] for i in range(num)]
+		score = [np.mean(d) for d in data]
+		best_img = data[np.argmax(score)]
+		self.saveImage(best_img)
+
+		frame_to_display = cv2.resize(best_img, DISPLAY_SIZE)
+		mQImage = cv2ImagaeToQtImage(frame_to_display)
+		self.painter.setImageData(mQImage)
+		#end
 
 	def updateFrame(self, saveTodisk = False):
 		ret, frame = self.camera.read()
@@ -322,9 +341,8 @@ class ImageCapture(QtGui.QMainWindow):
 			self.captureButton.setEnabled(True)
 			return
 		frame_to_display = cv2.resize(frame, DISPLAY_SIZE)
-		if saveTodisk:
-			self.preImageData = frame
-			self.saveImage(frame)
+		# if saveTodisk:
+		# 	self.saveImage(frame)
 		mQImage = cv2ImagaeToQtImage(frame_to_display)
 		self.painter.setImageData(mQImage)
 
