@@ -103,21 +103,31 @@ except Exception as e:
 def focusLedOn():
 	try:
 		flashLed.off()
+	except Exception as e:
+		pass
+	try:
 		infraredLed.on()
+	except Exception as e:
+		pass
+	try:
 		led5.value = 0.01
 	except Exception as e:
 		pass
 
+
 def exposureOn():
 	try:
 		infraredLed.off()
-		led5.value = 0
-		flashLed.on()
-
 	except Exception as e:
 		pass
-
-
+	try:
+		led5.value = 0
+	except Exception as e:
+		pass
+	try:
+		flashLed.on()
+	except Exception as e:
+		pass
 
 
 def setBackGroundColor(aWidget, color):
@@ -352,7 +362,9 @@ class ImageCapture(QtGui.QMainWindow):
 		score = [np.mean(d) for d in data]
 		best_img = data[np.argmax(score)]
 		self.preImageData = best_img
-		self.saveImage(best_img)
+		for d in data:
+			self.saveImage(d)
+		# self.saveImage(best_img)
 
 		frame_to_display = cv2.resize(best_img, DISPLAY_SIZE)
 		mQImage = cv2ImagaeToQtImage(frame_to_display)
