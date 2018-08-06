@@ -66,7 +66,7 @@ class VideoReader():
 	def read(self):
 		return self.reader.read()
 #13,26
-FIXED_LED = [5,6,13,19,26,12,27,22]
+FIXED_LED = [5,6,13,19,26,16,20,21]
 def offFixedLed():
 	try:
 		for l in FIXED_LED:
