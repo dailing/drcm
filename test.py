@@ -11,6 +11,17 @@ import time
 import cv2
 from utils.auxs import cv2ImagaeToQtImage
 from widget.PainterWidget import PainterWidget
+from utils.auxs import decodeDBImage
+
+from sql.DataBaseManager import DataBaseManager
+
+def getImage():
+	dbm = DataBaseManager('sql/patientRecord.db')
+	imgs = dbm.getAllLocalOnlyImageData()
+	i = 0
+	for img in imgs:
+		i += 1
+		cv2.imwrite('images/{}.png'.format(i), decodeDBImage(img[-1]))
 
 
 def timeWork():
@@ -120,7 +131,7 @@ def main():
 	sys.exit(app.exec_())
 
 if __name__ == '__main__':
-	timeWork()
+	getImage()
 	
 	
 # if __name__ == '__main__':

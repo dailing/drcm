@@ -77,3 +77,11 @@ class DataBaseManager():
 			reply.emit(False)
 		else:
 			reply.emit(True)
+
+
+def main():
+	pass
+
+
+if __name__ == '__main__':
+	main()

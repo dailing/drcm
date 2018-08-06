@@ -8,6 +8,7 @@ capture, save and upload video frame
 author: knowthy
 last edited: july 2018
 """
+#sudo -E bash -c 'sleep 15;python /home/pi/Desktop/drcm/DRCM.py &>> /tmp/drcm.log'
 import sys
 from PyQt4 import QtGui, QtCore
 import cv2
@@ -165,7 +166,7 @@ class ImageCapture(QtGui.QMainWindow):
 		focusLedOn()
 
 	def initEnv(self):
-
+		self.imgCnt = 0
 		self.preImageData = None
 		self.pw = PoolWrapper()
 		self.dbManager = DataBaseManager('patientRecord.db')
@@ -294,6 +295,8 @@ class ImageCapture(QtGui.QMainWindow):
 		
 
 	def saveImage(self, imageData):
+		self.imgCnt += 1
+		cv2.imwrite('{}.png'.format(self.imgCnt), imageData)
 		if self.patientInfo is None:
 			self.captureButton.setEnabled(True)
 			return
