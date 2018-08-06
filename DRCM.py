@@ -17,6 +17,7 @@ from widget.PainterWidget import PainterWidget
 from widget.MedicalRecordDialog  import MedicalRecordDialog
 from widget.SplashScreen import SplashScreen
 from widget.ViewModel import ViewModel
+from widget.DiagnosisDialog import DiagnosisDialog
 
 from sql.sqlConn import SqlConn
 from sql.RunnableFunc import RunnableFunc
@@ -140,7 +141,7 @@ class ImageCapture(QtGui.QMainWindow):
 	dbInsertSignal = QtCore.pyqtSignal(bool)
 	uploadSignal = QtCore.pyqtSignal(list)
 	queryTableSignal = QtCore.pyqtSignal(list)
-	remoteProcessSignal = QtCore.pyqtSignal(bytes)
+	remoteProcessSignal = QtCore.pyqtSignal(dict)
 	
 	def __init__(self, logger):
 		QtGui.QMainWindow.__init__(self, None)
@@ -188,6 +189,7 @@ class ImageCapture(QtGui.QMainWindow):
 
 
 	def processImage(self):
+		self.logger.debug('processImage')
 		if self.timer.isActive() or self.preImageData is None:
 			return
 		self.pw.start(
@@ -198,11 +200,11 @@ class ImageCapture(QtGui.QMainWindow):
 				)
 			)
 
-	def processImageCallBack(self, imageData):
-		image = decodeDBImage(imageData)
-		frame_to_display = cv2.resize(image, DISPLAY_SIZE)
-		mQImage = cv2ImagaeToQtImage(frame_to_display)
-		self.painter.setImageData(mQImage)
+	def processImageCallBack(self, diagnosis):
+		self.logger.debug('diagnosis display')
+		DiagnosisDialog.newInstance(diagnosis)
+		print (diagnosis)
+		
 
 	def createButtonLayout(self):
 		bottomLayout = QtGui.QVBoxLayout()
@@ -347,6 +349,7 @@ class ImageCapture(QtGui.QMainWindow):
 		data = [self.camera.read()[1] for i in range(num)]
 		score = [np.mean(d) for d in data]
 		best_img = data[np.argmax(score)]
+		self.preImageData = best_img
 		self.saveImage(best_img)
 
 		frame_to_display = cv2.resize(best_img, DISPLAY_SIZE)
