@@ -34,7 +34,7 @@ from utils.singleShotTimer import SingleShotTimer
 from subprocess import Popen, PIPE
 
 try:
-	from gpiozero import LED
+	from gpiozero import LED, PWMLED
 except Exception as e:
 	pass
 
@@ -127,7 +127,7 @@ def setBackGroundColor(aWidget, color):
 
 def setLabelStyle(label):
 	label.setAlignment(QtCore.Qt.AlignCenter)
-	label.setStyleSheet("QLabel{color:white;font-size:24px}"
+	label.setStyleSheet("QLabel{color:white;font-size:16px}"
 		);
 
 DISPLAY_SIZE = (640, 480)
