@@ -231,7 +231,7 @@ class ImageCapture(QtGui.QMainWindow):
 			
 		self.captureButton = addButton('Capture', self.snapShot)
 		uploadButton  = addButton('Upload', self.uploadImages)
-		ledButton = addButton('Led', toggleFixedLed)
+		# ledButton = addButton('Led', toggleFixedLed)
 		pageButton = addButton('NewRecord', self.newRecord)
 		
 		addButton('Process', self.processImage)
