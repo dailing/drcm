@@ -4,8 +4,10 @@ import time
 import logging
 
 import requests
+import json
 
 from utils.auxs import encodeImageToDBdata
+
 class uploadClient():
 	def __init__(self, dbManager):
 		self.dbManager = dbManager
@@ -42,8 +44,8 @@ class uploadClient():
 		#emit signal
 
 	def remoteProcess(self, cv2ImageData, reply):
-		cv2ImageData = 255 - cv2ImageData
-		res = encodeImageToDBdata(cv2ImageData)
+		res = post_test(encodeImageToDBdata(cv2ImageData))
+		res = json.loads(res)
 		reply.emit(res)
 
 		
