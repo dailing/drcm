@@ -151,6 +151,7 @@ class ImageCapture(QtGui.QMainWindow):
 		self.initEnv()
 		self.initUI()
 		self.timer.start(ImageCapture.UPDATE_FREQ)
+		offFixedLed()
 		focusLedOn()
 
 	def initEnv(self):
@@ -467,7 +468,6 @@ class ImageCapture(QtGui.QMainWindow):
 		
 		
 def main(logger):
-	offFixedLed()
 	app = QtGui.QApplication(sys.argv)
 	# splash= SplashScreen("logo.png")  
 	# splash.effect()
