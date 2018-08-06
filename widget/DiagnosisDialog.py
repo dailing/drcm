@@ -11,8 +11,8 @@ class DiagnosisDialog(QtGui.QDialog):
 		
 		
 		layout.addWidget(QtGui.QLabel(description))
-		layout.addWidget(QtGui.QLabel('level {}'.format(level)))
-		layout.addWidget(QtGui.QLabel('quality {}',format(quality)))
+		layout.addWidget(QtGui.QLabel('level : ' + level))
+		layout.addWidget(QtGui.QLabel('quality : ' + quality))
 
 		# OK and Cancel buttons
 		buttons = QtGui.QDialogButtonBox(
@@ -30,3 +30,7 @@ class DiagnosisDialog(QtGui.QDialog):
 			return True
 		else :
 			return False
+
+
+if __name__ == '__main__':
+	pass
