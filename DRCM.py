@@ -78,6 +78,7 @@ def offFixedLed():
 		pass
 try:
 	led5 = pwm(5)
+	led6 = LED(6)
 except Exception as e:
 	pass
 
@@ -127,6 +128,7 @@ def exposureOn():
 		pass
 	try:
 		flashLed.on()
+		led6.off()
 	except Exception as e:
 		pass
 
@@ -365,7 +367,7 @@ class ImageCapture(QtGui.QMainWindow):
 		focusLedOn()
 		newData = [self.camera.read()[1] for i in range(num)]
 		data.extend(newData)
-		score = [np.mean(d) for d in data]
+		score = [np.var(d[:,:,0] - d[:, :, 1]) for d in data]
 		best_img = data[np.argmax(score)]
 		self.preImageData = best_img
 		
