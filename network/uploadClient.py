@@ -44,7 +44,7 @@ class uploadClient():
 		#emit signal
 
 	def remoteProcess(self, cv2ImageData, reply):
-		res = post_test(encodeImageToDBdata(cv2ImageData))
+		res = self.post_test(encodeImageToDBdata(cv2ImageData))
 		res = json.loads(res)
 		reply.emit(res)
 
