@@ -345,7 +345,7 @@ class ImageCapture(QtGui.QMainWindow):
 		else :
 			self.timer.start(ImageCapture.UPDATE_FREQ)
 
-	def flashFrame(self, num = 5):
+	def flashFrame(self, num = 3):
 		#exposure
 		data = [self.camera.read()[1] for i in range(num)]
 		score = [np.mean(d) for d in data]
