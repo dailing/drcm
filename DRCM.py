@@ -34,7 +34,8 @@ from utils.singleShotTimer import SingleShotTimer
 from subprocess import Popen, PIPE
 
 try:
-	from gpiozero import LED, PWMLED
+	from gpiozero import LED
+	from gpiozero import PWMLED as pwm
 except Exception as e:
 	pass
 
@@ -75,7 +76,7 @@ def offFixedLed():
 	except Exception as e:
 		pass
 try:
-	led5 = LED(5)
+	led5 = pwm(5)
 except Exception as e:
 	pass
 
@@ -103,14 +104,14 @@ def focusLedOn():
 	try:
 		flashLed.off()
 		infraredLed.on()
-		led5.on()
+		led5.value = 0.01
 	except Exception as e:
 		pass
 
 def exposureOn():
 	try:
 		infraredLed.off()
-		led5.off()
+		led5.value = 0
 		flashLed.on()
 
 	except Exception as e:
