@@ -355,16 +355,21 @@ class ImageCapture(QtGui.QMainWindow):
 				pass
 			finally :
 				self.captureButton.setEnabled(True)
-				focusLedOn()
+				
 		else :
 			self.timer.start(ImageCapture.UPDATE_FREQ)
 
 	def flashFrame(self, num = 3):
 		#exposure
 		data = [self.camera.read()[1] for i in range(num)]
+		focusLedOn()
+		newData = [self.camera.read()[1] for i in range(num)]
+		data.extend(newData)
 		score = [np.mean(d) for d in data]
 		best_img = data[np.argmax(score)]
 		self.preImageData = best_img
+		
+		
 		for d in data:
 			self.saveImage(d)
 		# self.saveImage(best_img)
