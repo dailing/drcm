@@ -3,7 +3,7 @@ import subprocess
 class MatchBoxLineEdit(QtGui.QLineEdit):
 	def focusInEvent(self, e):
 		try:
-			subprocess.Popen(["wmctrl -r keyboard -e 0, 100,200,300,400"])
+			subprocess.Popen(["matchbox-keyboard"])
 		except FileNotFoundError:
 			pass
 
