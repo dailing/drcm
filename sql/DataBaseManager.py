@@ -19,7 +19,7 @@ class DataBaseManager():
 
 
 	def getAllLocalOnlyImageData(self):
-		sqlQuery = "select uuid, data from PatientInfo where uptoServer = 0"
+		sqlQuery = "select name, pid, isLeftEye, male, birthday, timeId, uuid, md5Sum, data from PatientInfo where uptoServer = 0"
 		try:
 			conn = sqlite3.connect(self.dbName)
 			res = list(conn.execute(sqlQuery))
