@@ -11,15 +11,8 @@ class uploadClient():
 		self.dbManager = dbManager
 
 
-	def post_test(file_names):
-		datas = []
-		for file_name in file_names:
-			data = open(file_name, 'rb').read()
-			# print('len', len(data))
-			code = base64.b64encode(data)
-			code = code.decode('utf-8')
-			datas.append(code)
-		obj = dict(data=datas)
+	def post_test(b64_encoded_png_image):
+		obj = dict(data=[b64_encoded_png_image])
 		resp = requests.post(url='http://106.14.140.203:6006/api/dr_grade_no_limit', json=obj)
 		return resp.text
 
