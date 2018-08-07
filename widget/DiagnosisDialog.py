@@ -6,16 +6,17 @@ TRANSLATE_QUALITY = ['BAD IMAGE', 'GOOD IMAGE']
 class DiagnosisDialog(QtGui.QDialog):
 	def __init__(self, diagnosis, parent = None):
 		QtGui.QDialog.__init__(self, parent)
-		res = diagnosis['richdata'][0]
-		description = res['des'].upper()
-		level = res['level']
-		quality = res['quality']
 		layout = QtGui.QVBoxLayout(self)
-		
-		
-		layout.addWidget(QtGui.QLabel(description))
-		layout.addWidget(QtGui.QLabel(TRANSLATE_LEVEL[level]))
-		layout.addWidget(QtGui.QLabel(TRANSLATE_QUALITY[quality]))
+		if diagnosis is None:
+			layout.addWidget(QtGui.QLabel("\nweak network\n"))
+		else :
+			res = diagnosis['richdata'][0]
+			description = res['des'].upper()
+			level = res['level']
+			quality = res['quality']
+			layout.addWidget(QtGui.QLabel(description))
+			layout.addWidget(QtGui.QLabel(TRANSLATE_LEVEL[level]))
+			layout.addWidget(QtGui.QLabel(TRANSLATE_QUALITY[quality]))
 
 		# OK and Cancel buttons
 		buttons = QtGui.QDialogButtonBox(

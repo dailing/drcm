@@ -78,6 +78,7 @@ def printmsg(first):
 	sleep(2)
 def defaultPrint():
 	print('default')
+	time.sleep(10)
 
 buttonStyle = "QPushButton { \
 background-color: white;\
@@ -120,10 +121,10 @@ class MyWidget(QtGui.QWidget):
 		self.setLayout(self.hlayout)
 		self.b = QtGui.QPushButton("Emit your signal!", self)
 		# self.b.resize((self.b.size()[0], self.b.size()[1] * 2))
-
-		self.b.setStyleSheet(buttonStyle)
+		self.b.setStyleSheet('QPushButton {border-radius: 12px;font-size:32px;font-family:arial;background-color: #1B87E4; color : white}; QPushButton:pressed{background-color:#006ED9}')
+		# self.b.setStyleSheet(buttonStyle)
 		self.connect(self.b, QtCore.SIGNAL("clicked()"),
-					defaultPrint)
+					self.clickHandler)
 		self.label = QtGui.QLabel('ini')
 		self.hlayout.addWidget(self.b)
 		self.hlayout.addWidget(self.label)
@@ -132,7 +133,11 @@ class MyWidget(QtGui.QWidget):
 		self.painter.setImageData(cv2ImagaeToQtImage(cv2.imread('logo.png')))
 
 	def clickHandler(self):
-		self.pw.start(Worker(printmsg, self.randSignal))
+		self.b.setEnabled(False)
+		print ('sleep 10 secs')
+		time.sleep(3)
+		self.b.setEnabled(True)
+		print ('sleep end')
 		
 		
 		# self.mysignal.emit(5, ["a", Foo(), 6])

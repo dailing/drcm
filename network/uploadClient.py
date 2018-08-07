@@ -10,6 +10,7 @@ from utils.auxs import encodeImageToDBdata
 class uploadClient():
 	def __init__(self, dbManager):
 		self.dbManager = dbManager
+		self.logger = logging.getLogger('root.uploadClient')
 
 	def post_test(self, b64_encoded_png_image):
 		obj = dict(data=[b64_encoded_png_image], eng=1)
@@ -21,7 +22,7 @@ class uploadClient():
 		# upload data:[(id, imageData)]
 
 		try:
-			logger = logging.getLogger('root.uploadClient')
+			logger = self.logger
 			dbManager = self.dbManager.newInstance()
 			# data : [[uuid, imageData]]
 			data = dbManager.getAllLocalOnlyImageData()
@@ -41,6 +42,11 @@ class uploadClient():
 
 	# emit signal
 	def remoteProcess(self, cv2ImageData, reply):
-		res = self.post_test(encodeImageToDBdata(cv2ImageData))
-		res = json.loads(res)
+		try:
+			res = self.post_test(encodeImageToDBdata(cv2ImageData))
+			res = json.loads(res)
+		except Exception as e:
+			self.logger.exception("remote process error")
+			reply.emit(None)
+			return
 		reply.emit(res)
