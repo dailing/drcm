@@ -400,7 +400,7 @@ class ImageCapture(QtGui.QMainWindow):
 	def flashFrame(self, num = 3):
 		#exposure
 		exposureOn()
-		data = [self.camera.read()]
+		data = [self.camera.read()[1]]
 		focusLedOn()
 		# newData = [self.camera.read()[1] for i in range(num)]
 		# data.extend(newData)
