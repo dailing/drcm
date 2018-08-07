@@ -92,7 +92,6 @@ class WifiTableView(QtGui.QTableWidget):
 		self.horizontalHeader().setResizeMode(QtGui.QHeaderView.Stretch)
 
 		#[[quality, name, pwd]]
-		self.appendStrRow(['quality', 'wifi', 'password'])
 		# self.item(0, 2).setFlags(self.item(0, 2).flags() ^ QtCore.Qt.ItemIsEditable)
 
 		self.pw.start(
