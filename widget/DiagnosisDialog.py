@@ -1,18 +1,21 @@
 from PyQt4 import QtGui, QtCore
 
+TRANSLATE_LEVEL = ['NO DR', 'MILD DR', 'MODERATE DR', 'SEVERE DR', 'PDR']
+TRANSLATE_QUALITY = ['BAD IMAGE', 'GOOD IMAGE']
+
 class DiagnosisDialog(QtGui.QDialog):
 	def __init__(self, diagnosis, parent = None):
 		QtGui.QDialog.__init__(self, parent)
 		res = diagnosis['richdata'][0]
 		description = res['des']
-		level = str(res['level'])
-		quality = str(res['quality'])
+		level = res['level']
+		quality = res['quality']
 		layout = QtGui.QVBoxLayout(self)
 		
 		
 		layout.addWidget(QtGui.QLabel(description))
-		layout.addWidget(QtGui.QLabel('level : ' + level))
-		layout.addWidget(QtGui.QLabel('quality : ' + quality))
+		layout.addWidget(QtGui.QLabel(TRANSLATE_LEVEL[level])
+		layout.addWidget(QtGui.QLabel(TRANSLATE_QUALITY[quality])
 
 		# OK and Cancel buttons
 		buttons = QtGui.QDialogButtonBox(
