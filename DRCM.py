@@ -69,7 +69,7 @@ class VideoReader():
 		try:
 			self.reader.set(3,1920);
 			self.reader.set(4,1080);
-			self.reader.set(38, 1)
+			# self.reader.set(38, 1)
 		except Exception as e:
 			print (str(e))
 			logger.exception(e)
@@ -408,8 +408,8 @@ class ImageCapture(QtGui.QMainWindow):
 		# best_img = data[0]
 		self.preImageData = best_img
 		
-		
-		self.saveImage(best_img)
+		for img in data:
+			self.saveImage(img)
 		# self.saveImage(best_img)
 
 		frame_to_display = cv2.resize(best_img, DISPLAY_SIZE)
