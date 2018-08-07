@@ -11,3 +11,6 @@ class MatchBoxLineEdit(QtGui.QLineEdit):
 
 	def focusOutEvent(self,e):
 		subprocess.Popen(["killall","matchbox-keyboard"])
+
+if __name__=="__main__":
+	subprocess.Popen(["matchbox-keyboard", "numword"])

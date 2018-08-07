@@ -69,6 +69,7 @@ class VideoReader():
 		try:
 			self.reader.set(3,1920);
 			self.reader.set(4,1080);
+			self.reader.set(38, 1)
 		except Exception as e:
 			print (str(e))
 			logger.exception(e)
@@ -384,7 +385,7 @@ class ImageCapture(QtGui.QMainWindow):
 		if self.timer.isActive():
 			self.captureButton.setEnabled(False)
 			self.timer.stop()
-			exposureOn()
+			
 			try:
 				self.flashFrame()
 			except Exception as e:
@@ -398,11 +399,13 @@ class ImageCapture(QtGui.QMainWindow):
 
 	def flashFrame(self, num = 3):
 		#exposure
-		data = [self.camera.read()[1] for i in range(num)]
+		exposureOn()
+		data = [self.camera.read()]
 		focusLedOn()
-		newData = [self.camera.read()[1] for i in range(num)]
-		data.extend(newData)
-		best_img = get_most_colorful_image(data)
+		# newData = [self.camera.read()[1] for i in range(num)]
+		# data.extend(newData)
+		# best_img = get_most_colorful_image(data)
+		best_img = data[0]
 		self.preImageData = best_img
 		
 		
