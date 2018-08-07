@@ -252,7 +252,7 @@ class ImageCapture(QtGui.QMainWindow):
 	def processImageCallBack(self, diagnosis):
 		self.logger.debug('diagnosis display')
 		DiagnosisDialog.newInstance(diagnosis)
-		self.logger.debug (str(diagnosis))
+		self.logger.debug ('end process')
 		
 
 	def createButtonLayout(self):
