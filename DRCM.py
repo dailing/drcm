@@ -74,6 +74,7 @@ class VideoReader():
 
 CaptureButtonStyle = "QPushButton { \
 background-color: #FFFFFF;\
+font-family:arial;\
     border-style: solid;\
     color:black;\
     border-width: 2px;\
@@ -181,10 +182,14 @@ class ImageCapture(QtGui.QMainWindow):
 		self.logger = logger
 		self.logger.info('logging started in {}'.format(self.__class__.__name__))
 		self.initEnv()
+		self.logger.info('inienv finished')
 		self.initUI()
+		self.logger.info('init ui finished')
+
 		self.timer.start(ImageCapture.UPDATE_FREQ)
 		offFixedLed()
 		focusLedOn()
+		self.logger.info('init main finished')
 
 	def initEnv(self):
 		self.imgCnt = 0
@@ -255,7 +260,7 @@ class ImageCapture(QtGui.QMainWindow):
 		bottomLayout.addStretch(1)
 		def addButton(label, action):
 			button = QtGui.QPushButton(label)
-			button.setStyleSheet('QPushButton {font-size:24px;};')
+			button.setStyleSheet('QPushButton {font-size:32px;font-family:arial;};')
 			bottomLayout.addWidget(button)
 			self.connect(button, QtCore.SIGNAL("clicked()"),
 					action)
@@ -264,15 +269,15 @@ class ImageCapture(QtGui.QMainWindow):
 		self.captureButton = addButton('Capture', self.snapShot)
 		uploadButton  = addButton('Upload', self.uploadImages)
 		# ledButton = addButton('Led', toggleFixedLed)
-		pageButton = addButton('NewRecord', self.newRecord)
+		# pageButton = addButton('NewRecord', self.newRecord)
 		
 		addButton('Process', self.processImage)
 
 		bottomLayout.addStretch(1)
-		self.captureButton.setStyleSheet(CaptureButtonStyle)
+		# self.captureButton.setStyleSheet(CaptureButtonStyle)
 
 		addButton('IMAGE', self.switchToImageView)
-		addButton('INFO', self.switchToInfoView)
+		# addButton('INFO', self.switchToInfoView)
 		addButton('WLAN', self.switchToWlanView)
 		
 		bottomLayout.addStretch(1)
@@ -423,9 +428,8 @@ class ImageCapture(QtGui.QMainWindow):
 		self.painter = PainterWidget()
 		self.stacked_widget = QtGui.QStackedWidget()
 		self.stacked_widget.addWidget(self.painter)
-		self.stacked_widget.addWidget(self.createListView())
+		# self.stacked_widget.addWidget(self.createListView())
 		self.stacked_widget.addWidget(WifiTableView())
-		# self.stacked_widget.setCurrentIndex(1)
 		setBackGroundColor(self.stacked_widget, QtCore.Qt.black)
 		return self.stacked_widget
 
@@ -435,14 +439,14 @@ class ImageCapture(QtGui.QMainWindow):
 		self.stacked_widget.setCurrentIndex(0)
 
 	def switchToInfoView(self):
-		if self.stacked_widget.currentIndex() == 1:
-			return
-		self.stacked_widget.setCurrentIndex(1)
-
-	def switchToWlanView(self):
 		if self.stacked_widget.currentIndex() == 2:
 			return
 		self.stacked_widget.setCurrentIndex(2)
+
+	def switchToWlanView(self):
+		if self.stacked_widget.currentIndex() == 1:
+			return
+		self.stacked_widget.setCurrentIndex(1)
 
 	def createMainGui(self):
 

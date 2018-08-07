@@ -81,6 +81,7 @@ def defaultPrint():
 
 buttonStyle = "QPushButton { \
 background-color: white;\
+font-family:arial;\
     border-style: outset;\
     border-width: 2px;\
     border-radius: 10px;\
