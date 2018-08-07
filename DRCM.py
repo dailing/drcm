@@ -69,7 +69,7 @@ class VideoReader():
 			self.reader.set(cv2.CAP_PROP_FRAME_WIDTH,1920);
 			self.reader.set(cv2.CAP_PROP_FRAME_HEIGHT,1080);
 		except Exception as e:
-			pass
+			print (str(e))
 		
 
 
