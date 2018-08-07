@@ -55,6 +55,7 @@ class DataBaseManager():
 			self.logger.exception("query error")
 			res = []
 		finally :
+			self.logger.debug('emit reply from getAllRows')
 			reply.emit(res)
 
 	def insertRecord(self, obj, reply):

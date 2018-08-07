@@ -133,6 +133,9 @@ def exposureOn():
 		pass
 
 
+def function():
+	pass
+
 def setBackGroundColor(aWidget, color):
 	aWidget.setAutoFillBackground(True)
 	pal = aWidget.palette()
