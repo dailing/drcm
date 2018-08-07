@@ -203,7 +203,7 @@ class ImageCapture(QtGui.QMainWindow):
 		self.ledTimer.connect(self, focusLedOn)
 		self.camera = VideoReader()
 		self.model = ViewModel()
-
+		self.logger.info('to register callback')
 		#register callback
 		
 		self.dbInsertSignal.connect(self.saveImageCallBack)
