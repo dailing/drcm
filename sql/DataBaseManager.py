@@ -19,7 +19,7 @@ class DataBaseManager():
 
 
 	def getAllLocalOnlyImageData(self):
-		sqlQuery = "select uuid, data from PatientInfo where uptoServer = 0"
+		sqlQuery = "select name, pid, isLeftEye, male, birthday, timeId, uuid, md5Sum, data from PatientInfo where uptoServer = 0"
 		try:
 			conn = sqlite3.connect(self.dbName)
 			res = list(conn.execute(sqlQuery))
@@ -55,6 +55,7 @@ class DataBaseManager():
 			self.logger.exception("query error")
 			res = []
 		finally :
+			self.logger.debug('emit reply from getAllRows')
 			reply.emit(res)
 
 	def insertRecord(self, obj, reply):
@@ -77,3 +78,11 @@ class DataBaseManager():
 			reply.emit(False)
 		else:
 			reply.emit(True)
+
+
+def main():
+	pass
+
+
+if __name__ == '__main__':
+	main()

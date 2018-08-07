@@ -8,6 +8,7 @@ capture, save and upload video frame
 author: knowthy
 last edited: july 2018
 """
+#sudo -E bash -c 'sleep 15;python /home/pi/Desktop/drcm/DRCM.py &>> /tmp/drcm.log'
 import sys
 from PyQt4 import QtGui, QtCore
 import cv2
@@ -17,6 +18,7 @@ from widget.PainterWidget import PainterWidget
 from widget.MedicalRecordDialog  import MedicalRecordDialog
 from widget.SplashScreen import SplashScreen
 from widget.ViewModel import ViewModel
+from widget.DiagnosisDialog import DiagnosisDialog
 
 from sql.sqlConn import SqlConn
 from sql.RunnableFunc import RunnableFunc
@@ -34,6 +36,7 @@ from subprocess import Popen, PIPE
 
 try:
 	from gpiozero import LED
+	from gpiozero import PWMLED as pwm
 except Exception as e:
 	pass
 
@@ -74,7 +77,8 @@ def offFixedLed():
 	except Exception as e:
 		pass
 try:
-	led5 = LED(5)
+	led5 = pwm(5)
+	led6 = LED(6)
 except Exception as e:
 	pass
 
@@ -101,22 +105,36 @@ except Exception as e:
 def focusLedOn():
 	try:
 		flashLed.off()
-		infraredLed.on()
-		led5.on()
 	except Exception as e:
 		pass
+	try:
+		infraredLed.on()
+	except Exception as e:
+		pass
+	try:
+		led5.value = 0.01
+	except Exception as e:
+		pass
+
 
 def exposureOn():
 	try:
 		infraredLed.off()
-		led5.off()
+	except Exception as e:
+		pass
+	try:
+		led5.value = 0
+	except Exception as e:
+		pass
+	try:
 		flashLed.on()
-
+		led6.off()
 	except Exception as e:
 		pass
 
 
-
+def function():
+	pass
 
 def setBackGroundColor(aWidget, color):
 	aWidget.setAutoFillBackground(True)
@@ -126,7 +144,7 @@ def setBackGroundColor(aWidget, color):
 
 def setLabelStyle(label):
 	label.setAlignment(QtCore.Qt.AlignCenter)
-	label.setStyleSheet("QLabel{color:white;font-size:24px}"
+	label.setStyleSheet("QLabel{color:white;font-size:16px}"
 		);
 
 DISPLAY_SIZE = (640, 480)
@@ -140,7 +158,7 @@ class ImageCapture(QtGui.QMainWindow):
 	dbInsertSignal = QtCore.pyqtSignal(bool)
 	uploadSignal = QtCore.pyqtSignal(list)
 	queryTableSignal = QtCore.pyqtSignal(list)
-	remoteProcessSignal = QtCore.pyqtSignal(bytes)
+	remoteProcessSignal = QtCore.pyqtSignal(dict)
 	
 	def __init__(self, logger):
 		QtGui.QMainWindow.__init__(self, None)
@@ -149,10 +167,11 @@ class ImageCapture(QtGui.QMainWindow):
 		self.initEnv()
 		self.initUI()
 		self.timer.start(ImageCapture.UPDATE_FREQ)
+		offFixedLed()
 		focusLedOn()
 
 	def initEnv(self):
-
+		self.imgCnt = 0
 		self.preImageData = None
 		self.pw = PoolWrapper()
 		self.dbManager = DataBaseManager('patientRecord.db')
@@ -188,6 +207,7 @@ class ImageCapture(QtGui.QMainWindow):
 
 
 	def processImage(self):
+		self.logger.debug('processImage')
 		if self.timer.isActive() or self.preImageData is None:
 			return
 		self.pw.start(
@@ -198,11 +218,11 @@ class ImageCapture(QtGui.QMainWindow):
 				)
 			)
 
-	def processImageCallBack(self, imageData):
-		image = decodeDBImage(imageData)
-		frame_to_display = cv2.resize(image, DISPLAY_SIZE)
-		mQImage = cv2ImagaeToQtImage(frame_to_display)
-		self.painter.setImageData(mQImage)
+	def processImageCallBack(self, diagnosis):
+		self.logger.debug('diagnosis display')
+		DiagnosisDialog.newInstance(diagnosis)
+		print (diagnosis)
+		
 
 	def createButtonLayout(self):
 		bottomLayout = QtGui.QVBoxLayout()
@@ -227,7 +247,7 @@ class ImageCapture(QtGui.QMainWindow):
 			
 		self.captureButton = addButton('Capture', self.snapShot)
 		uploadButton  = addButton('Upload', self.uploadImages)
-		ledButton = addButton('Led', toggleFixedLed)
+		# ledButton = addButton('Led', toggleFixedLed)
 		pageButton = addButton('NewRecord', self.newRecord)
 		
 		addButton('Process', self.processImage)
@@ -280,6 +300,8 @@ class ImageCapture(QtGui.QMainWindow):
 		
 
 	def saveImage(self, imageData):
+		self.imgCnt += 1
+		cv2.imwrite('{}.png'.format(self.imgCnt), imageData)
 		if self.patientInfo is None:
 			self.captureButton.setEnabled(True)
 			return
@@ -338,16 +360,22 @@ class ImageCapture(QtGui.QMainWindow):
 				pass
 			finally :
 				self.captureButton.setEnabled(True)
-				focusLedOn()
+				
 		else :
 			self.timer.start(ImageCapture.UPDATE_FREQ)
 
 	def flashFrame(self, num = 3):
 		#exposure
 		data = [self.camera.read()[1] for i in range(num)]
-		score = [np.mean(d) for d in data]
-		best_img = data[np.argmax(score)]
+		focusLedOn()
+		newData = [self.camera.read()[1] for i in range(num)]
+		data.extend(newData)
+		best_img = get_most_colorful_image(data)
+		self.preImageData = best_img
+		
+		
 		self.saveImage(best_img)
+		# self.saveImage(best_img)
 
 		frame_to_display = cv2.resize(best_img, DISPLAY_SIZE)
 		mQImage = cv2ImagaeToQtImage(frame_to_display)
@@ -463,7 +491,6 @@ class ImageCapture(QtGui.QMainWindow):
 		
 		
 def main(logger):
-	offFixedLed()
 	app = QtGui.QApplication(sys.argv)
 	# splash= SplashScreen("logo.png")  
 	# splash.effect()
