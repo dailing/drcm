@@ -32,6 +32,7 @@ from utils.logFormatter import setupLogger
 from utils.auxs import *
 from utils.folderUtils import ensurePath
 from utils.singleShotTimer import SingleShotTimer
+from utils.CircleMask import CircleMask
 from subprocess import Popen, PIPE
 
 try:
@@ -83,16 +84,17 @@ class VideoReader():
 		return self.reader.read()
 
 CaptureButtonStyle = "QPushButton { \
-background-color: #FFFFFF;\
+background-color: #1B87E4;\
 font-family:arial;\
     border-style: solid;\
     color:black;\
     border-width: 2px;\
     border-radius: 10px;\
-    border-color: white;\
+    border-color: #1B87E4;\
     font: bold 24px;\
     padding: 6px;\
 }\
+QPushButton:pressed{background-color:#007ED9}\
 "
 
 #13,26
@@ -213,6 +215,7 @@ class ImageCapture(QtGui.QMainWindow):
 		self.ledTimer.connect(self, focusLedOn)
 		self.camera = VideoReader()
 		self.model = ViewModel()
+		self.mask = CircleMask()
 		self.logger.info('to register callback')
 		#register callback
 		
@@ -269,8 +272,9 @@ class ImageCapture(QtGui.QMainWindow):
 
 		bottomLayout.addStretch(1)
 		def addButton(label, action):
+			default_button_style = 'QPushButton {border-radius: 12px;font-size:32px;font-family:arial;background-color: #1B87E4; color : white}; QPushButton:pressed{background-color:#007ED9}'
 			button = QtGui.QPushButton(label)
-			button.setStyleSheet('QPushButton {border-radius: 12px;font-size:32px;font-family:arial;background-color: #1B87E4; color : white}; QPushButton:pressed{background-color:#007ED9}')
+			button.setStyleSheet(CaptureButtonStyle)
 			bottomLayout.addWidget(button)
 			self.connect(button, QtCore.SIGNAL("clicked()"),
 					action)
@@ -424,7 +428,9 @@ class ImageCapture(QtGui.QMainWindow):
 				self.camera = VideoReader()
 			self.captureButton.setEnabled(True)
 			return
+		frame = self.mask.getROI(frame)
 		frame_to_display = cv2.resize(frame, DISPLAY_SIZE)
+		print (frame_to_display.shape)
 		# if saveTodisk:
 		# 	self.saveImage(frame)
 		mQImage = cv2ImagaeToQtImage(frame_to_display)

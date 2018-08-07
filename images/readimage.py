@@ -30,7 +30,6 @@ def getImages(imgIdxs):
 	return [cv2.imread('{}.png'.format(i)) for i in imgIdxs]
 
 def main():
-	res = get_most_colorful_image(getImages(range(37, 43)))
-	print (res)
+	scoreIt()
 if __name__ == '__main__':
 	main()
