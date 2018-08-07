@@ -406,11 +406,11 @@ class ImageCapture(QtGui.QMainWindow):
 		exposureOn()
 		data = [self.camera.read()[1]]
 		focusLedOn()
-		newData = [self.camera.read()[1] for i in range(9)]
+		newData = [self.camera.read()[1] for i in range(5)]
 		data.extend(newData)
 		self.logger.debug('num of imgs {}'.format(len(data)))
-		best_img = get_most_colorful_image(data)
-		# best_img = data[0]
+		# best_img = get_most_colorful_image(data)
+		best_img = data[5]
 		self.preImageData = best_img
 		
 		for img in data:
