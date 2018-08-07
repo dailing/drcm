@@ -126,12 +126,12 @@ def switchFixedLed():
 # 	LED(3).toggle()
 try:
 	infraredLed = LED(17)
-	flashLed = LED(4)
+	flashLed = pwm(4)
 except Exception as e:
 	pass
 def focusLedOn():
 	try:
-		flashLed.off()
+		flashLed.value = 0.0
 	except Exception as e:
 		pass
 	try:
@@ -154,7 +154,7 @@ def exposureOn():
 	except Exception as e:
 		pass
 	try:
-		flashLed.on()
+		flashLed.value = 0.8
 		led6.off()
 	except Exception as e:
 		pass
