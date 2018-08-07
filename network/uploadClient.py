@@ -47,6 +47,8 @@ class uploadClient():
 			res = json.loads(res)
 		except Exception as e:
 			self.logger.exception("remote process error")
-			reply.emit(None)
+			reply.emit(dict())
 			return
 		reply.emit(res)
+
+

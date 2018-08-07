@@ -7,7 +7,7 @@ class DiagnosisDialog(QtGui.QDialog):
 	def __init__(self, diagnosis, parent = None):
 		QtGui.QDialog.__init__(self, parent)
 		layout = QtGui.QVBoxLayout(self)
-		if diagnosis is None:
+		if not diagnosis:
 			layout.addWidget(QtGui.QLabel("\nweak network\n"))
 		else :
 			res = diagnosis['richdata'][0]

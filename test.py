@@ -160,7 +160,11 @@ def main():
 
 if __name__ == '__main__':
 	#getImage()
-	main()
+	
+	if dict():
+		print ('flase')
+	else :
+		print ('true')
 	
 	
 # if __name__ == '__main__':
