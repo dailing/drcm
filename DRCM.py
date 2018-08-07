@@ -404,9 +404,9 @@ class ImageCapture(QtGui.QMainWindow):
 	def flashFrame(self, num = 3):
 		#exposure
 		exposureOn()
-		data = [self.camera.read()[1]]
+		data = [self.mask.getROI(self.camera.read()[1])]
 		focusLedOn()
-		newData = [self.camera.read()[1] for i in range(5)]
+		newData = [self.mask.getROI(self.camera.read()[1]) for i in range(5)]
 		data.extend(newData)
 		self.logger.debug('num of imgs {}'.format(len(data)))
 		# best_img = get_most_colorful_image(data)
