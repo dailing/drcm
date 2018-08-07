@@ -12,6 +12,12 @@ import cv2
 from PyQt4 import QtGui
 
 
+def get_most_colorful_image(imgs) :
+	scores = []
+	for img in imgs :
+		hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+
+
 def saveObj(fname, obj):
 	fname = 'state/' + fname
 	with open(fname, 'wb') as output:

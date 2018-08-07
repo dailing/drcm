@@ -1,6 +1,6 @@
 from PyQt4 import QtGui, QtCore
 
-TRANSLATE_LEVEL = ['NO DR', 'MILD DR', 'MODERATE DR', 'SEVERE DR', 'PDR']
+TRANSLATE_LEVEL = ['NORMAL', 'MILD DR', 'MODERATE DR', 'SEVERE DR', 'PDR']
 TRANSLATE_QUALITY = ['BAD IMAGE', 'GOOD IMAGE']
 
 class DiagnosisDialog(QtGui.QDialog):
