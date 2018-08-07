@@ -67,8 +67,8 @@ class VideoReader():
 		self.reader = cv2.VideoCapture(0)
 		logger = logging.getLogger('root.VideoReader')
 		try:
-			self.reader.set(3,1920);
-			self.reader.set(4,1080);
+			self.reader.set(3,640);
+			self.reader.set(4,480);
 			# self.reader.set(38, 1)
 		except Exception as e:
 			print (str(e))
