@@ -1,6 +1,12 @@
 import cv2
 import numpy as np
 
+def get_most_colorful_image(imgs) :
+	scores = []
+	for img in imgs :
+		hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+		scores.append(np.mean(hsv[:,:, 1]))
+	return np.argmax(scores)
 def drawCircles(circles, cimg):
 	for i in circles[0,:]:
 		cv2.circle(cimg,(i[0],i[1]),i[2],(0,255,0),2)
@@ -19,7 +25,12 @@ def scoreIt(dataIdx):
 		scores.append(res)
 		print (idx, res)
 	print(np.argmin(scores))
+
+def getImages(imgIdxs):
+	return [cv2.imread('{}.png'.format(i)) for i in imgIdxs]
+
 def main():
-	scoreIt([38])
+	res = get_most_colorful_image(getImages(range(37, 43)))
+	print (res)
 if __name__ == '__main__':
 	main()

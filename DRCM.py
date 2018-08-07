@@ -65,6 +65,9 @@ class VideoReader():
 	def __init__(self):
 		pass
 		self.reader = cv2.VideoCapture(0)
+		self.reader.set(cv2.CAP_PROP_FRAME_WIDTH,640);
+		self.reader.set(cv2.CAP_PROP_FRAME_HEIGHT,480);
+
 
 	def read(self):
 		return self.reader.read()
@@ -112,7 +115,7 @@ def focusLedOn():
 	except Exception as e:
 		pass
 	try:
-		led5.value = 0.01
+		led5.value = 0
 	except Exception as e:
 		pass
 
