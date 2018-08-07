@@ -156,7 +156,7 @@ def exposureOn():
 	except Exception as e:
 		pass
 	try:
-		flashLed.value = 0.8
+		flashLed.value = 0.9
 		led6.off()
 	except Exception as e:
 		pass
@@ -408,6 +408,7 @@ class ImageCapture(QtGui.QMainWindow):
 		focusLedOn()
 		newData = [self.camera.read()[1] for i in range(9)]
 		data.extend(newData)
+		self.logger.debug('num of imgs {}'.format(len(data)))
 		best_img = get_most_colorful_image(data)
 		# best_img = data[0]
 		self.preImageData = best_img
@@ -416,8 +417,8 @@ class ImageCapture(QtGui.QMainWindow):
 			self.saveImage(img)
 		# self.saveImage(best_img)
 
-		frame_to_display = cv2.resize(best_img, DISPLAY_SIZE)
-		mQImage = cv2ImagaeToQtImage(frame_to_display)
+		# frame_to_display = cv2.resize(best_img, DISPLAY_SIZE)
+		mQImage = cv2ImagaeToQtImage(best_img)
 		self.painter.setImageData(mQImage)
 		#end
 
@@ -429,11 +430,11 @@ class ImageCapture(QtGui.QMainWindow):
 			self.captureButton.setEnabled(True)
 			return
 		frame = self.mask.getROI(frame)
-		frame_to_display = cv2.resize(frame, DISPLAY_SIZE)
-		print (frame_to_display.shape)
+		# frame_to_display = cv2.resize(frame, DISPLAY_SIZE)
+		# assert frame_to_display.shape == frame.shape
 		# if saveTodisk:
 		# 	self.saveImage(frame)
-		mQImage = cv2ImagaeToQtImage(frame_to_display)
+		mQImage = cv2ImagaeToQtImage(frame)
 		self.painter.setImageData(mQImage)
 
 	def createListView(self):

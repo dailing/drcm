@@ -1,11 +1,35 @@
 import cv2
 import numpy as np
 
+
+def image_colorfulness(image):
+	# split the image into its respective RGB components
+	(B, G, R) = cv2.split(image.astype("float"))
+
+	# compute rg = R - G
+	rg = np.absolute(R - G)
+
+	# compute yb = 0.5 * (R + G) - B
+	yb = np.absolute(0.5 * (R + G) - B)
+
+	# compute the mean and standard deviation of both `rg` and `yb`
+	(rbMean, rbStd) = (np.mean(rg), np.std(rg))
+	(ybMean, ybStd) = (np.mean(yb), np.std(yb))
+
+	# combine the mean and standard deviations
+	stdRoot = np.sqrt((rbStd ** 2) + (ybStd ** 2))
+	meanRoot = np.sqrt((rbMean ** 2) + (ybMean ** 2))
+
+	# derive the "colorfulness" metric and return it
+	return stdRoot + (0.3 * meanRoot)
+
+def colorfulnessByHSV(img):
+	hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+	return np.mean(hsv[:,:, 1])
+
 def get_most_colorful_image(imgs) :
-	scores = []
-	for img in imgs :
-		hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-		scores.append(np.mean(hsv[:,:, 1]))
+	scores = [colorfulnessByHSV(img) for img in imgs]
+	print(scores)
 	return np.argmax(scores)
 def drawCircles(circles, cimg):
 	for i in circles[0,:]:
@@ -30,6 +54,6 @@ def getImages(imgIdxs):
 	return [cv2.imread('{}.png'.format(i)) for i in imgIdxs]
 
 def main():
-	scoreIt()
+	get_most_colorful_image(getImages(range(33, 49)))
 if __name__ == '__main__':
 	main()
