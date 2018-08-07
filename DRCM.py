@@ -370,13 +370,11 @@ class ImageCapture(QtGui.QMainWindow):
 		focusLedOn()
 		newData = [self.camera.read()[1] for i in range(num)]
 		data.extend(newData)
-		score = [np.var(d[:,:,0] - d[:, :, 1]) for d in data]
-		best_img = data[np.argmax(score)]
+		best_img = get_most_colorful_image(data)
 		self.preImageData = best_img
 		
 		
-		for d in data:
-			self.saveImage(d)
+		self.saveImage(best_img)
 		# self.saveImage(best_img)
 
 		frame_to_display = cv2.resize(best_img, DISPLAY_SIZE)
