@@ -269,7 +269,7 @@ class ImageCapture(QtGui.QMainWindow):
 		bottomLayout.addStretch(1)
 		def addButton(label, action):
 			button = QtGui.QPushButton(label)
-			button.setStyleSheet('QPushButton {border-radius: 12px;font-size:32px;font-family:arial;background-color: #1B87E4; color : white};')
+			button.setStyleSheet('QPushButton {border-radius: 12px;font-size:32px;font-family:arial;background-color: #1B87E4; color : white}; QPushButton:pressed{background-color:#007ED9}')
 			bottomLayout.addWidget(button)
 			self.connect(button, QtCore.SIGNAL("clicked()"),
 					action)
