@@ -5,7 +5,7 @@ import subprocess
 class MatchBoxLineEdit(QtGui.QLineEdit):
 	def focusInEvent(self, e):
 		try:
-			subprocess.Popen(["matchbox-keyboard numword"])
+			subprocess.Popen(["matchbox-keyboard"])
 		except FileNotFoundError:
 			pass
 
