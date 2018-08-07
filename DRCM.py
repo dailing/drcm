@@ -65,11 +65,15 @@ class VideoReader():
 	def __init__(self):
 		pass
 		self.reader = cv2.VideoCapture(0)
+		logger = logging.getLogger('root.VideoReader')
 		try:
 			self.reader.set(cv2.CAP_PROP_FRAME_WIDTH,1920);
 			self.reader.set(cv2.CAP_PROP_FRAME_HEIGHT,1080);
 		except Exception as e:
 			print (str(e))
+			logger.exception(e)
+		logger.debug('finish open video')
+
 		
 
 
