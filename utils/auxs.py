@@ -16,7 +16,7 @@ def get_most_colorful_image(imgs) :
 	scores = []
 	for img in imgs :
 		hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
-		scores.append(np.mean(s))
+		scores.append(np.mean(hsv[:,:, 1]))
 	return imgs[np.argmax(scores)]
 
 

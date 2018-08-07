@@ -65,12 +65,25 @@ class VideoReader():
 	def __init__(self):
 		pass
 		self.reader = cv2.VideoCapture(0)
-		self.reader.set(cv2.CAP_PROP_FRAME_WIDTH,640);
-		self.reader.set(cv2.CAP_PROP_FRAME_HEIGHT,480);
+		self.reader.set(cv2.CAP_PROP_FRAME_WIDTH,1920);
+		self.reader.set(cv2.CAP_PROP_FRAME_HEIGHT,1080);
 
 
 	def read(self):
 		return self.reader.read()
+
+CaptureButtonStyle = "QPushButton { \
+background-color: #FFFFFF;\
+    border-style: solid;\
+    color:black;\
+    border-width: 2px;\
+    border-radius: 10px;\
+    border-color: white;\
+    font: bold 24px;\
+    padding: 6px;\
+}\
+"
+
 #13,26
 FIXED_LED = [5,6,13,19,26,16,20,21]
 def offFixedLed():
@@ -256,6 +269,7 @@ class ImageCapture(QtGui.QMainWindow):
 		addButton('Process', self.processImage)
 
 		bottomLayout.addStretch(1)
+		self.captureButton.setStyleSheet(CaptureButtonStyle)
 
 		addButton('IMAGE', self.switchToImageView)
 		addButton('INFO', self.switchToInfoView)

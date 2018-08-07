@@ -79,6 +79,25 @@ def printmsg(first):
 def defaultPrint():
 	print('default')
 
+buttonStyle = "QPushButton { \
+background-color: white;\
+    border-style: outset;\
+    border-width: 2px;\
+    border-radius: 10px;\
+    border-color: white;\
+    font: bold 24px;\
+    min-width: 10em;\
+    padding: 6px;\
+    selection-color : white;\
+    selection-background-color : white;\
+};\
+QPushButton:selected{background-color:white; color: black;}\
+QPushButton:cliked{background-color:white; color: black;}\
+QPushButton:pressed{background-color:white; color: black;}\
+QPushButton:hover{background-color:white; color: black;}\
+QPushButton:focus{background-color:white; color: black;}\
+QPushButton:checked{background-color:white; color: black;}\
+"
 class MyWidget(QtGui.QWidget):
 	randSignal = QtCore.pyqtSignal(int, list)
 
@@ -87,7 +106,7 @@ class MyWidget(QtGui.QWidget):
 		self.setGeometry(0, 0, 800, 480)
 		print(self.x())
 		print(self.frameGeometry())
-
+		self.setStyleSheet('background-color:black')
 		self.resize(800, 480)
 		print(self.x())
 		print(self.geometry().x())
@@ -99,14 +118,17 @@ class MyWidget(QtGui.QWidget):
 		self.hlayout = QtGui.QVBoxLayout()
 		self.setLayout(self.hlayout)
 		self.b = QtGui.QPushButton("Emit your signal!", self)
+		# self.b.resize((self.b.size()[0], self.b.size()[1] * 2))
+
+		self.b.setStyleSheet(buttonStyle)
+		self.connect(self.b, QtCore.SIGNAL("clicked()"),
+					defaultPrint)
 		self.label = QtGui.QLabel('ini')
 		self.hlayout.addWidget(self.b)
 		self.hlayout.addWidget(self.label)
 		self.painter = PainterWidget()
-		self.hlayout.addWidget(self.painter)
+		# self.hlayout.addWidget(self.painter)
 		self.painter.setImageData(cv2ImagaeToQtImage(cv2.imread('logo.png')))
-		self.b.clicked.connect(self.clickHandler)
-		self.randSignal.connect(self.mySignalHandler)
 
 	def clickHandler(self):
 		self.pw.start(Worker(printmsg, self.randSignal))
@@ -131,7 +153,8 @@ def main():
 	sys.exit(app.exec_())
 
 if __name__ == '__main__':
-	getImage()
+	#getImage()
+	main()
 	
 	
 # if __name__ == '__main__':
