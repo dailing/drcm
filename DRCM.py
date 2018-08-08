@@ -336,7 +336,7 @@ class ImageCapture(QtGui.QMainWindow):
 		
 		
 
-	def  (self, imageData):
+	def  saveImage(self, imageData):
 		self.imgCnt += 1
 		cv2.imwrite('{}.png'.format(self.imgCnt), imageData)
 		return
