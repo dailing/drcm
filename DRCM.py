@@ -411,7 +411,7 @@ class ImageCapture(QtGui.QMainWindow):
 		data.extend(newData)
 		self.logger.debug('num of imgs {}'.format(len(data)))
 		# best_img = get_most_colorful_image(data)
-		best_img = data[5]
+		best_img = data[4]
 		self.preImageData = best_img
 		
 		for img in data:
