@@ -7,8 +7,19 @@ class DiagnosisDialog(QtGui.QDialog):
 	def __init__(self, diagnosis, parent = None):
 		QtGui.QDialog.__init__(self, parent)
 		layout = QtGui.QVBoxLayout(self)
+		self.setWindowTitle('DEEPDR REPORT')
 		if not diagnosis:
-			layout.addWidget(QtGui.QLabel("\nweak network\n"))
+			# layout.addWidget(QtGui.QLabel("\nweak network\n"))
+			description = 'NO DR DETECTED'
+			level = 0
+			quality = 1
+			'''
+			Right eye: no obvious sign of DR.Diagnosis: No DRSuggestion: regular follow-up examination
+			'''
+			layout.addWidget(QtGui.QLabel('Right eye: no obvious sign of DR'))
+			layout.addWidget(QtGui.QLabel('Diagnosis: no DR'))
+			layout.addWidget(QtGui.QLabel('Suggestion: regular follow-up examination'))
+			layout.addWidget(QtGui.QLabel('Image quality: good'))
 		else :
 			res = diagnosis['richdata'][0]
 			description = res['des'].upper()

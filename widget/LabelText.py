@@ -1,7 +1,7 @@
 from PyQt4 import QtGui, QtCore
 import subprocess
 
-from widget.MatchBoxLineEdit import MatchBoxLineEdit
+from MatchBoxLineEdit import MatchBoxLineEdit
 
 class LabelText(QtGui.QWidget):
 	"""edit text box with label"""

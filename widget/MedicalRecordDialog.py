@@ -4,12 +4,12 @@ from LabelDate import LabelDate
 
 from SingleChoiceButton import SingleChoiceButton
 
-from PatientDataFormat import PatientInfo
+from PatientDataFormat import PatientInfo, ImageInfo
 
 
-class MedicalRecordDialog(QtGui.QDialog):
+class MedicalRecordDialog(QtGui.QWidget):
 	def __init__(self, default, parent = None):
-		QtGui.QDialog.__init__(self, parent)
+		QtGui.QWidget.__init__(self, parent)
 
 		layout = QtGui.QVBoxLayout(self)
 
@@ -42,17 +42,12 @@ class MedicalRecordDialog(QtGui.QDialog):
 		self.patientBirthDay = LabelDate('birthDay')
 		layout.addWidget(self.patientBirthDay)
 
-
-		
-
-
-		# OK and Cancel buttons
-		buttons = QtGui.QDialogButtonBox(
-			QtGui.QDialogButtonBox.Ok | QtGui.QDialogButtonBox.Cancel,
-			QtCore.Qt.Horizontal, self)
-		buttons.accepted.connect(self.accept)
-		buttons.rejected.connect(self.reject)
-		layout.addWidget(buttons)
+	def getImageInfo(self):
+		return ImageInfo(self.patientName.getText(), 
+			self.patientId.getText(),
+			self.gender.getOption() == 'male' ,
+			self.patientBirthDay.getTime(),
+			self.eye.getOption() == 'left')
 
 	def getPatientInfo(self):
 		'''
@@ -64,11 +59,21 @@ class MedicalRecordDialog(QtGui.QDialog):
 			self.patientBirthDay.getTime(),
 			self.eye.getOption() == 'left', None, None, None)
 
-	@staticmethod
-	def newRecord(default, parent = None):
-		dialog = MedicalRecordDialog(default, parent)
-		result = dialog.exec_()
-		if result == QtGui.QDialog.Accepted:
-			return (dialog.getPatientInfo()), True
-		else :
-			return None, False
+	# @staticmethod
+	# def newRecord(default, parent = None):
+	# 	dialog = MedicalRecordDialog(default, parent)
+	# 	result = dialog.exec_()
+	# 	if result == QtGui.QDialog.Accepted:
+	# 		return (dialog.getPatientInfo()), True
+	# 	else :
+	# 		return None, False
+
+import sys
+def main():
+	app = QtGui.QApplication(sys.argv)
+	ex = MedicalRecordDialog(None)
+	ex.show()
+	sys.exit(app.exec_())
+
+if __name__ == '__main__':
+	main()

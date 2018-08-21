@@ -11,6 +11,10 @@ import numpy as np
 import cv2
 from PyQt4 import QtGui
 
+def setButtonIcon(iconFile, button):
+	icon = QtGui.QIcon(iconFile)
+	button.setIcon(icon)
+
 
 def image_colorfulness(image):
 	# split the image into its respective RGB components

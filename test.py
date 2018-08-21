@@ -90,22 +90,21 @@ font-family:arial;\
     font: bold 24px;\
     min-width: 10em;\
     padding: 6px;\
-    selection-color : white;\
-    selection-background-color : white;\
-};\
-QPushButton:selected{background-color:white; color: black;}\
-QPushButton:cliked{background-color:white; color: black;}\
-QPushButton:pressed{background-color:white; color: black;}\
-QPushButton:hover{background-color:white; color: black;}\
-QPushButton:focus{background-color:white; color: black;}\
-QPushButton:checked{background-color:white; color: black;}\
+} \
+QPushButton:focus{background-color:white;}\
+QPushButton:pressed{background-color:red;}\
 "
+defaultButtonStyle = 'QPushButton {border-radius: 12px;font-size:32px;font-family:arial;background-color: #1B87E4; color : white} QPushButton:pressed{background-color:#006ED9;border-style: inset;}'
+
+def setButtonIcon(iconFile, button):
+	icon = QtGui.QIcon(iconFile)
+	button.setIcon(icon)
 class MyWidget(QtGui.QWidget):
 	randSignal = QtCore.pyqtSignal(int, list)
 
 	def __init__(self, parent=None):
 		super(MyWidget, self).__init__(parent)
-		self.setGeometry(0, 0, 800, 480)
+		self.setGeometry(200, 200, 800, 480)
 		print(self.x())
 		print(self.frameGeometry())
 		self.setStyleSheet('background-color:black')
@@ -121,7 +120,8 @@ class MyWidget(QtGui.QWidget):
 		self.setLayout(self.hlayout)
 		self.b = QtGui.QPushButton("Emit your signal!", self)
 		# self.b.resize((self.b.size()[0], self.b.size()[1] * 2))
-		self.b.setStyleSheet('QPushButton {border-radius: 12px;font-size:32px;font-family:arial;background-color: #1B87E4; color : white}; QPushButton:pressed{background-color:#006ED9}')
+		self.b.setStyleSheet(buttonStyle)
+		setButtonIcon('icons/photo-camera.svg', self.b)
 		# self.b.setStyleSheet(buttonStyle)
 		self.connect(self.b, QtCore.SIGNAL("clicked()"),
 					self.clickHandler)
@@ -130,12 +130,11 @@ class MyWidget(QtGui.QWidget):
 		self.hlayout.addWidget(self.label)
 		self.painter = PainterWidget()
 		# self.hlayout.addWidget(self.painter)
-		self.painter.setImageData(cv2ImagaeToQtImage(cv2.imread('logo.png')))
 
 	def clickHandler(self):
 		self.b.setEnabled(False)
 		print ('sleep 10 secs')
-		time.sleep(3)
+		# time.sleep(3)
 		self.b.setEnabled(True)
 		print ('sleep end')
 		
@@ -161,10 +160,7 @@ def main():
 if __name__ == '__main__':
 	#getImage()
 	
-	if dict():
-		print ('flase')
-	else :
-		print ('true')
+	main()
 	
 	
 # if __name__ == '__main__':

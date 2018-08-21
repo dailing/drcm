@@ -1,11 +1,38 @@
+from time import gmtime, strftime
 class PatientInfo():
-	def __init__(self, name, pid, gender, birthday, leftEye, timestamp, uuid, data):
-		
+	"""docstring for BasicInfo"""
+	def __init__(self, name, pid, gender, birthday, leftEye):
+		# PatientInfo('name', '1234', False, '2018-09-08', True)
 		self.name = name
 		self.pid = pid
 		self.gender = gender
 		self.birthday = birthday
 		self.leftEye = leftEye
+		self.timeOnCreation = strftime("%Y-%m-%d", gmtime())
+
+	def getCreationTime(self):
+		return self.timeOnCreation
+		
+	def isMale(self):
+		return self.gender
+
+	def getName(self):
+		return self.name
+
+	def getPid(self):
+		return self.pid
+
+	def isLeftEye(self):
+		return self.leftEye
+
+	def getBirthday(self):
+		return self.birthday
+
+class ImageInfo(PatientInfo):
+	# ImageInfo('name', 'pid', 'gender', 'birthday', 'left', 'ts', 'uuid', 'data')
+	def __init__(self, name, pid, gender, birthday, leftEye, timestamp, uuid, data):
+		PatientInfo.__init__(self, name, pid, gender, birthday, leftEye)
+
 		self.timestamp = timestamp
 		self.uuid = uuid
 		self.data = data
@@ -21,26 +48,18 @@ class PatientInfo():
 	def setData(self, data):
 		self.data = data
 
-	def isMale(self):
-		return self.gender
-
-	def getName(self):
-		return self.name
-
-	def getPid(self):
-		return self.pid
-
-	def isLeftEye(self):
-		return self.leftEye
-
 	def getData(self):
 		return self.data
 
 	def getUUID(self):
 		return self.uuid
 
-	def getBirthday(self):
-		return self.birthday
-
 	def getTimeId(self):
 		return self.timestamp
+
+
+def main():
+	imageInfo = ImageInfo('name', 'pid', 'gender', 'birthday', 'left', 'ts', 'uuid', 'data')
+	print(imageInfo.getName())
+if __name__ == '__main__':
+	main()

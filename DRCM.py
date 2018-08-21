@@ -33,13 +33,8 @@ from utils.auxs import *
 from utils.folderUtils import ensurePath
 from utils.singleShotTimer import SingleShotTimer
 from utils.CircleMask import CircleMask
+from utils.CameraLED import ViewFixationLED, Infrared_LED, Flash_LED
 from subprocess import Popen, PIPE
-
-try:
-	from gpiozero import LED
-	from gpiozero import PWMLED as pwm
-except Exception as e:
-	pass
 
 import socket
 
@@ -65,23 +60,22 @@ def get_host_ip():
 class VideoReader():
 	def __init__(self):
 		pass
-		self.reader = cv2.VideoCapture(0)
-		logger = logging.getLogger('root.VideoReader')
-		try:
-			self.reader.set(3,640);
-			self.reader.set(4,480);
-			# self.reader.set(38, 4)
-		except Exception as e:
-			print (str(e))
-			logger.exception(e)
-		logger.debug('finish open video')
-		logger.info('buffer size for camera : {}'.format(self.reader.get(38)))
-
-		
+		# self.reader = cv2.VideoCapture(0)
+		# logger = logging.getLogger('root.VideoReader')
+		# try:
+		# 	self.reader.set(3,640);
+		# 	self.reader.set(4,480);
+		# 	# self.reader.set(38, 4)
+		# except Exception as e:
+		# 	print (str(e))
+		# 	logger.exception(e)
+		# logger.debug('finish open video')
+		# logger.info('buffer size for camera : {}'.format(self.reader.get(38)))
+		self.image = cv2.imread('eye.jpg')
 
 
 	def read(self):
-		return self.reader.read()
+		return [True, self.image]
 
 CaptureButtonStyle = "QPushButton { \
 background-color: #1B87E4;\
@@ -94,76 +88,11 @@ font-family:arial;\
     font: bold 24px;\
     padding: 6px;\
 }\
-QPushButton:pressed{background-color:#007ED9}\
+QPushButton:pressed{background-color:#007E59}\
 "
-
-#13,26
-FIXED_LED = [5,6,13,19,26,16,20,21]
-def offFixedLed():
-	try:
-		for l in FIXED_LED:
-			LED(l).off()
-	except Exception as e:
-		pass
-try:
-	led5 = pwm(5)
-	led6 = LED(6)
-except Exception as e:
-	pass
-
-def toggleFixedLed():
-	led5.toggle()
-
-def switchFixedLed():
-	try:
-		for l in FIXED_LED:
-			LED(l).toggle()
-	except Exception as e:
-		pass
-
-# def infraredLed():
-# 	LED(2).toggle()
-
-# def flashLed():
-# 	LED(3).toggle()
-try:
-	infraredLed = LED(17)
-	flashLed = pwm(4)
-except Exception as e:
-	pass
-def focusLedOn():
-	try:
-		flashLed.value = 0.0
-	except Exception as e:
-		pass
-	try:
-		infraredLed.on()
-	except Exception as e:
-		pass
-	try:
-		led5.value = 0
-	except Exception as e:
-		pass
+default_button_style = 'QPushButton {border-radius: 12px;font-size:32px;font-family:arial;background-color: white;} QPushButton:pressed{background-color:#007ED9}'
 
 
-def exposureOn():
-	try:
-		infraredLed.off()
-	except Exception as e:
-		pass
-	try:
-		led5.value = 0
-	except Exception as e:
-		pass
-	try:
-		flashLed.value = 0.9
-		led6.off()
-	except Exception as e:
-		pass
-
-
-def function():
-	pass
 
 def setBackGroundColor(aWidget, color):
 	aWidget.setAutoFillBackground(True)
@@ -184,10 +113,8 @@ class ImageCapture(QtGui.QMainWindow):
 	LAST_PATIENT = 'patientInfo.pkl'
 
 
-	dbInsertSignal = QtCore.pyqtSignal(bool)
 	uploadSignal = QtCore.pyqtSignal(list)
 	queryTableSignal = QtCore.pyqtSignal(list)
-	remoteProcessSignal = QtCore.pyqtSignal(dict)
 	
 	def __init__(self, logger):
 		QtGui.QMainWindow.__init__(self, None)
@@ -199,38 +126,26 @@ class ImageCapture(QtGui.QMainWindow):
 		self.logger.info('init ui finished')
 
 		self.timer.start(ImageCapture.UPDATE_FREQ)
-		offFixedLed()
 		focusLedOn()
 		self.logger.info('init main finished')
 
 	def initEnv(self):
 		self.imgCnt = 0
-		self.preImageData = None
-		self.pw = PoolWrapper()
-		self.dbManager = DataBaseManager('patientRecord.db')
 		self.patientInfo = loadObj(ImageCapture.LAST_PATIENT)
-		self.timer = QtCore.QTimer()
-		self.ledTimer = SingleShotTimer()
-		self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.updateFrame)
-		self.ledTimer.connect(self, focusLedOn)
-		self.camera = VideoReader()
-		self.model = ViewModel()
-		self.mask = CircleMask()
+		
 		self.logger.info('to register callback')
 		#register callback
 		
-		self.dbInsertSignal.connect(self.saveImageCallBack)
 		self.uploadSignal.connect(self.uploadCallBack)
 		self.queryTableSignal.connect(self.appendDataToModel)
-		self.remoteProcessSignal.connect(self.processImageCallBack)
 		#get all previous captured image to list view
-		self.dbManager.getAllRows(self.queryTableSignal)
+		# self.dbManager.getAllRows(self.queryTableSignal)
 		
 		
 	def initUI(self):
 		self.setWindowTitle('DRCM')
-		self.showFullScreen()
-		# self.setGeometry(200, 200, 800, 480)
+		# self.showFullScreen()
+		self.setGeometry(200, 200, 800, 480)
 		# self.resize(800, 480)
 
 
@@ -240,22 +155,7 @@ class ImageCapture(QtGui.QMainWindow):
 		
 
 
-	def processImage(self):
-		self.logger.debug('processImage')
-		if self.timer.isActive() or self.preImageData is None:
-			return
-		self.pw.start(
-			RunnableFunc(
-				uploadClient(self.dbManager).remoteProcess,
-				self.preImageData,
-				self.remoteProcessSignal
-				)
-			)
 
-	def processImageCallBack(self, diagnosis):
-		self.logger.debug('diagnosis display')
-		DiagnosisDialog.newInstance(diagnosis)
-		self.logger.debug ('end process')
 		
 
 	def createButtonLayout(self):
@@ -268,11 +168,11 @@ class ImageCapture(QtGui.QMainWindow):
 			ipadd
 			)
 		setLabelStyle(self.patientIdentify)
-		bottomLayout.addWidget(self.patientIdentify)
+		# bottomLayout.addWidget(self.patientIdentify)
 
 		bottomLayout.addStretch(1)
 		def addButton(label, action):
-			default_button_style = 'QPushButton {border-radius: 12px;font-size:32px;font-family:arial;background-color: #1B87E4; color : white}; QPushButton:pressed{background-color:#007ED9}'
+			
 			button = QtGui.QPushButton(label)
 			button.setStyleSheet(CaptureButtonStyle)
 			bottomLayout.addWidget(button)
@@ -282,6 +182,8 @@ class ImageCapture(QtGui.QMainWindow):
 			return button
 			
 		self.captureButton = addButton('Capture', self.snapShot)
+		
+		# setButtonIcon('icons/photo-camera.svg', self.captureButton)
 		# uploadButton  = addButton('Upload', self.uploadImages)
 		# ledButton = addButton('Led', toggleFixedLed)
 		# pageButton = addButton('NewRecord', self.newRecord)
@@ -329,53 +231,6 @@ class ImageCapture(QtGui.QMainWindow):
 		self.clearListView()
 		self.appendDataToModel(items)
 
-
-	def snapShot(self):
-		
-		self.scheduleUpdating()
-		
-		
-
-	def  saveImage(self, imageData):
-		self.imgCnt += 1
-		cv2.imwrite('{}.png'.format(self.imgCnt), imageData)
-		return
-		if self.patientInfo is None:
-			self.captureButton.setEnabled(True)
-			return
-
-		
-		self.patientInfo.setTime(getTimeStamp())
-		self.patientInfo.setUUID(getUUID())
-		self.patientInfo.setData(
-			encodeImageToDBdata(imageData)
-			)
-		# to do: push to DB
-		# self.pw.start(
-		# 	RunnableFunc(
-		# 		self.dbManager.insertRecord,
-		# 		self.patientInfo,
-		# 		self.dbInsertSignal
-		# 		)
-		# 	)
-		self.dbManager.insertRecord(self.patientInfo, self.dbInsertSignal)
-
-
-	def saveImageCallBack(self, isSucceed):
-		print(isSucceed)
-		if isSucceed:
-			ts = self.patientInfo.getTimeId()
-			print(ts, type(ts))
-			dt = getDateTimeFromTS(ts)
-			foo = '{} {}'.format(self.patientInfo.getPid(), dt)
-			self.model.pushFront(foo)
-		else :
-			QtGui.QMessageBox.warning(
-				QtGui.QWidget(), "Error", "save data failed!")
-
-		self.captureButton.setEnabled(True)
-
-
 	def newRecord(self):
 		reply, okPressed = MedicalRecordDialog.newRecord(self.patientInfo);
 		print(reply)
@@ -384,65 +239,12 @@ class ImageCapture(QtGui.QMainWindow):
 			self.patientIdentify.setText(self.patientInfo.getPid())
 			saveObj(ImageCapture.LAST_PATIENT,
 				self.patientInfo)
-			
 
-	def scheduleUpdating(self):
-		if self.timer.isActive():
-			self.captureButton.setEnabled(False)
-			self.timer.stop()
-			
-			try:
-				self.flashFrame()
-			except Exception as e:
-				self.logger.exception('flash Frame')
-				pass
-			finally :
-				self.captureButton.setEnabled(True)
-				
-		else :
-			self.timer.start(ImageCapture.UPDATE_FREQ)
-
-	def flashFrame(self, num = 3):
-		#exposure
-		exposureOn()
-		data = [self.mask.getROI(self.camera.read()[1])]
-		focusLedOn()
-		newData = [self.mask.getROI(self.camera.read()[1]) for i in range(5)]
-		data.extend(newData)
-		self.logger.debug('num of imgs {}'.format(len(data)))
-		# best_img = get_most_colorful_image(data)
-		best_img = data[4]
-		self.preImageData = best_img
-		
-		for img in data:
-			self.saveImage(img)
-		# self.saveImage(best_img)
-
-		# frame_to_display = cv2.resize(best_img, DISPLAY_SIZE)
-		mQImage = cv2ImagaeToQtImage(best_img)
-		self.painter.setImageData(mQImage)
-		#end
-
-	def updateFrame(self, saveTodisk = False):
-		ret, frame = self.camera.read()
-		if not ret:
-			if not sys.platform.startswith('win'):
-				self.camera = VideoReader()
-			self.captureButton.setEnabled(True)
-			return
-		frame = self.mask.getROI(frame)
-		# frame_to_display = cv2.resize(frame, DISPLAY_SIZE)
-		# assert frame_to_display.shape == frame.shape
-		# if saveTodisk:
-		# 	self.saveImage(frame)
-		mQImage = cv2ImagaeToQtImage(frame)
-		self.painter.setImageData(mQImage)
 
 	def createListView(self):
 		listView = QtGui.QListView()
 		listView.setModel(self.model)
 		return listView
-
 		
 
 	def createLeftPanelView(self):
@@ -453,21 +255,6 @@ class ImageCapture(QtGui.QMainWindow):
 		self.stacked_widget.addWidget(WifiTableView())
 		setBackGroundColor(self.stacked_widget, QtCore.Qt.black)
 		return self.stacked_widget
-
-	def switchToImageView(self):
-		if self.stacked_widget.currentIndex() == 0:
-			return
-		self.stacked_widget.setCurrentIndex(0)
-
-	def switchToInfoView(self):
-		if self.stacked_widget.currentIndex() == 2:
-			return
-		self.stacked_widget.setCurrentIndex(2)
-
-	def switchToWlanView(self):
-		if self.stacked_widget.currentIndex() == 1:
-			return
-		self.stacked_widget.setCurrentIndex(1)
 
 	def createMainGui(self):
 
@@ -486,60 +273,17 @@ class ImageCapture(QtGui.QMainWindow):
 		self.close()
 
 	def create_menu(self):
-		pass
 		self.connect(QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Escape), self), QtCore.SIGNAL('activated()'), self.exitElegantly)
-		# self.file_menu = self.menuBar().addMenu("&File")
-		
-		# getImageAction = self.create_action("snapShot",
-		# 	shortcut="Ctrl+I", slot=self.snapShot, tip="take a picture")
-		
-		# exit_action = self.create_action("E&xit", slot=self.exitElegantly, 
-		# 	shortcut="Ctrl+W", tip="Exit the application")
-
-		
-		# self.add_actions(self.file_menu, 
-		# 	(   getImageAction,
-		# 		None, exit_action))
-		
-	# The following two methods are utilities for simpler creation
-	# and assignment of actions
-	#
-	def add_actions(self, target, actions):
-		for action in actions:
-			if action is None:
-				target.addSeparator()
-			else:
-				target.addAction(action)
-	#-----------------------------------------------
-
-	def create_action(
-		self, text, slot=None, shortcut=None, 
-						icon=None, tip=None, checkable=False, 
-						signal="triggered()"):
-		action = QtGui.QAction(text, self)
-		if icon is not None:
-			action.setIcon(QIcon(":/{}.png".format(icon)))
-		if shortcut is not None:
-			action.setShortcut(shortcut)
-		if tip is not None:
-			action.setToolTip(tip)
-			action.setStatusTip(tip)
-		if slot is not None:
-			self.connect(action, QtCore.SIGNAL(signal), slot)
-		if checkable:
-			action.setCheckable(True)
-		return action
-	#-----------------------------------------------
 		
 		
 def main(logger):
 	app = QtGui.QApplication(sys.argv)
-	# splash= SplashScreen("logo.png")  
-	# splash.effect()
-	# app.processEvents() 
+	splash= SplashScreen("icons/logo.jpg")  
+	splash.effect()
+	app.processEvents() 
 	ex = ImageCapture(logger)
 	ex.show()
-	# splash.finish(ex)
+	splash.finish(ex)
 	sys.exit(app.exec_())
 
 
