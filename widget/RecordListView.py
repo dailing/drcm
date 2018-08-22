@@ -5,6 +5,7 @@ from PatientDataFormat import PatientInfo
 class QCustomQWidget (QtGui.QWidget):
 	def __init__ (self, patient, parent = None):
 		super(QCustomQWidget, self).__init__(parent)
+		self.patient = patient
 		self.iconQLabel      = QtGui.QLabel()
 		if patient.isMale():
 			self.iconQLabel.setPixmap(QtGui.QPixmap('male_48.png'))
@@ -19,7 +20,9 @@ class QCustomQWidget (QtGui.QWidget):
 		self.allQHBoxLayout.addWidget(self.nameQLabel, 1)
 		self.allQHBoxLayout.addWidget(self.pidQLabel, 2)
 		self.allQHBoxLayout.addWidget(self.createTimeQLabel, 3)
-		self.setLayout(self.allQHBoxLayout)		
+		self.setLayout(self.allQHBoxLayout)
+	def getPatient(self):
+		return self.patient
 		
 class RecordListView(QtGui.QListWidget):
 	"""docstring for RecordListView"""

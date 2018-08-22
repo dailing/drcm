@@ -1,12 +1,19 @@
 from PyQt4 import QtCore, QtGui
 
+from widget.VideoView import VideoView
+from widget.RecordListView import RecordListView
+from widget.MedicalRecordDialog import MedicalRecordDialog
 class PageManager(QtCore.QObject):
 	"""docstring for PageManager"""
 	nextPageSignal = QtCore.pyqtSignal()
-	def __init__(self, pages):
+	def __init__(self):
 		QtCore.QObject.__init__(self)
 		self.stacked_widget = QtGui.QStackedWidget()
-		self.pageId = list()
+		self.pageId = [
+			RecordListView(),
+			MedicalRecordDialog(),
+			VideoView(),
+		]
 		self.nextPageSignal.connect(self.nextPage)
 
 		self.nextPageId = -1

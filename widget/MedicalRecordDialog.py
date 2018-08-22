@@ -6,13 +6,13 @@ from SingleChoiceButton import SingleChoiceButton
 
 from PatientDataFormat import PatientInfo, ImageInfo
 
-
+from HeadWidget import HeadWidget
 class MedicalRecordDialog(QtGui.QWidget):
 	def __init__(self, default, parent = None):
 		QtGui.QWidget.__init__(self, parent)
-
+		
 		layout = QtGui.QVBoxLayout(self)
-
+		layout.addWidget(self.createHeadWidget())
 		self.patientName = LabelText(
 			' name '
 			)
@@ -58,6 +58,12 @@ class MedicalRecordDialog(QtGui.QWidget):
 			self.gender.getOption() == 'male' ,
 			self.patientBirthDay.getTime(),
 			self.eye.getOption() == 'left', None, None, None)
+
+	def createHeadWidget(self):
+		myQCustomQWidget = HeadWidget('Record list')
+		myQCustomQWidget.setLeftIcon('back_48.png')
+		myQCustomQWidget.setRightIcon('camera_48.png')
+		return myQCustomQWidget
 
 	# @staticmethod
 	# def newRecord(default, parent = None):

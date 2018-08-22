@@ -2,7 +2,23 @@ from PyQt4 import QtGui, QtCore
 import sys
 
 from PainterWidget import PainterWidget
+
+ButtonStyle = "QPushButton { \
+background-color: #1B87E4;\
+font-family:arial;\
+    border-style: solid;\
+    color:black;\
+    border-width: 2px;\
+    border-radius: 10px;\
+    border-color: #1B87E4;\
+    font: bold 24px;\
+    padding: 6px;\
+}\
+QPushButton:pressed{background-color:#007E59}\
+"
+
 def defaultButtonClickHandler():
+	print ('clicked')
 	pass
 	
 class VideoView(QtGui.QWidget):
@@ -10,11 +26,21 @@ class VideoView(QtGui.QWidget):
 	def __init__(self):
 		QtGui.QWidget.__init__(self)
 		self.initUI()
-		self.setGeometry(200, 200, 800, 480)
+		self.resize(800, 480)
 
 	def addButton(self, label, action, layout):
 			
 		button = QtGui.QPushButton(label)
+		button.setStyleSheet(ButtonStyle)
+		layout.addWidget(button)
+		self.connect(button, QtCore.SIGNAL("clicked()"),
+				action)
+		return button
+
+	def addLabel(self, iconPath, action, layout):
+			
+		button = QtGui.QLabel()
+		button.setPixmap(QtGui.QPixmap(iconPath))
 		layout.addWidget(button)
 		self.connect(button, QtCore.SIGNAL("clicked()"),
 				action)
@@ -29,7 +55,7 @@ class VideoView(QtGui.QWidget):
 	def createRightButtons(self):
 		leftLayout = QtGui.QVBoxLayout()
 		self.addButton('SNAP', defaultButtonClickHandler, leftLayout)
-		self.addButton('DIAGNOSIS', defaultButtonClickHandler, leftLayout)
+		self.addButton('DIAG', defaultButtonClickHandler, leftLayout)
 		return leftLayout
 
 	def initUI(self):

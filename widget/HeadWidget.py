@@ -4,7 +4,6 @@ class HeadWidget(QtGui.QWidget):
 	"""docstring for HeadWidget"""
 	def __init__(self, middleText):
 		QtGui.QWidget.__init__(self)
-		self.resize(800, 48)
 		self.leftIcon = QtGui.QLabel()
 		self.rightIcon = QtGui.QLabel()
 		self.middleText = QtGui.QLabel(middleText)
@@ -30,3 +29,9 @@ class HeadWidget(QtGui.QWidget):
 		self.rightIcon.setPixmap(QtGui.QPixmap(iconPath))
 		self.rightIcon.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
 		self.rightIcon.setContentsMargins(0, 0, 0, 0)
+
+	def leftLabel(self):
+		return self.leftIcon
+
+	def rightLabel(self):
+		return self.rightIcon
