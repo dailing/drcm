@@ -12,7 +12,7 @@ class PageManager(QtCore.QObject):
 		self.pageId = [
 			RecordListView(),
 			MedicalRecordDialog(),
-			VideoView(),
+			VideoView()
 		]
 		self.nextPageSignal.connect(self.nextPage)
 
