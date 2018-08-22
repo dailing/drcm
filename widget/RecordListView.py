@@ -32,6 +32,8 @@ class RecordListView(QtGui.QListWidget):
 		self.setGeometry(200, 200, 800, 480)
 		self.setStyleSheet( "QListWidget::item { border-bottom: 1px solid #999999; }");
 
+		self.clicked.connect(self.expandRecord)
+
 		self.state = state
 		self.selectedRecord = None
 
@@ -44,8 +46,25 @@ class RecordListView(QtGui.QListWidget):
 		myQCustomQWidget.resize(item.sizeHint())
 		self.addItem(item)
 		self.setItemWidget(item, myQCustomQWidget)
+		myQCustomQWidget.leftLabel().mousePressEvent = self.backEvent
+		myQCustomQWidget.rightLabel().mousePressEvent = self.newRecord
 
 		pass
+
+	def newRecord(self, event):
+		#emit signal
+
+		print ('new Record')
+
+	def expandRecord(self, event):
+		#put patient to page manager
+		#emit signal
+		print ('expand')
+
+	def backEvent(self, event):
+		#emit signal
+		
+		print (event)
 
 	def setState(self, state):
 		self.state = state
