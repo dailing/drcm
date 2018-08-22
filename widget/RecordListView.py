@@ -98,8 +98,8 @@ class RecordListView(QtGui.QListWidget):
 			PatientInfo('other', '1244', True, '2018-09-08', True)] :
 			self.appendRow(record)
 
-# app = QtGui.QApplication([])
-# window = RecordListView()
-# window.initDefault()
-# window.show()
-# sys.exit(app.exec_())
+app = QtGui.QApplication([])
+window = RecordListView(None)
+window.initDefault()
+window.show()
+sys.exit(app.exec_())
