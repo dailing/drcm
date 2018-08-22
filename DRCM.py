@@ -35,7 +35,7 @@ from utils.singleShotTimer import SingleShotTimer
 from utils.CircleMask import CircleMask
 from utils.CameraLED import ViewFixationLED, Infrared_LED, Flash_LED
 from subprocess import Popen, PIPE
-
+from utils.PageManager import PageManager
 import socket
 
 def get_host_ip():
@@ -57,25 +57,6 @@ def get_host_ip():
 		return 'None'
 	return '\n'.join(addresses[1:])
 
-class VideoReader():
-	def __init__(self):
-		pass
-		# self.reader = cv2.VideoCapture(0)
-		# logger = logging.getLogger('root.VideoReader')
-		# try:
-		# 	self.reader.set(3,640);
-		# 	self.reader.set(4,480);
-		# 	# self.reader.set(38, 4)
-		# except Exception as e:
-		# 	print (str(e))
-		# 	logger.exception(e)
-		# logger.debug('finish open video')
-		# logger.info('buffer size for camera : {}'.format(self.reader.get(38)))
-		self.image = cv2.imread('eye.jpg')
-
-
-	def read(self):
-		return [True, self.image]
 
 CaptureButtonStyle = "QPushButton { \
 background-color: #1B87E4;\
@@ -125,8 +106,7 @@ class ImageCapture(QtGui.QMainWindow):
 		self.initUI()
 		self.logger.info('init ui finished')
 
-		self.timer.start(ImageCapture.UPDATE_FREQ)
-		focusLedOn()
+		# focusLedOn()
 		self.logger.info('init main finished')
 
 	def initEnv(self):
@@ -137,10 +117,9 @@ class ImageCapture(QtGui.QMainWindow):
 		#register callback
 		
 		self.uploadSignal.connect(self.uploadCallBack)
-		self.queryTableSignal.connect(self.appendDataToModel)
+		# self.queryTableSignal.connect(self.appendDataToModel)
 		#get all previous captured image to list view
 		# self.dbManager.getAllRows(self.queryTableSignal)
-		
 		
 	def initUI(self):
 		self.setWindowTitle('DRCM')
@@ -149,56 +128,9 @@ class ImageCapture(QtGui.QMainWindow):
 		# self.resize(800, 480)
 
 
-		self.create_menu()
+		self.createShortCut()
 		self.createMainGui()
 		self.show()
-		
-
-
-
-		
-
-	def createButtonLayout(self):
-		bottomLayout = QtGui.QVBoxLayout()
-
-		bottomLayout.addStretch(1)
-		ipadd = get_host_ip()
-		print(ipadd, type(ipadd))
-		self.patientIdentify = QtGui.QLabel(
-			ipadd
-			)
-		setLabelStyle(self.patientIdentify)
-		# bottomLayout.addWidget(self.patientIdentify)
-
-		bottomLayout.addStretch(1)
-		def addButton(label, action):
-			
-			button = QtGui.QPushButton(label)
-			button.setStyleSheet(CaptureButtonStyle)
-			bottomLayout.addWidget(button)
-			self.connect(button, QtCore.SIGNAL("clicked()"),
-					action)
-			# button.setStyleSheet("")
-			return button
-			
-		self.captureButton = addButton('Capture', self.snapShot)
-		
-		# setButtonIcon('icons/photo-camera.svg', self.captureButton)
-		# uploadButton  = addButton('Upload', self.uploadImages)
-		# ledButton = addButton('Led', toggleFixedLed)
-		# pageButton = addButton('NewRecord', self.newRecord)
-		
-		addButton('Process', self.processImage)
-
-		bottomLayout.addStretch(1)
-		# self.captureButton.setStyleSheet(CaptureButtonStyle)
-
-		addButton('IMAGE', self.switchToImageView)
-		# addButton('INFO', self.switchToInfoView)
-		addButton('WLAN', self.switchToWlanView)
-		
-		bottomLayout.addStretch(1)
-		return bottomLayout
 
 	def uploadImages(self):
 		# ipadd = get_host_ip()
@@ -213,38 +145,12 @@ class ImageCapture(QtGui.QMainWindow):
 			)
 
 
-	def clearListView(self):
-		self.model.clear()
-
-	def appendDataToModel(self, items):
-		for item in items:
-			patiendName = item[1]
-			recordTime = getDateTimeFromTS(item[2])
-			if item[0] == 0:
-				foo = '{} {}'.format(patiendName, recordTime)
-			else :
-				foo = u'\u2713 {} {}'.format(patiendName, recordTime)
-			self.model.pushBack(foo)
 
 	def uploadCallBack(self, items):
 		#clear and update list view
 		self.clearListView()
 		self.appendDataToModel(items)
 
-	def newRecord(self):
-		reply, okPressed = MedicalRecordDialog.newRecord(self.patientInfo);
-		print(reply)
-		if okPressed:
-			self.patientInfo = reply
-			self.patientIdentify.setText(self.patientInfo.getPid())
-			saveObj(ImageCapture.LAST_PATIENT,
-				self.patientInfo)
-
-
-	def createListView(self):
-		listView = QtGui.QListView()
-		listView.setModel(self.model)
-		return listView
 		
 
 	def createLeftPanelView(self):
@@ -258,21 +164,15 @@ class ImageCapture(QtGui.QMainWindow):
 
 	def createMainGui(self):
 
-		buttonLayout = self.createButtonLayout()
-		leftPanelView = self.createLeftPanelView()
-		layout = QtGui.QGridLayout()
-		layout.addWidget(leftPanelView, 0, 0, 4, 4)
-		layout.addLayout(buttonLayout, 0, 4, 4, 1)
-		self.main_frame = QtGui.QWidget()
-		self.main_frame.setLayout(layout)
+		self.pm = PageManager()
+		self.main_frame = self.pm.getWidget()
 		setBackGroundColor(self.main_frame, QtCore.Qt.black)
 		self.setCentralWidget(self.main_frame)
 
 	def exitElegantly(self):
-		self.timer.stop()
 		self.close()
 
-	def create_menu(self):
+	def createShortCut(self):
 		self.connect(QtGui.QShortcut(QtGui.QKeySequence(QtCore.Qt.Key_Escape), self), QtCore.SIGNAL('activated()'), self.exitElegantly)
 		
 		

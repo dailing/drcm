@@ -1,8 +1,9 @@
 from PyQt4 import QtGui, QtCore
-import sys
-
+import os, sys
+sys.path.append(os.path.dirname(os.path.realpath('.')))
+# /media/markalso/0C9EC8AB9EC88F20/test/camera/
 from PainterWidget import PainterWidget
-
+from VideoManager import VideoManager
 ButtonStyle = "QPushButton { \
 background-color: #1B87E4;\
 font-family:arial;\
@@ -48,20 +49,24 @@ class VideoView(QtGui.QWidget):
 
 	def createLeftButtons(self):
 		leftLayout = QtGui.QVBoxLayout()
-		self.addButton('Back', defaultButtonClickHandler, leftLayout)
+		self.addButton('BACK', defaultButtonClickHandler, leftLayout)
 		self.addButton('LED', defaultButtonClickHandler, leftLayout)
 		return leftLayout
 
 	def createRightButtons(self):
 		leftLayout = QtGui.QVBoxLayout()
-		self.addButton('SNAP', defaultButtonClickHandler, leftLayout)
+		self.addButton('SNAP', self.vm.snap, leftLayout)
 		self.addButton('DIAG', defaultButtonClickHandler, leftLayout)
 		return leftLayout
 
 	def initUI(self):
+		self.canvas = PainterWidget()
+		self.vm = VideoManager(self.canvas, None)
+		self.vm.startCanvas()
+
 		leftLayout = self.createLeftButtons()
 		rightLayout = self.createRightButtons()
-		self.canvas = PainterWidget()
+		
 		layout = QtGui.QGridLayout(self)
 		layout.addLayout(leftLayout, 0, 0, 8, 1)
 		layout.addWidget(self.canvas, 0, 1, 8, 8)

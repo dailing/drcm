@@ -27,15 +27,15 @@ class QCustomQWidget (QtGui.QWidget):
 class RecordListView(QtGui.QListWidget):
 	"""docstring for RecordListView"""
 
-	def __init__(self, state = []):
+	def __init__(self, pageManager, recordList = []):
 		QtGui.QListWidget.__init__(self)
 		self.setGeometry(200, 200, 800, 480)
 		self.setStyleSheet( "QListWidget::item { border-bottom: 1px solid #999999; }");
 
 		self.clicked.connect(self.expandRecord)
 
-		self.state = state
-		self.selectedRecord = None
+		self.recordList = recordList
+		self.pm = pageManager
 
 		#add head bar
 		myQCustomQWidget = HeadWidget('Record list')
@@ -51,19 +51,26 @@ class RecordListView(QtGui.QListWidget):
 
 		pass
 
+	def setPageManager(self, pm):
+		self.pm = pm
+
 	def newRecord(self, event):
 		#emit signal
 
 		print ('new Record')
 
 	def expandRecord(self, event):
+		row = event.row()
+		if 0 == row :
+			return
 		#put patient to page manager
 		#emit signal
+		self.pm.setState(self.recordList[row])
 		print ('expand')
 
 	def backEvent(self, event):
 		#emit signal
-		
+
 		print (event)
 
 	def setState(self, state):
@@ -91,8 +98,8 @@ class RecordListView(QtGui.QListWidget):
 			PatientInfo('other', '1244', True, '2018-09-08', True)] :
 			self.appendRow(record)
 
-app = QtGui.QApplication([])
-window = RecordListView()
-window.initDefault()
-window.show()
-sys.exit(app.exec_())
+# app = QtGui.QApplication([])
+# window = RecordListView()
+# window.initDefault()
+# window.show()
+# sys.exit(app.exec_())

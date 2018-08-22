@@ -14,7 +14,7 @@ DISPLAY_SIZE = (640, 480)
 class VideoReader():
 	def __init__(self):
 		pass
-		self.reader = cv2.VideoCapture(0)
+		self.reader = cv2.VideoCapture(1)
 		logger = logging.getLogger('root.VideoReader')
 		try:
 			self.reader.set(3,640);
@@ -23,8 +23,28 @@ class VideoReader():
 		except Exception as e:
 			print (str(e))
 			logger.exception(e)
+		self.getParameters()
 		logger.debug('finish open video')
 		logger.info('buffer size for camera : {}'.format(self.reader.get(38)))
+
+	def getParameters(self):
+		self.reader.set(cv2.CAP_PROP_AUTO_EXPOSURE, 3)
+		self.reader.set(cv2.CAP_PROP_EXPOSURE, 0.1)
+		self.reader.set(cv2.CAP_PROP_HUE, 2)
+
+		print ('CAP_PROP_FPS', self.reader.get(cv2.CAP_PROP_FPS))
+		print ('CAP_PROP_MODE', self.reader.get(cv2.CAP_PROP_MODE))
+		print ('CAP_PROP_BRIGHTNESS', self.reader.get(cv2.CAP_PROP_BRIGHTNESS))
+		print ('CAP_PROP_CONTRAST', self.reader.get(cv2.CAP_PROP_CONTRAST))
+		print ('CAP_PROP_SATURATION', self.reader.get(cv2.CAP_PROP_SATURATION))
+		print ('CAP_PROP_EXPOSURE', self.reader.get(cv2.CAP_PROP_EXPOSURE))
+		print ('CAP_PROP_BUFFERSIZE', self.reader.get(cv2.CAP_PROP_BUFFERSIZE))
+		print ('CAP_PROP_GAIN', self.reader.get(cv2.CAP_PROP_GAIN))
+		print ('CAP_PROP_HUE', self.reader.get(cv2.CAP_PROP_HUE))
+		print ('CAP_PROP_ISO_SPEED', self.reader.get(cv2.CAP_PROP_ISO_SPEED))
+
+
+
 
 	def read(self):
 		return self.reader.read()
@@ -152,6 +172,7 @@ class VideoManager(QtCore.QObject):
 
 	def  saveImage(self, imageData):
 		if self.patientInfo is None:
+			cv2.imwrite('default.png', imageData)
 			return
 		self.patientInfo.setTime(getTimeStamp())
 		self.patientInfo.setUUID(getUUID())
