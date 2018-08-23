@@ -62,7 +62,8 @@ class RecordListView(QtGui.QListWidget):
 			return
 		#put patient to page manager
 		#emit signal
-		self.pm.nav2PatientPage(self.recordList[row])
+		#row zero is head data
+		self.pm.nav2PatientPage(self.recordList[row - 1])
 		print ('expand')
 
 	def backEvent(self, event):

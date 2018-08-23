@@ -8,7 +8,7 @@ from utils.CircleMask import CircleMask
 from sql.DataBaseManager import DataBaseManager
 
 from widget.DiagnosisDialog import DiagnosisDialog
-
+from widget.PatientDataFormat import ImageInfo
 
 DISPLAY_SIZE = (640, 480)
 
@@ -111,6 +111,8 @@ class VideoManager(QtCore.QObject):
 
 	def __init__(self, canvas):
 		QtCore.QObject.__init__(self)
+
+		self.logger = logging.getLogger('root.video_manager')
 		self.patientInfo = None
 
 		self.canvas = canvas
@@ -174,7 +176,7 @@ class VideoManager(QtCore.QObject):
 				self.puaseCanvas()
 				self.flashFrame()
 			except Exception as e:
-				print(e)
+				self.logger.exception('snap error')
 			finally :
 				self.inProcessing = False
 		else :
@@ -184,16 +186,19 @@ class VideoManager(QtCore.QObject):
 	def process(self):
 		pass
 
-	def  saveImage(self, imageData):
+	def saveImage(self, imageData):
 		if self.patientInfo is None:
 			cv2.imwrite('default.png', imageData)
 			return
-		self.patientInfo.setTime(getTimeStamp())
-		self.patientInfo.setUUID(getUUID())
-		self.patientInfo.setData(
+		print ('save to database')
+		imageInfo = ImageInfo.fromPatientInfo(self.patientInfo)
+		imageInfo.setTime(getTimeStamp())
+		imageInfo.setUUID(getUUID())
+		imageInfo.setData(
 			encodeImageToDBdata(imageData)
 			)
-		self.dbManager.insertRecord(self.patientInfo, self.dbInsertSignal)
+		print ('start to save')
+		self.dbManager.insertRecord(imageInfo, self.dbInsertSignal)
 
 	def saveImageCallBack(self, isSucceed):
 		print(isSucceed)

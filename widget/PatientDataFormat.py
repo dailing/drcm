@@ -30,13 +30,23 @@ class PatientInfo():
 
 class ImageInfo(PatientInfo):
 	# ImageInfo('name', 'pid', 'gender', 'birthday', 'left', 'ts', 'uuid', 'data')
-	def __init__(self, name, pid, gender, birthday, leftEye, timestamp, uuid, data):
+	def __init__(self, name, pid, gender, birthday, leftEye):
 		PatientInfo.__init__(self, name, pid, gender, birthday, leftEye)
-
-		self.timestamp = timestamp
-		self.uuid = uuid
-		self.data = data
+		pass
+		# self.timestamp = timestamp
+		# self.uuid = uuid
+		# self.data = data
 		
+	@staticmethod
+	def fromPatientInfo(patient):
+		instance = ImageInfo(
+			patient.getName(), 
+			patient.getPid(), 
+			patient.isMale(),
+			patient.getBirthday(),
+			patient.isLeftEye()
+			)
+		return instance
 
 	def setTime(self, timestamp):
 		self.timestamp = timestamp
