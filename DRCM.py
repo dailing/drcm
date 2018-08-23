@@ -157,7 +157,7 @@ class ImageCapture(QtGui.QMainWindow):
 
 		self.pm = PageManager()
 		self.main_frame = self.pm.getWidget()
-		setBackGroundColor(self.main_frame, QtCore.Qt.black)
+		# setBackGroundColor(self.main_frame, QtCore.Qt.black)
 		self.setCentralWidget(self.main_frame)
 
 	def exitElegantly(self):

@@ -21,6 +21,12 @@ font-family:arial;\
 QPushButton:pressed{background-color:#007E59}\
 "
 
+def setBackGroundColor(aWidget, color):
+	aWidget.setAutoFillBackground(True)
+	pal = aWidget.palette()
+	pal.setColor(aWidget.backgroundRole(), color)
+	aWidget.setPalette(pal)
+
 def defaultButtonClickHandler():
 	print ('clicked')
 	pass
@@ -33,7 +39,9 @@ class VideoView(QtGui.QWidget):
 		self.initUI()
 		self.resize(800, 480)
 
-
+		self.setObjectName("window")
+		self.setStyleSheet("QWidget{background-color : black;} #window{ background:pink; }")
+		setBackGroundColor(self, QtCore.Qt.black)
 	def addButton(self, label, action, layout):
 			
 		button = QtGui.QPushButton(label)
@@ -68,6 +76,7 @@ class VideoView(QtGui.QWidget):
 		leftLayout.addWidget(HUE_SPIN)
 		HUE_SPIN.setValue(50)
 		HUE_SPIN.connect_on_value_changed(self.set_HUE)
+
 		return leftLayout
 
 	def set_HUE(self, value):
@@ -100,7 +109,7 @@ class VideoView(QtGui.QWidget):
 
 def main():
 	app = QtGui.QApplication(sys.argv)
-	ex = VideoView()
+	ex = VideoView(None)
 	ex.show()
 	sys.exit(app.exec_())
 

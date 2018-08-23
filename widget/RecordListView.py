@@ -21,6 +21,7 @@ class QCustomQWidget (QtGui.QWidget):
 		self.allQHBoxLayout.addWidget(self.pidQLabel, 2)
 		self.allQHBoxLayout.addWidget(self.createTimeQLabel, 3)
 		self.setLayout(self.allQHBoxLayout)
+
 	def getPatient(self):
 		return self.patient
 		
@@ -43,6 +44,8 @@ class RecordListView(QtGui.QListWidget):
 		myQCustomQWidget.setRightIcon('icons/new_record.png')
 		item = QtGui.QListWidgetItem(self)
 		item.setSizeHint(myQCustomQWidget.sizeHint())
+		# item.setBackgroundColor(QtGui.QColor("#969b2b;"));
+
 		self.addItem(item)
 		self.setItemWidget(item, myQCustomQWidget)
 		myQCustomQWidget.leftLabel().mousePressEvent = self.backEvent

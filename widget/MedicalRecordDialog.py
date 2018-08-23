@@ -40,6 +40,9 @@ class MedicalRecordDialog(QtGui.QWidget):
 		self.patientBirthDay = LabelDate('time')
 		layout.addWidget(self.patientBirthDay)
 
+		self.setStyleSheet("color : white;")
+
+
 	def fillRecord(self, patient):
 		self.patient = patient
 		self.patientName.setText(
@@ -94,7 +97,7 @@ class MedicalRecordDialog(QtGui.QWidget):
 import sys
 def main():
 	app = QtGui.QApplication(sys.argv)
-	ex = MedicalRecordDialog()
+	ex = MedicalRecordDialog(None)
 	ex.show()
 	sys.exit(app.exec_())
 
