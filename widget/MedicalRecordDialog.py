@@ -8,39 +8,46 @@ from PatientDataFormat import PatientInfo, ImageInfo
 
 from HeadWidget import HeadWidget
 class MedicalRecordDialog(QtGui.QWidget):
-	def __init__(self, default, parent = None):
+	def __init__(self, pageManager, parent = None):
 		QtGui.QWidget.__init__(self, parent)
 		
+		self.pm = pageManager
+
 		layout = QtGui.QVBoxLayout(self)
 		layout.addWidget(self.createHeadWidget())
 		self.patientName = LabelText(
 			' name '
 			)
-		self.patientName.setText(
-			'' if default is None else default.getName()
-			)
+		
 		layout.addWidget(self.patientName)
 		self.patientId = LabelText(
 			'  ID  '
 			)
-		self.patientId.setText('' if default is None else default.getPid())
+		
 		layout.addWidget(self.patientId)
 
 
 		self.gender = SingleChoiceButton('gender',  ['male', 'female'])
-		if default is not None:
-			self.gender.setOption(default.isMale())
+			
 		layout.addWidget(self.gender)
 
 		#patient address
 		self.eye = SingleChoiceButton("eye", ['left', 'right'])
-		if default is not None:
-			self.eye.setOption(default.isLeftEye())
+			
 		layout.addWidget(self.eye)
 
 		# nice widget for editing the date
-		self.patientBirthDay = LabelDate('birthDay')
+		self.patientBirthDay = LabelDate('time')
 		layout.addWidget(self.patientBirthDay)
+
+	def fillRecord(self, patient):
+		self.patient = patient
+		self.patientName.setText(
+			patient.getName()
+			)
+		self.patientId.setText(patient.getPid())
+		self.gender.setOption(patient.isMale())
+		self.eye.setOption(patient.isLeftEye())
 
 	def getImageInfo(self):
 		return ImageInfo(self.patientName.getText(), 
@@ -61,9 +68,13 @@ class MedicalRecordDialog(QtGui.QWidget):
 
 	def createHeadWidget(self):
 		myQCustomQWidget = HeadWidget('Record list')
-		myQCustomQWidget.setLeftIcon('back_48.png')
-		myQCustomQWidget.setRightIcon('camera_48.png')
+		myQCustomQWidget.setLeftIcon('icons/back_48.png')
+		myQCustomQWidget.setRightIcon('icons/camera_48.png')
+		myQCustomQWidget.rightLabel().mousePressEvent = self.camera_on_click_handler
 		return myQCustomQWidget
+
+	def camera_on_click_handler(self, event):
+		self.pm.nav2VideoPage(self.patient)
 
 	# @staticmethod
 	# def newRecord(default, parent = None):
@@ -77,7 +88,7 @@ class MedicalRecordDialog(QtGui.QWidget):
 import sys
 def main():
 	app = QtGui.QApplication(sys.argv)
-	ex = MedicalRecordDialog(None)
+	ex = MedicalRecordDialog()
 	ex.show()
 	sys.exit(app.exec_())
 

@@ -1,4 +1,5 @@
 import logging
+import os
 
 from PyQt4 import QtGui, QtCore
 import cv2
@@ -14,7 +15,12 @@ DISPLAY_SIZE = (640, 480)
 class VideoReader():
 	def __init__(self):
 		pass
-		self.reader = cv2.VideoCapture(1)
+		try:
+			V_DES = os.environ['VIDEO_DEFAULT']
+			self.reader = cv2.VideoCapture(int(V_DES))
+		except Exception as e:
+			print (e)
+			self.reader = cv2.VideoCapture(0)
 		logger = logging.getLogger('root.VideoReader')
 		try:
 			self.reader.set(3,640);
@@ -43,6 +49,8 @@ class VideoReader():
 		print ('CAP_PROP_HUE', self.reader.get(cv2.CAP_PROP_HUE))
 		print ('CAP_PROP_ISO_SPEED', self.reader.get(cv2.CAP_PROP_ISO_SPEED))
 
+	def getDevice(self):
+		return self.reader
 
 
 
@@ -101,9 +109,9 @@ class VideoManager(QtCore.QObject):
 
 	dbInsertSignal = QtCore.pyqtSignal(bool)
 
-	def __init__(self, canvas, patientInfo):
+	def __init__(self, canvas):
 		QtCore.QObject.__init__(self)
-		self.patientInfo = patientInfo
+		self.patientInfo = None
 
 		self.canvas = canvas
 		self.mask = CircleMask()
@@ -113,6 +121,12 @@ class VideoManager(QtCore.QObject):
 		self.dbInsertSignal.connect(self.saveImageCallBack)
 		self.dbManager = DataBaseManager('patientRecord.db')
 		self.inProcessing = False
+
+	def fillRecord(self, patient):
+		self.patientInfo = patient
+
+	def set_HUE(self, value):
+		self.camera.getDevice().set(cv2.CAP_PROP_HUE, value)
 
 	def updateFrame(self):
 		ret, frame = self.camera.read()

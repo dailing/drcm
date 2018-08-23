@@ -153,15 +153,6 @@ class ImageCapture(QtGui.QMainWindow):
 
 		
 
-	def createLeftPanelView(self):
-		self.painter = PainterWidget()
-		self.stacked_widget = QtGui.QStackedWidget()
-		self.stacked_widget.addWidget(self.painter)
-		# self.stacked_widget.addWidget(self.createListView())
-		self.stacked_widget.addWidget(WifiTableView())
-		setBackGroundColor(self.stacked_widget, QtCore.Qt.black)
-		return self.stacked_widget
-
 	def createMainGui(self):
 
 		self.pm = PageManager()

@@ -1,28 +1,40 @@
 from PyQt4 import QtCore, QtGui
-
+import os, sys
+sys.path.append(os.path.dirname(os.path.realpath('.')))
 from widget.VideoView import VideoView
 from widget.RecordListView import RecordListView
 from widget.MedicalRecordDialog import MedicalRecordDialog
 from widget.PatientDataFormat import PatientInfo
 class PageManager(QtCore.QObject):
 	"""docstring for PageManager"""
-	nextPageSignal = QtCore.pyqtSignal()
+	recordList2patientSignal = QtCore.pyqtSignal(object)
 	def __init__(self):
 		QtCore.QObject.__init__(self)
 		self.stacked_widget = QtGui.QStackedWidget()
 		self.pageId = [
-			RecordListView([
+			RecordListView(self, [
 			PatientInfo('name', '1234', False, '2018-09-08', True),
 			PatientInfo('other', '1244', True, '2018-09-08', True)]),
-			MedicalRecordDialog(PatientInfo('name', '1234', False, '2018-09-08', True)),
+			MedicalRecordDialog(self),
 			VideoView()
 		]
+		self.pageId[0].initDefault()
 		for w in self.pageId :
 			self.stacked_widget.addWidget(w)
-		self.nextPageSignal.connect(self.nextPage)
 
 		self.nextPageId = -1
 		self.currentPageState = None
+
+
+		# self.recordList2patientSignal.connect(self.nav2PatientPage)
+
+	def nav2PatientPage(self, patient):
+		self.pageId[1].fillRecord(patient)
+		self.stacked_widget.setCurrentIndex(1)
+
+	def nav2VideoPage(self, patient):
+		self.pageId[2].fillRecord(patient)
+		self.stacked_widget.setCurrentIndex(2)
 
 	def getWidget(self):
 		return self.stacked_widget

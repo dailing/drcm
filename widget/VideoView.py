@@ -4,6 +4,8 @@ sys.path.append(os.path.dirname(os.path.realpath('.')))
 # /media/markalso/0C9EC8AB9EC88F20/test/camera/
 from PainterWidget import PainterWidget
 from VideoManager import VideoManager
+
+from LabelSpinBox import LabelSpinBox
 ButtonStyle = "QPushButton { \
 background-color: #1B87E4;\
 font-family:arial;\
@@ -38,6 +40,16 @@ class VideoView(QtGui.QWidget):
 				action)
 		return button
 
+	#enter page
+	def fillRecord(self, patient):
+		self.vm.fillRecord(patient)
+		self.vm.startCanvas()
+
+	def leavePage(self):
+		#clean resource
+		self.vm.pauseCanvas()
+		#to do : LED related
+
 	def addLabel(self, iconPath, action, layout):
 			
 		button = QtGui.QLabel()
@@ -49,20 +61,29 @@ class VideoView(QtGui.QWidget):
 
 	def createLeftButtons(self):
 		leftLayout = QtGui.QVBoxLayout()
-		self.addButton('BACK', defaultButtonClickHandler, leftLayout)
-		self.addButton('LED', defaultButtonClickHandler, leftLayout)
+		HUE_SPIN = LabelSpinBox('HUE')
+		leftLayout.addWidget(HUE_SPIN)
+		HUE_SPIN.setValue(50)
+		HUE_SPIN.connect_on_value_changed(self.set_HUE)
 		return leftLayout
+
+	def set_HUE(self, value):
+		self.vm.set_HUE(value / 100.0)
 
 	def createRightButtons(self):
 		leftLayout = QtGui.QVBoxLayout()
+		#left panel moved here for the convinience of program test
+		self.addButton('BACK', defaultButtonClickHandler, leftLayout)
+		self.addButton('LED', defaultButtonClickHandler, leftLayout)
+		#right panel
 		self.addButton('SNAP', self.vm.snap, leftLayout)
 		self.addButton('DIAG', defaultButtonClickHandler, leftLayout)
 		return leftLayout
 
 	def initUI(self):
 		self.canvas = PainterWidget()
-		self.vm = VideoManager(self.canvas, None)
-		self.vm.startCanvas()
+		self.vm = VideoManager(self.canvas)
+		
 
 		leftLayout = self.createLeftButtons()
 		rightLayout = self.createRightButtons()

@@ -8,9 +8,9 @@ class QCustomQWidget (QtGui.QWidget):
 		self.patient = patient
 		self.iconQLabel      = QtGui.QLabel()
 		if patient.isMale():
-			self.iconQLabel.setPixmap(QtGui.QPixmap('male_48.png'))
+			self.iconQLabel.setPixmap(QtGui.QPixmap('icons/male_48.png'))
 		else :
-			self.iconQLabel.setPixmap(QtGui.QPixmap('female_48.png'))
+			self.iconQLabel.setPixmap(QtGui.QPixmap('icons/female_48.png'))
 		self.nameQLabel = QtGui.QLabel(patient.getName())
 		self.pidQLabel = QtGui.QLabel(patient.getPid())
 		self.createTimeQLabel = QtGui.QLabel(patient.getCreationTime())
@@ -36,11 +36,11 @@ class RecordListView(QtGui.QListWidget):
 
 		self.recordList = recordList
 		self.pm = pageManager
-
+		print(self.pm, pageManager)
 		#add head bar
 		myQCustomQWidget = HeadWidget('Record list')
-		myQCustomQWidget.setLeftIcon('back_48.png')
-		myQCustomQWidget.setRightIcon('new_record.png')
+		myQCustomQWidget.setLeftIcon('icons/back_48.png')
+		myQCustomQWidget.setRightIcon('icons/new_record.png')
 		item = QtGui.QListWidgetItem(self)
 		item.setSizeHint(myQCustomQWidget.sizeHint())
 		myQCustomQWidget.resize(item.sizeHint())
@@ -50,9 +50,6 @@ class RecordListView(QtGui.QListWidget):
 		myQCustomQWidget.rightLabel().mousePressEvent = self.newRecord
 
 		pass
-
-	def setPageManager(self, pm):
-		self.pm = pm
 
 	def newRecord(self, event):
 		#emit signal
@@ -65,7 +62,7 @@ class RecordListView(QtGui.QListWidget):
 			return
 		#put patient to page manager
 		#emit signal
-		self.pm.setState(self.recordList[row])
+		self.pm.nav2PatientPage(self.recordList[row])
 		print ('expand')
 
 	def backEvent(self, event):
@@ -98,8 +95,14 @@ class RecordListView(QtGui.QListWidget):
 			PatientInfo('other', '1244', True, '2018-09-08', True)] :
 			self.appendRow(record)
 
-app = QtGui.QApplication([])
-window = RecordListView(None)
-window.initDefault()
-window.show()
-sys.exit(app.exec_())
+
+
+def main():
+	app = QtGui.QApplication([])
+	window = RecordListView(None)
+	window.initDefault()
+	window.show()
+	sys.exit(app.exec_())
+if __name__ == '__main__':
+	main()
+
