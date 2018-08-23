@@ -43,7 +43,6 @@ class RecordListView(QtGui.QListWidget):
 		myQCustomQWidget.setRightIcon('icons/new_record.png')
 		item = QtGui.QListWidgetItem(self)
 		item.setSizeHint(myQCustomQWidget.sizeHint())
-		myQCustomQWidget.resize(item.sizeHint())
 		self.addItem(item)
 		self.setItemWidget(item, myQCustomQWidget)
 		myQCustomQWidget.leftLabel().mousePressEvent = self.backEvent

@@ -71,7 +71,13 @@ class MedicalRecordDialog(QtGui.QWidget):
 		myQCustomQWidget.setLeftIcon('icons/back_48.png')
 		myQCustomQWidget.setRightIcon('icons/camera_48.png')
 		myQCustomQWidget.rightLabel().mousePressEvent = self.camera_on_click_handler
+		myQCustomQWidget.leftLabel().mousePressEvent = self.back_on_click_handler
+
 		return myQCustomQWidget
+
+	def back_on_click_handler(self, event):
+		self.pm.navBack2RecordListPage()
+		pass
 
 	def camera_on_click_handler(self, event):
 		self.pm.nav2VideoPage(self.patient)

@@ -16,7 +16,7 @@ class PageManager(QtCore.QObject):
 			PatientInfo('name', '1234', False, '2018-09-08', True),
 			PatientInfo('other', '1244', True, '2018-09-08', True)]),
 			MedicalRecordDialog(self),
-			VideoView()
+			VideoView(self)
 		]
 		self.pageId[0].initDefault()
 		for w in self.pageId :
@@ -27,6 +27,13 @@ class PageManager(QtCore.QObject):
 
 
 		# self.recordList2patientSignal.connect(self.nav2PatientPage)
+
+	def navBack2PatientPage(self):
+		self.stacked_widget.setCurrentIndex(1)
+
+	def navBack2RecordListPage(self):
+		self.stacked_widget.setCurrentIndex(0)
+		pass
 
 	def nav2PatientPage(self, patient):
 		self.pageId[1].fillRecord(patient)

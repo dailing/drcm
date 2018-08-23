@@ -38,6 +38,7 @@ from subprocess import Popen, PIPE
 from utils.PageManager import PageManager
 import socket
 
+
 def get_host_ip():
 	"""
 	查询本机ip地址
@@ -56,7 +57,6 @@ def get_host_ip():
 		print(e)
 		return 'None'
 	return '\n'.join(addresses[1:])
-
 
 CaptureButtonStyle = "QPushButton { \
 background-color: #1B87E4;\
@@ -169,12 +169,12 @@ class ImageCapture(QtGui.QMainWindow):
 		
 def main(logger):
 	app = QtGui.QApplication(sys.argv)
-	splash= SplashScreen("icons/logo.jpg")  
-	splash.effect()
-	app.processEvents() 
+	# splash= SplashScreen("icons/logo.jpg")  
+	# splash.effect()
+	# app.processEvents() 
 	ex = ImageCapture(logger)
 	ex.show()
-	splash.finish(ex)
+	# splash.finish(ex)
 	sys.exit(app.exec_())
 
 

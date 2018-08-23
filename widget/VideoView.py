@@ -2,6 +2,7 @@ from PyQt4 import QtGui, QtCore
 import os, sys
 sys.path.append(os.path.dirname(os.path.realpath('.')))
 # /media/markalso/0C9EC8AB9EC88F20/test/camera/
+#https://github.com/opencv/opencv/tree/b3cd2448cdb4a95f78864c2ec75914f8a628dd05/modules/videoio/src
 from PainterWidget import PainterWidget
 from VideoManager import VideoManager
 
@@ -26,10 +27,12 @@ def defaultButtonClickHandler():
 	
 class VideoView(QtGui.QWidget):
 	"""docstring for VideoView"""
-	def __init__(self):
+	def __init__(self, pageManager):
 		QtGui.QWidget.__init__(self)
+		self.pm = pageManager
 		self.initUI()
 		self.resize(800, 480)
+
 
 	def addButton(self, label, action, layout):
 			
@@ -73,7 +76,7 @@ class VideoView(QtGui.QWidget):
 	def createRightButtons(self):
 		leftLayout = QtGui.QVBoxLayout()
 		#left panel moved here for the convinience of program test
-		self.addButton('BACK', defaultButtonClickHandler, leftLayout)
+		self.addButton('BACK', self.pm.navBack2PatientPage, leftLayout)
 		self.addButton('LED', defaultButtonClickHandler, leftLayout)
 		#right panel
 		self.addButton('SNAP', self.vm.snap, leftLayout)
