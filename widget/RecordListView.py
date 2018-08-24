@@ -55,8 +55,7 @@ class RecordListView(QtGui.QListWidget):
 
 	def newRecord(self, event):
 		#emit signal
-
-		print ('new Record')
+		self.pm.createRecord()
 
 	def expandRecord(self, event):
 		row = event.row()
@@ -87,6 +86,7 @@ class RecordListView(QtGui.QListWidget):
 		item.setSizeHint(myQCustomQWidget.sizeHint())
 		self.addItem(item)
 		self.setItemWidget(item, myQCustomQWidget)
+		self.recordList.append(patient)
 
 	def initDefault(self):
 		# if self.state is not []:

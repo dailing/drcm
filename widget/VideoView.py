@@ -59,6 +59,7 @@ class VideoView(QtGui.QWidget):
 	def leavePage(self):
 		#clean resource
 		self.vm.pauseCanvas()
+		self.pm.navBack2PatientPage()
 		#to do : LED related
 
 	def addLabel(self, iconPath, action, layout):
@@ -82,10 +83,11 @@ class VideoView(QtGui.QWidget):
 	def set_HUE(self, value):
 		self.vm.set_HUE(value / 100.0)
 
+
 	def createRightButtons(self):
 		leftLayout = QtGui.QVBoxLayout()
 		#left panel moved here for the convinience of program test
-		self.addButton('BACK', self.pm.navBack2PatientPage, leftLayout)
+		self.addButton('BACK', self.leavePage, leftLayout)
 		self.addButton('LED', defaultButtonClickHandler, leftLayout)
 		#right panel
 		self.addButton('SNAP', self.vm.snap, leftLayout)
@@ -96,7 +98,6 @@ class VideoView(QtGui.QWidget):
 		self.canvas = PainterWidget()
 		self.vm = VideoManager(self.canvas)
 		
-
 		leftLayout = self.createLeftButtons()
 		rightLayout = self.createRightButtons()
 		

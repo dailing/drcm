@@ -1,5 +1,10 @@
-from PyQt4 import QtGui
+from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSlot
+
+def setLabelStyle(label):
+	label.setAlignment(QtCore.Qt.AlignCenter)
+	label.setStyleSheet("QLabel{color:black;font-size:24px}"
+		);
 
 class SingleChoiceButton(QtGui.QWidget):
 	"""docstring for SingleChoiceButton"""
@@ -18,7 +23,9 @@ class SingleChoiceButton(QtGui.QWidget):
 
 		# horizontal box layout
 		hlayout = QtGui.QHBoxLayout()
-		hlayout.addWidget(QtGui.QLabel(label))
+		labelWidget = QtGui.QLabel(label)
+		hlayout.addWidget(labelWidget)
+		setLabelStyle(labelWidget)
 		for optionButton in optionButtons:
 			hlayout.addWidget(optionButton)
 

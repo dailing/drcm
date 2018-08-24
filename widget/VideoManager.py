@@ -144,7 +144,7 @@ class VideoManager(QtCore.QObject):
 	def startCanvas(self):
 		self.timer.start(VideoManager.UPDATE_FREQ)
 
-	def puaseCanvas(self):
+	def pauseCanvas(self):
 		self.timer.stop()
 
 	def flashFrame(self, num = 3):

@@ -4,6 +4,7 @@ sys.path.append(os.path.dirname(os.path.realpath('.')))
 from widget.VideoView import VideoView
 from widget.RecordListView import RecordListView
 from widget.MedicalRecordDialog import MedicalRecordDialog
+from widget.NewRecordWidget import NewRecordWidget
 from widget.PatientDataFormat import PatientInfo
 class PageManager(QtCore.QObject):
 	"""docstring for PageManager"""
@@ -16,7 +17,8 @@ class PageManager(QtCore.QObject):
 			PatientInfo('name', '1234', False, '2018-09-08', True),
 			PatientInfo('other', '1244', True, '2018-09-08', True)]),
 			MedicalRecordDialog(self),
-			VideoView(self)
+			VideoView(self),
+			NewRecordWidget(self)
 		]
 		self.pageId[0].initDefault()
 		for w in self.pageId :
@@ -34,6 +36,13 @@ class PageManager(QtCore.QObject):
 	def navBack2RecordListPage(self):
 		self.stacked_widget.setCurrentIndex(0)
 		pass
+
+	def createRecord(self):
+		self.stacked_widget.setCurrentIndex(3)
+
+	def saveRecord(self, patient):
+		self.pageId[0].appendRow(patient)
+		self.stacked_widget.setCurrentIndex(0)
 
 	def nav2PatientPage(self, patient):
 		self.pageId[1].fillRecord(patient)
