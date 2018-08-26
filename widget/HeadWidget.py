@@ -10,12 +10,9 @@ class HeadWidget(QtGui.QWidget):
 		self.rightIcon = QtGui.QLabel()
 		self.middleText = QtGui.QLabel(middleText)
 		self.allQHBoxLayout = QtGui.QHBoxLayout()
-		self.allQHBoxLayout.addWidget(self.leftIcon, 0)
-		self.allQHBoxLayout.addWidget(self.middleText, 1)
-		self.allQHBoxLayout.addWidget(self.rightIcon, 2)
-		# self.allQHBoxLayout.addWidget(self.leftIcon)
-		# self.allQHBoxLayout.addWidget(self.middleText)
-		# self.allQHBoxLayout.addWidget(self.rightIcon)
+		self.allQHBoxLayout.addWidget(self.leftIcon)
+		self.allQHBoxLayout.addWidget(self.middleText)
+		self.allQHBoxLayout.addWidget(self.rightIcon)
 		self.setLayout(self.allQHBoxLayout)
 		
 		self.middleText.setStyleSheet("color:black;font-size:36px;");
