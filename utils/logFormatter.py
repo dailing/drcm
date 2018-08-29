@@ -1,11 +1,12 @@
 import logging
 from datetime import datetime
 import sys
+import os
 
 def setupLogger(name, print_level = logging.DEBUG):
 	pass
 	formater = logging.Formatter(
-		fmt="%(levelname)6s %(name)s[%(filename)s.%(lineno)-3d %(asctime)s] %(message)s",
+		fmt="[%(levelname)-6s]%(name)s(%(filename)s.%(lineno)-3d %(asctime)s) %(message)s",
 		datefmt='%H:%M:%S',
 	)
 	time_now = datetime.now().strftime("%Y_%m_%d")
