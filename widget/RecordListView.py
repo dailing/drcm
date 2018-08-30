@@ -1,7 +1,12 @@
 from PyQt4 import QtGui, QtCore
 import sys
 from HeadWidget import HeadWidget
-from PatientDataFormat import PatientInfo
+from utils.logFormatter import setupLogger
+import model.patient
+
+logger = setupLogger('record_list')
+
+
 class QCustomQWidget (QtGui.QWidget):
 	def __init__ (self, patient, parent = None):
 		super(QCustomQWidget, self).__init__(parent)
@@ -9,7 +14,7 @@ class QCustomQWidget (QtGui.QWidget):
 		self.iconQLabel      = QtGui.QLabel()
 		if patient.isMale():
 			self.iconQLabel.setPixmap(QtGui.QPixmap('icons/male_48.png'))
-		else :
+		else:
 			self.iconQLabel.setPixmap(QtGui.QPixmap('icons/female_48.png'))
 		self.nameQLabel = QtGui.QLabel(patient.getName())
 		self.pidQLabel = QtGui.QLabel(patient.getPid())
@@ -24,9 +29,12 @@ class QCustomQWidget (QtGui.QWidget):
 
 	def getPatient(self):
 		return self.patient
-		
+
+
 class RecordListView(QtGui.QListWidget):
+	# todo add page here
 	"""docstring for RecordListView"""
+	record_list_clicked = QtCore.pyqtSignal(int, name='record_list_clicked()')
 
 	def __init__(self, pageManager, recordList = []):
 		QtGui.QListWidget.__init__(self)
@@ -51,7 +59,13 @@ class RecordListView(QtGui.QListWidget):
 		myQCustomQWidget.leftLabel().mousePressEvent = self.backEvent
 		myQCustomQWidget.rightLabel().mousePressEvent = self.newRecord
 
-		pass
+		self.patients = model.patient.Patients()
+
+	def refresh(self):
+		self.clear()
+		self.recordList = []
+		for i in self.patients[:]:
+			self.appendRow(i)
 
 	def newRecord(self, event):
 		#emit signal
@@ -61,20 +75,16 @@ class RecordListView(QtGui.QListWidget):
 		row = event.row()
 		if 0 == row :
 			return
-		#put patient to page manager
-		#emit signal
-		#row zero is head data
-		self.pm.nav2PatientPage(self.recordList[row - 1])
-		print ('expand')
+		logger.debug('expand item:{}'.format(row))
+		self.record_list_clicked.emit(row)
 
 	def backEvent(self, event):
 		#emit signal
-
 		print (event)
 
 	def setState(self, state):
 		self.state = state
-		#to do : clear view and repaint
+		# todo : clear view and repaint
 
 	def getState(self):
 		return self.selectedRecord
@@ -88,24 +98,32 @@ class RecordListView(QtGui.QListWidget):
 		self.setItemWidget(item, myQCustomQWidget)
 		self.recordList.append(patient)
 
-	def initDefault(self):
-		# if self.state is not []:
-		# 	for record in self.state:
-		# 		self.appendRow(record)
-		# 	return
-		for record in [
-			PatientInfo('name', '1234', False, '2018-09-08', True),
-			PatientInfo('other', '1244', True, '2018-09-08', True)] :
-			self.appendRow(record)
-
+	# def initDefault(self):
+	# 	# if self.state is not []:
+	# 	# 	for record in self.state:
+	# 	# 		self.appendRow(record)
+	# 	# 	return
+	# 	for record in [
+	# 		PatientInfo('name', '1234', False, '2018-09-08', True),
+	# 		PatientInfo('other', '1244', True, '2018-09-08', True),
+	# 		PatientInfo('other', '1244', True, '2018-09-08', True),
+	# 		PatientInfo('other', '1244', True, '2018-09-08', True),
+	# 		PatientInfo('other', '1244', True, '2018-09-08', True),
+	# 		PatientInfo('other', '1244', True, '2018-09-08', True)] :
+	# 		self.appendRow(record)
+	# 	return self
 
 
 def main():
 	app = QtGui.QApplication([])
 	window = RecordListView(None)
 	window.initDefault()
+	window.refresh()
 	window.show()
-	sys.exit(app.exec_())
+	app.exec_()
+	return ss
+
+
 if __name__ == '__main__':
-	main()
+	ss = main()
 

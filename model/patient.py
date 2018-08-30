@@ -1,5 +1,7 @@
 """models for patient and fundus images storage"""
-from peewee import SqliteDatabase, Model, TextField, DateTimeField, CharField, ForeignKeyField, BlobField
+from peewee import SqliteDatabase, Model, TextField,\
+    DateTimeField, CharField, ForeignKeyField, BlobField, \
+    IntegerField, DateField
 import datetime
 import cv2
 import numpy as np
@@ -18,11 +20,14 @@ class BaseModel(Model):
 
 class Patient(BaseModel):
     name = TextField()
-    pid = CharField(unique=True, primary_key=True)
+    pid = CharField(unique=True)
+    gender = IntegerField(default=-1)
+    birthday = DateTimeField(null=True)
     created = DateTimeField(default=datetime.datetime.now)
 
+
     def __str__(self):
-        return '{}, id={}'.format(self.name, self.pid)
+        return 'Patient:{}, id={}'.format(self.name, self.pid)
 
     def get_images(self):
         return FundusImage \
@@ -35,15 +40,33 @@ class Patient(BaseModel):
         image_record.read_img(image)
         image_record.save()
 
+    def getCreationTime(self):
+        return str(self.created)
+
+    def isMale(self):
+        return self.gender==1
+
+
+    def getName(self):
+        return self.name
+
+
+    def getPid(self):
+        return self.pid
+
+
+    def getBirthday(self):
+        return self.birthday
+
 
 class FundusImage(BaseModel):
     pid = ForeignKeyField(Patient, field='pid')
-    uuid = TextField(unique=True, default=lambda: str(uuid.uuid4()), primary_key=True)
+    uuid = TextField(unique=True, default=lambda: str(uuid.uuid4()))
     payload = BlobField(null=False)
     created = DateTimeField(default=datetime.datetime.now)
 
     def __str__(self):
-        return 'pid:[{}], created at:{}, size:{}'.format(
+        return 'FundusImage: pid:[{}], created at:{}, size:{}'.format(
             self.pid,
             self.created,
             len(self.payload)
@@ -115,7 +138,7 @@ class Patients():
         :return:
         """
         if type(item) is int:
-            if item > self.__len__():
+            if item >= self.__len__():
                 raise IndexError('{} out of index'.format(item))
             return list(Patient.select().order_by(Patient.created.desc()).offset(item).limit(0))[0]
         elif type(item) is str:
@@ -145,7 +168,7 @@ class Patients():
     def __len__(self):
         return Patient.select().count()
 
-    def add_patient(self, name, pid=None):
+    def add_patient(self, name, pid=None, gender=-1, birthday=None):
         """
         add patient to database
         :param name: name of patient
@@ -154,7 +177,7 @@ class Patients():
         """
         if pid is None:
             pid = str(uuid.uuid4())
-        p = Patient(name=name, pid=pid)
+        p = Patient(name=name, pid=pid, gender=gender, birthday=birthday)
         try:
             p.save()
             return p.pid
@@ -165,15 +188,18 @@ class Patients():
 
 if __name__ == '__main__':
     p = Patients()
-    pid = p.add_patient('Bob', '123')
-    pid = p.add_patient('test_pathent1', '1234')
-    pid = p.add_patient('test_pathent2', '1235')
+    logger.info(p.add_patient('Bob', '123'))
+    logger.info(p.add_patient('test_pathent1', '1234'))
+    logger.info(p.add_patient('test_pathent2', '1235'))
     logger.info(len(p))
     logger.info(p[0])
     logger.info(p['123'])
     logger.info(p[:3])
     logger.info(p[1, 2])
     logger.info(p[0, 2])
+
+    for i in p[:]:
+        logger.info(i)
 
     bob = p['123']
     bob.add_image('/home/d/workspace/drsys/classification_service/app/yanhua_test/25422_right.jpeg')
