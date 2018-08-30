@@ -39,6 +39,7 @@ class PageManager(QtCore.QObject):
         self.currentPageState = None
 
         self.record_list.record_list_clicked.connect(self.record_list_clicked)
+        self.stacked_widget.setCurrentIndex(2)
 
     def nav2(self, item):
         if type(item) is int:

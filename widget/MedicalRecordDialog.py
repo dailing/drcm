@@ -76,10 +76,12 @@ class MedicalRecordDialog(QtGui.QWidget):
 		return myQCustomQWidget
 
 	def back_on_click_handler(self, event):
+		logger.debug ('nav back')
 		self.pm.navBack2RecordListPage()
 		pass
 
 	def camera_on_click_handler(self, event):
+		logger.debug ('open ca')
 		self.open_camera_signal.emit()
 		# self.pm.nav2VideoPage(self.patient)
 

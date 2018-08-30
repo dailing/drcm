@@ -40,7 +40,7 @@ class VideoView(QtGui.QWidget):
 		self.resize(800, 480)
 
 		self.setObjectName("window")
-		self.setStyleSheet("QWidget{background-color : black;} #window{ background:pink; }")
+		# self.setStyleSheet("QWidget{background-color : white;}")
 		setBackGroundColor(self, QtCore.Qt.black)
 	def addButton(self, label, action, layout):
 			
@@ -56,7 +56,7 @@ class VideoView(QtGui.QWidget):
 		self.vm.fillRecord(patient)
 		self.vm.startCanvas()
 
-	def leavePage(self):
+	def leavePage(self, event):
 		#clean resource
 		self.vm.pauseCanvas()
 		self.pm.navBack2PatientPage()
@@ -66,19 +66,27 @@ class VideoView(QtGui.QWidget):
 			
 		button = QtGui.QLabel()
 		button.setPixmap(QtGui.QPixmap(iconPath))
+		button.setAlignment(QtCore.Qt.AlignCenter)
 		layout.addWidget(button)
-		self.connect(button, QtCore.SIGNAL("clicked()"),
-				action)
+		button.mousePressEvent = action
 		return button
 
 	def createLeftButtons(self):
 		leftLayout = QtGui.QVBoxLayout()
+		#left panel moved here for the convinience of program test
+		leftLayout.addStretch(1)
+		self.addLabel('icons/back_48.png', self.leavePage, leftLayout)
+		self.addLabel('icons/led_48.png', defaultButtonClickHandler, leftLayout)
+		leftLayout.addStretch(1)
+
+		return leftLayout
+
+
+	def hiddenSpinBoxs(self):
 		HUE_SPIN = LabelSpinBox('HUE')
 		leftLayout.addWidget(HUE_SPIN)
 		HUE_SPIN.setValue(50)
 		HUE_SPIN.connect_on_value_changed(self.set_HUE)
-
-		return leftLayout
 
 	def set_HUE(self, value):
 		self.vm.set_HUE(value / 100.0)
@@ -86,12 +94,14 @@ class VideoView(QtGui.QWidget):
 
 	def createRightButtons(self):
 		leftLayout = QtGui.QVBoxLayout()
-		#left panel moved here for the convinience of program test
-		self.addButton('BACK', self.leavePage, leftLayout)
-		self.addButton('LED', defaultButtonClickHandler, leftLayout)
+		
 		#right panel
-		self.addButton('SNAP', self.vm.snap, leftLayout)
-		self.addButton('DIAG', defaultButtonClickHandler, leftLayout)
+		leftLayout.addStretch(1)
+
+		self.addLabel('icons/snap_48.png', self.vm.snap, leftLayout)
+		self.addLabel('icons/diagnosis_48.png', defaultButtonClickHandler, leftLayout)
+		leftLayout.addStretch(1)
+
 		return leftLayout
 
 	def initUI(self):
