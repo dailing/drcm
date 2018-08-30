@@ -116,8 +116,10 @@ class FundusImage(BaseModel):
 database.connect()
 database.create_tables([Patient, FundusImage])
 
-
-class Patients():
+"""
+    object is explictly put here for python 2 function correctly
+"""
+class Patients(object):
     def __init__(self):
         pass
 
