@@ -1,6 +1,6 @@
 from PyQt4 import QtGui, QtCore
 from PyQt4.QtCore import pyqtSignal
-from LabelText import LabelText
+from LabelPair import LabelPair
 from LabelDate import LabelDate
 from SingleChoiceButton import SingleChoiceButton
 from PatientDataFormat import PatientInfo, ImageInfo
@@ -20,20 +20,19 @@ class MedicalRecordDialog(QtGui.QWidget):
 
 		layout = QtGui.QVBoxLayout(self)
 		layout.addWidget(self.createHeadWidget())
-		self.patientName = LabelText(
-			' name '
+		self.patientName = LabelPair(
+			'name', 'patient'
 			)
 		layout.addWidget(self.patientName)
-		self.patientId = LabelText('  ID  ')
+		self.patientId = LabelPair('  pid  ', '1111')
 		layout.addWidget(self.patientId)
-		self.gender = SingleChoiceButton('gender',  ['male', 'female'])
+		self.gender = LabelPair(' sex ',  'male')
 		layout.addWidget(self.gender)
-		#patient address
-		self.eye = SingleChoiceButton("eye", ['left', 'right'])
-		layout.addWidget(self.eye)
+
 		# nice widget for editing the date
-		self.patientBirthDay = LabelDate('time')
+		self.patientBirthDay = LabelPair('created', '1949-01-01')
 		layout.addWidget(self.patientBirthDay)
+		layout.addStretch(1)
 		self.setStyleSheet("color : white;")
 
 	def fillRecord(self, patient):
@@ -53,8 +52,7 @@ class MedicalRecordDialog(QtGui.QWidget):
 		return ImageInfo(self.patientName.getText(), 
 			self.patientId.getText(),
 			self.gender.getOption() == 'male' ,
-			self.patientBirthDay.getTime(),
-			self.eye.getOption() == 'left')
+			self.patientBirthDay.getText())
 
 	# def getPatientInfo(self):
 	# 	'''

@@ -27,7 +27,9 @@ class SingleChoiceButton(QtGui.QWidget):
 		hlayout.addWidget(labelWidget)
 		setLabelStyle(labelWidget)
 		for optionButton in optionButtons:
+			hlayout.addStretch(1)
 			hlayout.addWidget(optionButton)
+		hlayout.addStretch(1)
 
 		self.setLayout(hlayout)
 		self.optionButtons = optionButtons
