@@ -5,17 +5,19 @@ class HeadWidget(QtGui.QWidget):
 	"""docstring for HeadWidget"""
 	def __init__(self, middleText):
 		QtGui.QWidget.__init__(self)
-		self.resize(800, 42)
+		self.resize(800, 10)
 		self.leftIcon = QtGui.QLabel()
 		self.rightIcon = QtGui.QLabel()
 		self.middleText = QtGui.QLabel(middleText)
 		self.allQHBoxLayout = QtGui.QHBoxLayout()
+
 		self.allQHBoxLayout.addWidget(self.leftIcon)
 		self.allQHBoxLayout.addWidget(self.middleText)
 		self.allQHBoxLayout.addWidget(self.rightIcon)
+		
 		self.setLayout(self.allQHBoxLayout)
 		
-		self.middleText.setStyleSheet("color:black;font-size:36px;");
+		self.middleText.setStyleSheet("color:black;font-size:20px;");
 		self.allQHBoxLayout.setAlignment(self.middleText, QtCore.Qt.AlignHCenter | QtCore.Qt.AlignVCenter)
 		#set bg color
 		# self.setStyleSheet("background-color:#969b2b;");

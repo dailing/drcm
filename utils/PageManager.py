@@ -9,6 +9,7 @@ from widget.MedicalRecordDialog import MedicalRecordDialog
 from widget.NewRecordWidget import NewRecordWidget
 from widget.PatientDataFormat import PatientInfo
 from utils.logFormatter import setupLogger
+from widget.HeadWidget import HeadWidget
 
 logger = setupLogger('page_manager')
 
@@ -19,6 +20,9 @@ class PageManager(QtCore.QObject):
 
     def __init__(self):
         QtCore.QObject.__init__(self)
+        self.head_widget = HeadWidget('you dont need it')
+        self.main_widget = QtGui.QWidget()
+
         self.stacked_widget = QtGui.QStackedWidget()
         # define each sub page
         self.record_list = RecordListView(self)
@@ -40,6 +44,12 @@ class PageManager(QtCore.QObject):
 
         self.record_list.record_list_clicked.connect(self.record_list_clicked)
         self.stacked_widget.setCurrentIndex(2)
+
+        self.main_layout = QtGui.QVBoxLayout()
+        self.main_layout.addWidget(self.head_widget)
+        self.main_layout.addWidget(self.stacked_widget)
+        self.main_widget.setLayout(self.main_layout)
+
 
     def nav2(self, item):
         if type(item) is int:
@@ -77,7 +87,7 @@ class PageManager(QtCore.QObject):
         self.stacked_widget.setCurrentIndex(2)
 
     def getWidget(self):
-        return self.stacked_widget
+        return self.main_widget
 
     def setNextPageId(self, pageId):
         self.nextPageId = pageId
