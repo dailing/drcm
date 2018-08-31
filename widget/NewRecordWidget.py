@@ -10,7 +10,7 @@ from HeadWidget import HeadWidget
 class NewRecordWidget(QtGui.QWidget):
 	def __init__(self, pageManager, parent = None):
 		QtGui.QWidget.__init__(self, parent)
-		
+		self.resize(800, 480)
 		self.pm = pageManager
 
 		layout = QtGui.QVBoxLayout(self)
@@ -32,13 +32,10 @@ class NewRecordWidget(QtGui.QWidget):
 		layout.addWidget(self.gender)
 
 		#patient address
-		self.eye = SingleChoiceButton("eye", ['left', 'right'])
-			
-		layout.addWidget(self.eye)
 
 		# nice widget for editing the date
-		self.createdAt = LabelDate('time')
-		layout.addWidget(self.createdAt)
+		self.bornAt = LabelDate('born')
+		layout.addWidget(self.bornAt)
 
 		self.setStyleSheet("color : white;")
 
@@ -49,8 +46,7 @@ class NewRecordWidget(QtGui.QWidget):
 		return PatientInfo(self.patientName.getText(), 
 			self.patientId.getText(),
 			self.gender.getOption() == 'male' ,
-			self.createdAt.getTime(),
-			self.eye.getOption() == 'left')
+			self.bornAt.getTime())
 
 	def createHeadWidget(self):
 		myQCustomQWidget = HeadWidget('Record list')
@@ -79,7 +75,7 @@ class NewRecordWidget(QtGui.QWidget):
 import sys
 def main():
 	app = QtGui.QApplication(sys.argv)
-	ex = MedicalRecordDialog(None)
+	ex = NewRecordWidget(None)
 	ex.show()
 	sys.exit(app.exec_())
 

@@ -1,13 +1,12 @@
 from time import gmtime, strftime
 class PatientInfo():
 	"""docstring for BasicInfo"""
-	def __init__(self, name, pid, gender, birthday, leftEye):
-		# PatientInfo('name', '1234', False, '2018-09-08', True)
+	def __init__(self, name, pid, gender, birthday):
+		# PatientInfo('name', '1234', False, '2018-09-08')
 		self.name = name
 		self.pid = pid
 		self.gender = gender
 		self.birthday = birthday
-		self.leftEye = leftEye
 		self.timeOnCreation = strftime("%Y-%m-%d", gmtime())
 
 	def getCreationTime(self):
@@ -22,16 +21,13 @@ class PatientInfo():
 	def getPid(self):
 		return self.pid
 
-	def isLeftEye(self):
-		return self.leftEye
-
 	def getBirthday(self):
 		return self.birthday
 
 class ImageInfo(PatientInfo):
 	# ImageInfo('name', 'pid', 'gender', 'birthday', 'left', 'ts', 'uuid', 'data')
-	def __init__(self, name, pid, gender, birthday, leftEye):
-		PatientInfo.__init__(self, name, pid, gender, birthday, leftEye)
+	def __init__(self, name, pid, gender, birthday):
+		PatientInfo.__init__(self, name, pid, gender, birthday)
 		pass
 		# self.timestamp = timestamp
 		# self.uuid = uuid
@@ -47,6 +43,12 @@ class ImageInfo(PatientInfo):
 			patient.isLeftEye()
 			)
 		return instance
+
+	def setIsLeft(self, isLeftEye):
+		self.isLeftEye = isLeftEye
+
+	def getIsLeft(self):
+		return self.isLeftEye
 
 	def setTime(self, timestamp):
 		self.timestamp = timestamp

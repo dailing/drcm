@@ -43,7 +43,7 @@ class PageManager(QtCore.QObject):
         self.currentPageState = None
 
         self.record_list.record_list_clicked.connect(self.record_list_clicked)
-        self.stacked_widget.setCurrentIndex(2)
+        self.stacked_widget.setCurrentIndex(1)
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.addWidget(self.head_widget)
