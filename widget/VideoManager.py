@@ -36,7 +36,7 @@ class VideoReader():
 	def getParameters(self):
 		self.reader.set(cv2.CAP_PROP_AUTO_EXPOSURE, 3)
 		self.reader.set(cv2.CAP_PROP_EXPOSURE, 0.1)
-		self.reader.set(cv2.CAP_PROP_HUE, 2)
+		self.reader.set(cv2.CAP_PROP_HUE, 0.5)
 
 		print ('CAP_PROP_FPS', self.reader.get(cv2.CAP_PROP_FPS))
 		print ('CAP_PROP_MODE', self.reader.get(cv2.CAP_PROP_MODE))
