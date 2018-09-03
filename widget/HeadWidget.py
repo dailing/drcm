@@ -60,6 +60,7 @@ class HeadWidget(QtGui.QWidget):
 		self.allQHBoxLayout.removeItem(self.allQHBoxLayout.itemAt(2))
 		if icon is not None:
 			self.allQHBoxLayout.insertWidget(2, icon)
+			icon.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
 		else:
 			self.allQHBoxLayout.insertWidget(2, self.leftIcon)
 
