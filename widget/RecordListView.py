@@ -5,7 +5,7 @@ from utils.logFormatter import setupLogger
 import model.patient
 from utils.icons import get_icon
 
-logger = setupLogger('record_list')
+logger = setupLogger('root.record_list')
 
 
 class QCustomQWidget (QtGui.QWidget):
