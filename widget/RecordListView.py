@@ -29,8 +29,9 @@ class QCustomQWidget (QtGui.QWidget):
 		
 		self.setLayout(self.allQHBoxLayout)
 
-		self.custom_right_header=QtGui.QLabel()
-		self.custom_right_header.setPixmap(get_icon('add_record'))
+		# TODO fix this
+		# self.custom_right_header=QtGui.QLabel()
+		# self.custom_right_header.setPixmap(get_icon('add_record'))
 
 	def getPatient(self):
 		return self.patient

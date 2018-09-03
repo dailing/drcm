@@ -23,11 +23,13 @@ class HeadWidget(QtGui.QWidget):
 		#set bg color
 		# self.setStyleSheet("background-color:#969b2b;");
 		# self.allQHBoxLayout.setContentsMargins(0, 0, 0, 0)
-		self.setLeftIcon(self.leftIcon)
-		self.setRightIcon(self.rightIcon)
+		# self.setLeftIcon(self.leftIcon)
+		# self.setRightIcon(self.rightIcon)
 		# self.getHeightWidth()
-		
+
+	# TODO fix this
 	def setLeftIcon(self,icon):
+		return
 		if icon is not None:
 			self.allQHBoxLayout.removeWidget(2)
 			self.allQHBoxLayout.addWidget(icon)
@@ -37,6 +39,7 @@ class HeadWidget(QtGui.QWidget):
 
 
 	def setRightIcon(self, icon):
+		return
 		# self.leftIcon.setPixmap(QtGui.QPixmap(iconPath))
 		# self.leftIcon.setAlignment(QtCore.Qt.AlignLeft | QtCore.Qt.AlignVCenter)
 		if icon is not None:
@@ -62,8 +65,8 @@ class HeadWidget(QtGui.QWidget):
 def main():
 	app = QtGui.QApplication(sys.argv)
 	ex = HeadWidget('Head widget')
-	ex.setLeftIcon('../icons/back_48.png')
-	ex.setRightIcon('../icons/back_48.png')
+	# ex.setLeftIcon('../icons/back_48.png')
+	# ex.setRightIcon('../icons/back_48.png')
 
 	ex.show()
 	sys.exit(app.exec_())
