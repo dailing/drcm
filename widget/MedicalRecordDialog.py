@@ -1,10 +1,8 @@
-from PyQt4 import QtGui, QtCore
+from PyQt4 import QtGui
 from PyQt4.QtCore import pyqtSignal
 from LabelPair import LabelPair
 from LabelDate import LabelDate
 from SingleChoiceButton import SingleChoiceButton
-from PatientDataFormat import PatientInfo, ImageInfo
-from HeadWidget import HeadWidget
 from utils.logFormatter import setupLogger
 
 logger = setupLogger('medical_record_dialog')
@@ -19,7 +17,6 @@ class MedicalRecordDialog(QtGui.QWidget):
 		self.pm = pageManager
 
 		layout = QtGui.QVBoxLayout(self)
-		layout.addWidget(self.createHeadWidget())
 		self.patientName = LabelPair(
 			'name', 'patient'
 			)
@@ -48,11 +45,12 @@ class MedicalRecordDialog(QtGui.QWidget):
 		self.patientId.setText(patient.getPid())
 		self.gender.setOption(patient.isMale())
 
-	def getImageInfo(self):
-		return ImageInfo(self.patientName.getText(), 
-			self.patientId.getText(),
-			self.gender.getOption() == 'male' ,
-			self.patientBirthDay.getText())
+
+	# def getImageInfo(self):
+	# 	return ImageInfo(self.patientName.getText(),
+	# 		self.patientId.getText(),
+	# 		self.gender.getOption() == 'male' ,
+	# 		self.patientBirthDay.getText())
 
 	# def getPatientInfo(self):
 	# 	'''
@@ -64,23 +62,15 @@ class MedicalRecordDialog(QtGui.QWidget):
 	# 		self.patientBirthDay.getTime(),
 	# 		self.eye.getOption() == 'left', None, None, None)
 
-	def createHeadWidget(self):
-		myQCustomQWidget = HeadWidget('Record list')
-		myQCustomQWidget.setLeftIcon('icons/back_48.png')
-		myQCustomQWidget.setRightIcon('icons/camera_48.png')
-		myQCustomQWidget.rightLabel().mousePressEvent = self.camera_on_click_handler
-		myQCustomQWidget.leftLabel().mousePressEvent = self.back_on_click_handler
 
-		return myQCustomQWidget
-
-	def back_on_click_handler(self, event):
-		logger.debug ('nav back')
-		self.pm.navBack2RecordListPage()
-		pass
-
-	def camera_on_click_handler(self, event):
-		logger.debug ('open ca')
-		self.open_camera_signal.emit()
+	# def back_on_click_handler(self, event):
+	# 	logger.debug ('nav back')
+	# 	self.pm.navBack2RecordListPage()
+	# 	pass
+	#
+	# def camera_on_click_handler(self, event):
+	# 	logger.debug ('open ca')
+	# 	self.open_camera_signal.emit()
 		# self.pm.nav2VideoPage(self.patient)
 
 	# @staticmethod
@@ -92,8 +82,8 @@ class MedicalRecordDialog(QtGui.QWidget):
 	# 	else :
 	# 		return None, False
 
-import sys
 def main():
+	import sys
 	app = QtGui.QApplication(sys.argv)
 	ex = MedicalRecordDialog(None)
 	ex.show()

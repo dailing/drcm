@@ -3,6 +3,7 @@ import sys
 from HeadWidget import HeadWidget
 from utils.logFormatter import setupLogger
 import model.patient
+from utils.icons import get_icon
 
 logger = setupLogger('record_list')
 
@@ -28,6 +29,9 @@ class QCustomQWidget (QtGui.QWidget):
 		
 		self.setLayout(self.allQHBoxLayout)
 
+		self.custom_right_header=QtGui.QLabel()
+		self.custom_right_header.setPixmap(get_icon('add_record'))
+
 	def getPatient(self):
 		return self.patient
 
@@ -48,17 +52,17 @@ class RecordListView(QtGui.QListWidget):
 		self.pm = pageManager
 		print(self.pm, pageManager)
 		#add head bar
-		myQCustomQWidget = HeadWidget('Record list')
-		myQCustomQWidget.setLeftIcon('icons/back_48.png')
-		myQCustomQWidget.setRightIcon('icons/new_record.png')
+		myQCustomQWidget = QtGui.QWidget()
+		# myQCustomQWidget.setLeftIcon('icons/back_48.png')
+		# myQCustomQWidget.setRightIcon('icons/new_record.png')
 		item = QtGui.QListWidgetItem(self)
-		item.setSizeHint(myQCustomQWidget.sizeHint())
+		# item.setSizeHint(myQCustomQWidget.sizeHint())
 		# item.setBackgroundColor(QtGui.QColor("#969b2b;"));
 
 		self.addItem(item)
 		self.setItemWidget(item, myQCustomQWidget)
-		myQCustomQWidget.leftLabel().mousePressEvent = self.backEvent
-		myQCustomQWidget.rightLabel().mousePressEvent = self.newRecord
+		# myQCustomQWidget.leftLabel().mousePressEvent = self.backEvent
+		# myQCustomQWidget.rightLabel().mousePressEvent = self.newRecord
 
 		self.patients = model.patient.Patients()
 

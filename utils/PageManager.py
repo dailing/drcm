@@ -7,7 +7,6 @@ from widget.VideoView import VideoView
 from widget.RecordListView import RecordListView
 from widget.MedicalRecordDialog import MedicalRecordDialog
 from widget.NewRecordWidget import NewRecordWidget
-from widget.PatientDataFormat import PatientInfo
 from utils.logFormatter import setupLogger
 from widget.HeadWidget import HeadWidget
 
@@ -43,21 +42,30 @@ class PageManager(QtCore.QObject):
         self.currentPageState = None
 
         self.record_list.record_list_clicked.connect(self.record_list_clicked)
-        self.stacked_widget.setCurrentIndex(1)
+        self.video_view.video_leave_signal.connect(lambda :self.nav2(self.record_list))
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.addWidget(self.head_widget)
         self.main_layout.addWidget(self.stacked_widget)
         self.main_widget.setLayout(self.main_layout)
+        self.nav2(self.video_view)
 
 
     def nav2(self, item):
+        logger.info('nav2 called')
         if type(item) is int:
-            self.stacked_widget.setCurrentIndex(item)
+            pass
         else:
-            idx = self.pageId.index(item)
-            logger.debug('jumping to index:{}'.format(idx))
-            self.stacked_widget.setCurrentIndex(idx)
+            item = self.pageId.index(item)
+        logger.debug('jumping to index:{}'.format(item))
+        self.stacked_widget.setCurrentIndex(item)
+        if hasattr(self.pageId[item], 'no_head') and \
+                self.pageId[item].no_head:
+            self.head_widget.hide()
+        else:
+            self.head_widget.show()
+        if hasattr(self.pageId[item], 'custom_right_header'):
+            self.head_widget.setRightIcon(self.pageId[item].custom_right_header)
 
     def record_list_clicked(self, item):
         logger.debug('item:{} clicked.'.format(item))
