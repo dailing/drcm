@@ -21,11 +21,12 @@ class QCustomQWidget (QtGui.QWidget):
 		self.pidQLabel = QtGui.QLabel(patient.getPid())
 		self.createTimeQLabel = QtGui.QLabel(patient.getCreationTime())
 		self.allQHBoxLayout = QtGui.QHBoxLayout()
-		self.allQHBoxLayout.addWidget(self.iconQLabel, 0)
-		self.allQHBoxLayout.addStretch(1)
+		self.allQHBoxLayout.addWidget(self.iconQLabel, 1)
 		self.allQHBoxLayout.addWidget(self.nameQLabel, 1)
-		self.allQHBoxLayout.addWidget(self.pidQLabel, 2)
-		self.allQHBoxLayout.addWidget(self.createTimeQLabel, 3)
+		self.allQHBoxLayout.addWidget(self.pidQLabel, 1)
+		self.allQHBoxLayout.addWidget(self.createTimeQLabel, 1)
+		self.allQHBoxLayout.addStretch(1)
+		
 		self.setLayout(self.allQHBoxLayout)
 
 		self.custom_right_header=QtGui.QLabel()
