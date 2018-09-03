@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.realpath('.')))
 from PainterWidget import PainterWidget
 from VideoManager import VideoManager
 
-from LabelSpinBox import LabelSpinBox
+
 ButtonStyle = "QPushButton { \
 background-color: #1B87E4;\
 font-family:arial;\
@@ -30,8 +30,10 @@ def setBackGroundColor(aWidget, color):
 def defaultButtonClickHandler():
 	print ('clicked')
 	pass
-	
+
 class VideoView(QtGui.QWidget):
+	no_head = True
+	video_leave_signal = QtCore.pyqtSignal(name='video_leave()')
 	"""docstring for VideoView"""
 	def __init__(self, pageManager):
 		QtGui.QWidget.__init__(self)
@@ -42,8 +44,9 @@ class VideoView(QtGui.QWidget):
 		self.setObjectName("window")
 		# self.setStyleSheet("QWidget{background-color : white;}")
 		setBackGroundColor(self, QtCore.Qt.black)
+
 	def addButton(self, label, action, layout):
-			
+
 		button = QtGui.QPushButton(label)
 		button.setStyleSheet(ButtonStyle)
 		layout.addWidget(button)
@@ -59,11 +62,11 @@ class VideoView(QtGui.QWidget):
 	def leavePage(self, event):
 		#clean resource
 		self.vm.pauseCanvas()
-		self.pm.navBack2PatientPage()
+		self.video_leave_signal.emit()
 		#to do : LED related
 
 	def addLabel(self, iconPath, action, layout):
-			
+
 		button = QtGui.QLabel()
 		button.setPixmap(QtGui.QPixmap(iconPath))
 		button.setAlignment(QtCore.Qt.AlignCenter)
@@ -82,11 +85,11 @@ class VideoView(QtGui.QWidget):
 		return leftLayout
 
 
-	def hiddenSpinBoxs(self):
-		HUE_SPIN = LabelSpinBox('HUE')
-		leftLayout.addWidget(HUE_SPIN)
-		HUE_SPIN.setValue(50)
-		HUE_SPIN.connect_on_value_changed(self.set_HUE)
+	# def hiddenSpinBoxs(self):
+	# 	HUE_SPIN = LabelSpinBox('HUE')
+	# 	leftLayout.addWidget(HUE_SPIN)
+	# 	HUE_SPIN.setValue(50)
+	# 	HUE_SPIN.connect_on_value_changed(self.set_HUE)
 
 	def set_HUE(self, value):
 		self.vm.set_HUE(value / 100.0)
@@ -94,23 +97,20 @@ class VideoView(QtGui.QWidget):
 
 	def createRightButtons(self):
 		leftLayout = QtGui.QVBoxLayout()
-		
 		#right panel
 		leftLayout.addStretch(1)
-
 		self.addLabel('icons/snap_48.png', self.vm.snap, leftLayout)
 		self.addLabel('icons/diagnosis_48.png', defaultButtonClickHandler, leftLayout)
 		leftLayout.addStretch(1)
-
 		return leftLayout
 
 	def initUI(self):
 		self.canvas = PainterWidget()
 		self.vm = VideoManager(self.canvas)
-		
+
 		leftLayout = self.createLeftButtons()
 		rightLayout = self.createRightButtons()
-		
+
 		layout = QtGui.QGridLayout(self)
 		layout.addLayout(leftLayout, 0, 0, 8, 1)
 		layout.addWidget(self.canvas, 0, 1, 8, 8)
@@ -128,4 +128,3 @@ if __name__ == '__main__':
 	main()
 
 
-		
