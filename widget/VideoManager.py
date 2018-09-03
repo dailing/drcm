@@ -38,16 +38,16 @@ class VideoReader():
 		self.reader.set(cv2.CAP_PROP_EXPOSURE, 0.1)
 		self.reader.set(cv2.CAP_PROP_HUE, 0.5)
 
-		print ('CAP_PROP_FPS', self.reader.get(cv2.CAP_PROP_FPS))
-		print ('CAP_PROP_MODE', self.reader.get(cv2.CAP_PROP_MODE))
-		print ('CAP_PROP_BRIGHTNESS', self.reader.get(cv2.CAP_PROP_BRIGHTNESS))
-		print ('CAP_PROP_CONTRAST', self.reader.get(cv2.CAP_PROP_CONTRAST))
-		print ('CAP_PROP_SATURATION', self.reader.get(cv2.CAP_PROP_SATURATION))
-		print ('CAP_PROP_EXPOSURE', self.reader.get(cv2.CAP_PROP_EXPOSURE))
-		print ('CAP_PROP_BUFFERSIZE', self.reader.get(cv2.CAP_PROP_BUFFERSIZE))
-		print ('CAP_PROP_GAIN', self.reader.get(cv2.CAP_PROP_GAIN))
-		print ('CAP_PROP_HUE', self.reader.get(cv2.CAP_PROP_HUE))
-		print ('CAP_PROP_ISO_SPEED', self.reader.get(cv2.CAP_PROP_ISO_SPEED))
+		# print ('CAP_PROP_FPS', self.reader.get(cv2.CAP_PROP_FPS))
+		# print ('CAP_PROP_MODE', self.reader.get(cv2.CAP_PROP_MODE))
+		# print ('CAP_PROP_BRIGHTNESS', self.reader.get(cv2.CAP_PROP_BRIGHTNESS))
+		# print ('CAP_PROP_CONTRAST', self.reader.get(cv2.CAP_PROP_CONTRAST))
+		# print ('CAP_PROP_SATURATION', self.reader.get(cv2.CAP_PROP_SATURATION))
+		# print ('CAP_PROP_EXPOSURE', self.reader.get(cv2.CAP_PROP_EXPOSURE))
+		# print ('CAP_PROP_BUFFERSIZE', self.reader.get(cv2.CAP_PROP_BUFFERSIZE))
+		# print ('CAP_PROP_GAIN', self.reader.get(cv2.CAP_PROP_GAIN))
+		# print ('CAP_PROP_HUE', self.reader.get(cv2.CAP_PROP_HUE))
+		# print ('CAP_PROP_ISO_SPEED', self.reader.get(cv2.CAP_PROP_ISO_SPEED))
 
 	def getDevice(self):
 		return self.reader
