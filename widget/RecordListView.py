@@ -41,6 +41,8 @@ class RecordListView(QtGui.QListWidget):
 	# todo add page here
 	"""docstring for RecordListView"""
 	record_list_clicked = QtCore.pyqtSignal(int, name='record_list_clicked()')
+	new_record_clicked = QtCore.pyqtSignal(name='open_camera_signal()')
+
 
 	def __init__(self, pageManager, recordList = []):
 		QtGui.QListWidget.__init__(self)
@@ -66,16 +68,17 @@ class RecordListView(QtGui.QListWidget):
 		# myQCustomQWidget.rightLabel().mousePressEvent = self.newRecord
 
 		self.patients = model.patient.Patients()
+		self.custom_right_header = get_icon('add_record')
+		self.custom_right_header.mouseReleaseEvent = lambda event:self.new_record_clicked.emit()
 
 	def refresh(self):
+		logger.debug('refresh table')
 		self.clear()
-		self.recordList = []
+		self.recordList = self.patients[:]
+		pp = model.patient.Patient(name='name', gender='gender', pid='ID', created='Created Time')
+		self.appendRow(pp)
 		for i in self.patients[:]:
 			self.appendRow(i)
-
-	def newRecord(self, event):
-		#emit signal
-		self.pm.createRecord()
 
 	def expandRecord(self, event):
 		row = event.row()

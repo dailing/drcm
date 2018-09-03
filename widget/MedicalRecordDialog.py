@@ -4,6 +4,7 @@ from LabelPair import LabelPair
 from LabelDate import LabelDate
 from SingleChoiceButton import SingleChoiceButton
 from utils.logFormatter import setupLogger
+from utils.icons import get_icon
 
 logger = setupLogger('medical_record_dialog')
 
@@ -15,7 +16,6 @@ class MedicalRecordDialog(QtGui.QWidget):
 		QtGui.QWidget.__init__(self, parent)
 		# todo remove the pm dependency
 		self.pm = pageManager
-
 		layout = QtGui.QVBoxLayout(self)
 		self.patientName = LabelPair(
 			'name', 'patient'
@@ -35,15 +35,15 @@ class MedicalRecordDialog(QtGui.QWidget):
 	def fillRecord(self, patient):
 		logger.debug('filling {}'.format(patient))
 		self.patient = patient
-		self.images = patient.get_images()
 		# TODO add images to the widget
-		for i in self.images:
-			logger.info(i)
+		# self.images = patient.get_images()
+		# for i in self.images:
+		# 	logger.info(i)
 		self.patientName.setText(
 			patient.getName()
 			)
 		self.patientId.setText(patient.getPid())
-		self.gender.setOption(patient.isMale())
+		self.gender.setText('male' if patient.isMale() else 'female')
 
 
 	# def getImageInfo(self):

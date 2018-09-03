@@ -43,6 +43,9 @@ class PageManager(QtCore.QObject):
 
         self.record_list.record_list_clicked.connect(self.record_list_clicked)
         self.video_view.video_leave_signal.connect(lambda :self.nav2(self.record_list))
+        self.record_list.new_record_clicked.connect(lambda: self.nav2(self.new_record_widget))
+        self.new_record_widget.add_record_clicked.connect(lambda: (self.nav2(self.record_list), self.record_list.refresh()))
+        self.head_widget.click_left_icon.connect(lambda : self.nev_previous())
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.addWidget(self.head_widget)
@@ -52,7 +55,7 @@ class PageManager(QtCore.QObject):
 
 
     def nav2(self, item):
-        logger.info('nav2 called')
+        logger.info('nav2 called' + str(item))
         if type(item) is int:
             pass
         else:
@@ -66,6 +69,17 @@ class PageManager(QtCore.QObject):
             self.head_widget.show()
         if hasattr(self.pageId[item], 'custom_right_header'):
             self.head_widget.setRightIcon(self.pageId[item].custom_right_header)
+        if hasattr(self.pageId[item], 'custom_left_header'):
+            self.head_widget.setLeftIcon(self.pageId[item].custom_left_header)
+
+    def nev_previous(self):
+        logger.debug('previous')
+        currentWidget = self.stacked_widget.currentIndex()
+        logger.debug(currentWidget)
+        currentWidget = (currentWidget-1) % len(self.pageId)
+        logger.debug(currentWidget)
+        self.nav2(currentWidget)
+
 
     def record_list_clicked(self, item):
         logger.debug('item:{} clicked.'.format(item))
