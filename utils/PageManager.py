@@ -48,7 +48,7 @@ class PageManager(QtCore.QObject):
         self.main_layout.addWidget(self.head_widget)
         self.main_layout.addWidget(self.stacked_widget)
         self.main_widget.setLayout(self.main_layout)
-        self.nav2(self.video_view)
+        self.nav2(self.record_list)
 
 
     def nav2(self, item):
