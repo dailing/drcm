@@ -82,8 +82,6 @@ class RecordListView(QtGui.QListWidget):
 
 	def expandRecord(self, event):
 		row = event.row()
-		if 0 == row :
-			return
 		logger.debug('expand item:{}'.format(row))
 		self.record_list_clicked.emit(row)
 
