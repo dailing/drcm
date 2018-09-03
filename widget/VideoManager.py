@@ -4,7 +4,7 @@ import os
 from PyQt4 import QtGui, QtCore
 import cv2
 from utils.auxs import *
-from utils.CircleMask import CircleMask
+from utils.CircleMask import CircleMask, RectangleMask
 from sql.DataBaseManager import DataBaseManager
 
 from widget.DiagnosisDialog import DiagnosisDialog
