@@ -39,7 +39,7 @@ class ViewFixationLED():
 
 class Infrared_LED():
 	def __init__(self, arg):
-		self.infraredLed = LED(17)
+		self.infraredLed = LED(4)
 		
 	def on(self):
 		self.infraredLed.on()
@@ -50,7 +50,7 @@ class Flash_LED():
 	DUTY_CYCLE = 0.9
 	def __init__(self):
 		pass
-		self.flashLed = pwm(4)
+		self.flashLed = pwm(17)
 
 	def on(self):
 		self.flashLed.value = Flash_LED.DUTY_CYCLE
