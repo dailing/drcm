@@ -13,7 +13,9 @@ class MedicalRecordDialog(QtGui.QWidget):
 	open_camera_clicked = pyqtSignal(name='open_camera_clicked()')
 	back_clicked = pyqtSignal(name = 'back_clicked()')
 	def __init__(self, pageManager, parent = None):
+
 		QtGui.QWidget.__init__(self, parent)
+		self.resize(800, 480)
 		# todo remove the pm dependency
 		self.pm = pageManager
 		layout = QtGui.QVBoxLayout(self)

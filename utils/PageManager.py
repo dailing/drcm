@@ -49,7 +49,7 @@ class PageManager(QtCore.QObject):
         self.record_list.new_record_clicked.connect(lambda: self.nav2(self.new_record_widget))
         self.record_list.wifi_config_clicked.connect(lambda: self.nav2(self.wifi_config_widget))
         self.new_record_widget.add_record_clicked.connect(lambda: (self.nav2(self.record_list), self.record_list.refresh()))
-        self.head_widget.click_left_icon.connect(lambda : self.nev_previous())
+        # self.head_widget.click_left_icon.connect(lambda : self.nev_previous())
         self.medical_record_dialog.open_camera_clicked.connect(self.open_camera_clicked)
         self.wifi_config_widget.back_clicked.connect(lambda : self.nav2(self.record_list))
         self.medical_record_dialog.back_clicked.connect(lambda : self.nav2(self.record_list))
@@ -81,13 +81,13 @@ class PageManager(QtCore.QObject):
             logger.debug(self.pageId[item])
             self.head_widget.setLeftIcon(self.pageId[item].custom_left_header)
 
-    def nev_previous(self):
-        logger.debug('previous')
-        currentWidget = self.stacked_widget.currentIndex()
-        logger.debug(currentWidget)
-        currentWidget = (currentWidget-1) % len(self.pageId)
-        logger.debug(currentWidget)
-        self.nav2(currentWidget)
+    # def nev_previous(self):
+    #     logger.debug('previous')
+    #     currentWidget = self.stacked_widget.currentIndex()
+    #     logger.debug(currentWidget)
+    #     currentWidget = (currentWidget-1) % len(self.pageId)
+    #     logger.debug(currentWidget)
+    #     self.nav2(currentWidget)
 
 
     def record_list_clicked(self, item):
