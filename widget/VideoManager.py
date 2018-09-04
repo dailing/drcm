@@ -162,6 +162,9 @@ class VideoManager(QtCore.QObject):
 	def pauseCanvas(self):
 		self.timer.stop()
 
+	def inVideoModel(self):
+		return self.timer.isActive()
+
 	def flashFrame(self, num = 3):
 		exposureOn()
 		data = [self.mask.getROI(self.camera.read()[1])]
@@ -197,7 +200,11 @@ class VideoManager(QtCore.QObject):
 
 	#?
 	def diagImage(self):
-		if self.inProcessing or self.preImageData is None:
+		if self.inProcessing or self.preImageData is None or self.inVideoModel():
+			self.pauseCanvas()
+			QtGui.QMessageBox.warning(
+				QtGui.QWidget(), "Operation warning", "In Video model!")
+			self.startCanvas()
 			return
 		self.imageProcesser.process(self.preImageData)
 

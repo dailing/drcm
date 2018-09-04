@@ -81,10 +81,8 @@ class VideoView(QtGui.QWidget):
 	def createLeftButtons(self):
 		leftLayout = QtGui.QVBoxLayout()
 		#left panel moved here for the convinience of program test
-		leftLayout.addStretch(1)
 		self.addLabel('icons/back_48.png', self.leave_page_signal, leftLayout)
 		self.addLabel('icons/led_48.png', self.leave_page_signal, leftLayout)
-		leftLayout.addStretch(1)
 
 		return leftLayout
 
@@ -102,10 +100,8 @@ class VideoView(QtGui.QWidget):
 	def createRightButtons(self):
 		leftLayout = QtGui.QVBoxLayout()
 		#right panel
-		leftLayout.addStretch(1)
 		self.addLabel('icons/snap_48.png', self.vm.take_picture_signal, leftLayout)
 		self.addLabel('icons/diagnosis_48.png', self.vm.diag_image_signal, leftLayout)
-		leftLayout.addStretch(1)
 		return leftLayout
 
 	def initUI(self):
