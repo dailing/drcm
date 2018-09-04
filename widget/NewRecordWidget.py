@@ -35,11 +35,14 @@ class NewRecordWidget(QtGui.QWidget):
 		self.bornAt = LabelDate('born')
 		layout.addWidget(self.bornAt)
 		self.setStyleSheet("color : white;")
-
-		self.custom_right_header = get_icon('save_record')
-		self.custom_right_header.mouseReleaseEvent = self.save_on_click_handler
 		self.patients = model.patient.Patients()
 
+
+	@property
+	def custom_right_header(self):
+		right_header = get_icon('save_record')
+		right_header.mouseReleaseEvent = self.save_on_click_handler
+		return right_header
 
 
 	def getPatientInfo(self):

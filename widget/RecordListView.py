@@ -68,8 +68,12 @@ class RecordListView(QtGui.QListWidget):
 		# myQCustomQWidget.rightLabel().mousePressEvent = self.newRecord
 
 		self.patients = model.patient.Patients()
-		self.custom_right_header = get_icon('add_record')
-		self.custom_right_header.mouseReleaseEvent = lambda event:self.new_record_clicked.emit()
+
+	@property
+	def custom_right_header(self):
+		right_header = get_icon('add_record')
+		right_header.mouseReleaseEvent = lambda event:self.new_record_clicked.emit()
+		return right_header
 
 	def refresh(self):
 		logger.debug('refresh table')

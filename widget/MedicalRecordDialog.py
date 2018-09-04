@@ -32,8 +32,11 @@ class MedicalRecordDialog(QtGui.QWidget):
 		layout.addStretch(1)
 		self.setStyleSheet("color : white;")
 
-		self.custom_right_header = get_icon('open_camera')
-		self.custom_right_header.mouseReleaseEvent = lambda event:self.open_camera_clicked.emit()
+	@property
+	def custom_right_header(self):
+		right_header = get_icon('open_camera')
+		right_header.mouseReleaseEvent = lambda event:self.open_camera_clicked.emit()
+		return right_header
 
 	def fillRecord(self, patient):
 		logger.debug('filling {}'.format(patient))
