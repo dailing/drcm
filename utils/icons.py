@@ -4,6 +4,7 @@ icon_dict={
     'add_record':'icons/new_record.png',
     'back':'icons/back_48.png',
     'open_camera':'icons/camera_48.png'
+    'save_record':'icons/save_48.png'
 }
 
 def get_icon(name):
