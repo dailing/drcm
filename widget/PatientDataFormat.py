@@ -39,8 +39,7 @@ class ImageInfo(PatientInfo):
 			patient.getName(), 
 			patient.getPid(), 
 			patient.isMale(),
-			patient.getBirthday(),
-			patient.isLeftEye()
+			patient.getBirthday()
 			)
 		return instance
 

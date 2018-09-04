@@ -87,7 +87,7 @@ class DataBaseManager():
 				str(obj.getName()),
 				str(obj.getPid()),
 				obj.isMale(),
-				str(obj.getCreatedTime()))
+				str(obj.getCreationTime()))
 			)
 			self.conn.commit()
 		except Exception as e:

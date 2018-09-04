@@ -1,7 +1,8 @@
 import sys
 import logging
 import subprocess
-
+from subprocess import Popen, PIPE
+import socket
 from PyQt4 import QtGui, QtCore
 
 from wifiManager import wifiManager
@@ -23,7 +24,24 @@ def hideKeyBoard():
 	pass
 	subprocess.Popen(["killall","matchbox-keyboard"])
 
-
+def get_host_ip():
+	"""
+	enqury machine ip address
+	:return: ip
+	"""
+	try:
+		process = Popen(['ip','addr','show'],stdout=PIPE)
+		olines = process.stdout.read().splitlines()
+		addresses = []
+		for line in olines:
+			line = line.strip()
+			if line.startswith('inet '):
+				line = line.split()[1]
+				addresses.append(line)
+	except Exception as e :
+		print(e)
+		return 'None'
+	return '\n'.join(addresses[1:])
 
 def visulizeSignal(wifiData):
 	#convert to percentage representation
@@ -52,10 +70,14 @@ class WifiTableView(QtGui.QTableWidget):
 		self.initTable()
 		self.setEditTriggers(QtGui.QAbstractItemView.CurrentChanged)
 
+	def refresh_clicked(self):
+		ipaddr = get_host_ip()
+		print (ipaddr)
+
 	@property
 	def custom_right_header(self):
 		right_header = get_icon('refresh')
-		# right_header.mouseReleaseEvent = lambda event:self.new_record_clicked.emit()
+		right_header.mouseReleaseEvent = lambda event:self.refresh_clicked()
 		return right_header
 
 	@property

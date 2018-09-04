@@ -34,6 +34,8 @@ def defaultButtonClickHandler():
 class VideoView(QtGui.QWidget):
 	no_head = True
 	video_leave_signal = QtCore.pyqtSignal(name='video_leave()')
+	leave_page_signal = QtCore.pyqtSignal(name='leave_page_signal()')
+
 	"""docstring for VideoView"""
 	def __init__(self, pageManager):
 		QtGui.QWidget.__init__(self)
@@ -44,6 +46,8 @@ class VideoView(QtGui.QWidget):
 		self.setObjectName("window")
 		# self.setStyleSheet("QWidget{background-color : white;}")
 		setBackGroundColor(self, QtCore.Qt.black)
+
+		self.leave_page_signal.connect(self.leavePage)
 
 	def addButton(self, label, action, layout):
 
@@ -59,27 +63,27 @@ class VideoView(QtGui.QWidget):
 		self.vm.fillRecord(patient)
 		self.vm.startCanvas()
 
-	def leavePage(self, event):
+	def leavePage(self):
 		#clean resource
 		self.vm.pauseCanvas()
 		self.video_leave_signal.emit()
 		#to do : LED related
 
-	def addLabel(self, iconPath, action, layout):
+	def addLabel(self, iconPath, signal, layout):
 
 		button = QtGui.QLabel()
 		button.setPixmap(QtGui.QPixmap(iconPath))
 		button.setAlignment(QtCore.Qt.AlignCenter)
 		layout.addWidget(button)
-		button.mousePressEvent = action
+		button.mousePressEvent = lambda event: signal.emit()
 		return button
 
 	def createLeftButtons(self):
 		leftLayout = QtGui.QVBoxLayout()
 		#left panel moved here for the convinience of program test
 		leftLayout.addStretch(1)
-		self.addLabel('icons/back_48.png', self.leavePage, leftLayout)
-		self.addLabel('icons/led_48.png', defaultButtonClickHandler, leftLayout)
+		self.addLabel('icons/back_48.png', self.leave_page_signal, leftLayout)
+		self.addLabel('icons/led_48.png', self.leave_page_signal, leftLayout)
 		leftLayout.addStretch(1)
 
 		return leftLayout
@@ -99,8 +103,8 @@ class VideoView(QtGui.QWidget):
 		leftLayout = QtGui.QVBoxLayout()
 		#right panel
 		leftLayout.addStretch(1)
-		self.addLabel('icons/snap_48.png', self.vm.snap, leftLayout)
-		self.addLabel('icons/diagnosis_48.png', defaultButtonClickHandler, leftLayout)
+		self.addLabel('icons/snap_48.png', self.vm.take_picture_signal, leftLayout)
+		self.addLabel('icons/diagnosis_48.png', self.vm.diag_image_signal, leftLayout)
 		leftLayout.addStretch(1)
 		return leftLayout
 

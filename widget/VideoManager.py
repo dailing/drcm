@@ -109,6 +109,10 @@ class VideoManager(QtCore.QObject):
 
 	dbInsertSignal = QtCore.pyqtSignal(bool)
 
+	take_picture_signal = QtCore.pyqtSignal(name='take_picture_signal()')
+	diag_image_signal = QtCore.pyqtSignal(name='diag_image_signal()')
+
+
 	def __init__(self, canvas):
 		QtCore.QObject.__init__(self)
 
@@ -122,7 +126,16 @@ class VideoManager(QtCore.QObject):
 		self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.updateFrame)
 		self.dbInsertSignal.connect(self.saveImageCallBack)
 		self.dbManager = DataBaseManager('patientRecord.db')
+		self.imageProcesser = ImageDiagnosis()
 		self.inProcessing = False
+		self.preImageData = None
+
+		self.take_picture_signal.connect(self.snap)
+
+		self.diag_image_signal.connect(self.diagImage)
+
+
+
 
 	def fillRecord(self, patient):
 		self.patientInfo = patient
@@ -173,7 +186,7 @@ class VideoManager(QtCore.QObject):
 			self.inProcessing = True
 			
 			try:
-				self.puaseCanvas()
+				self.pauseCanvas()
 				self.flashFrame()
 			except Exception as e:
 				self.logger.exception('snap error')
@@ -183,8 +196,10 @@ class VideoManager(QtCore.QObject):
 			self.startCanvas()
 
 	#?
-	def process(self):
-		pass
+	def diagImage(self):
+		if self.inProcessing or self.preImageData is None:
+			return
+		self.imageProcesser.process(self.preImageData)
 
 	def saveImage(self, imageData):
 		if self.patientInfo is None:
