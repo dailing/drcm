@@ -44,12 +44,26 @@ class WifiTableView(QtGui.QTableWidget):
 	"""wifi mananger table list view"""
 
 	wifiQuerySignal = QtCore.pyqtSignal(list)
+	back_clicked = QtCore.pyqtSignal(name='back_clicked()')
 
 	def __init__(self):
 		QtGui.QTableWidget.__init__(self)
 		self.pw = PoolWrapper()
 		self.initTable()
 		self.setEditTriggers(QtGui.QAbstractItemView.CurrentChanged)
+
+	@property
+	def custom_right_header(self):
+		right_header = get_icon('refresh')
+		# right_header.mouseReleaseEvent = lambda event:self.new_record_clicked.emit()
+		return right_header
+
+	@property
+	def custom_left_header(self):
+		left_header = get_icon('back')
+		print ('back')
+		left_header.mouseReleaseEvent = lambda event:self.back_clicked.emit()
+		return left_header
 		
 	def tabCellClicked(self, i, j):
 		

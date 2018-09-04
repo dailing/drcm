@@ -9,6 +9,7 @@ from widget.MedicalRecordDialog import MedicalRecordDialog
 from widget.NewRecordWidget import NewRecordWidget
 from utils.logFormatter import setupLogger
 from widget.HeadWidget import HeadWidget
+from network.wifiWidget import WifiTableView
 
 logger = setupLogger('page_manager')
 
@@ -28,11 +29,13 @@ class PageManager(QtCore.QObject):
         self.medical_record_dialog = MedicalRecordDialog(self)
         self.video_view = VideoView(self)
         self.new_record_widget = NewRecordWidget(self)
+        self.wifi_config_widget = WifiTableView()
         self.pageId = [
             self.record_list,
             self.medical_record_dialog,
             self.video_view,
             self.new_record_widget,
+            self.wifi_config_widget
         ]
         self.record_list.refresh()
         for w in self.pageId:
@@ -44,9 +47,11 @@ class PageManager(QtCore.QObject):
         self.record_list.record_list_clicked.connect(self.record_list_clicked)
         self.video_view.video_leave_signal.connect(lambda :self.nav2(self.medical_record_dialog))
         self.record_list.new_record_clicked.connect(lambda: self.nav2(self.new_record_widget))
+        self.record_list.wifi_config_clicked.connect(lambda: self.nav2(self.wifi_config_widget))
         self.new_record_widget.add_record_clicked.connect(lambda: (self.nav2(self.record_list), self.record_list.refresh()))
         self.head_widget.click_left_icon.connect(lambda : self.nev_previous())
         self.medical_record_dialog.open_camera_clicked.connect(self.open_camera_clicked)
+        self.wifi_config_widget.back_clicked.connect(lambda : self.nav2(self.record_list))
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.addWidget(self.head_widget)

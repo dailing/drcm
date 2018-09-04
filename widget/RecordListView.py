@@ -42,6 +42,8 @@ class RecordListView(QtGui.QListWidget):
 	"""docstring for RecordListView"""
 	record_list_clicked = QtCore.pyqtSignal(int, name='record_list_clicked()')
 	new_record_clicked = QtCore.pyqtSignal(name='open_camera_signal()')
+	wifi_config_clicked = QtCore.pyqtSignal(name='wifi_config_clicked()')
+
 
 
 	def __init__(self, pageManager, recordList = []):
@@ -74,6 +76,12 @@ class RecordListView(QtGui.QListWidget):
 		right_header = get_icon('add_record')
 		right_header.mouseReleaseEvent = lambda event:self.new_record_clicked.emit()
 		return right_header
+
+	@property
+	def custom_left_header(self):
+		left_header = get_icon('wifi_config')
+		left_header.mouseReleaseEvent = lambda event:self.wifi_config_clicked.emit()
+		return left_header
 
 	def refresh(self):
 		logger.debug('refresh table')
