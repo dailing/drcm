@@ -87,8 +87,7 @@ class RecordListView(QtGui.QListWidget):
 		logger.debug('refresh table')
 		self.clear()
 		self.recordList = self.patients[:]
-		pp = model.patient.Patient(name='name', gender='gender', pid='ID', created='Created Time')
-		self.appendRow(pp)
+		
 		for i in self.patients[:]:
 			self.appendRow(i)
 
@@ -115,7 +114,7 @@ class RecordListView(QtGui.QListWidget):
 		item.setSizeHint(myQCustomQWidget.sizeHint())
 		self.addItem(item)
 		self.setItemWidget(item, myQCustomQWidget)
-		self.recordList.append(patient)
+		
 
 	# def initDefault(self):
 	# 	# if self.state is not []:

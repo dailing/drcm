@@ -15,7 +15,7 @@ logger = setupLogger('new_record_list')
 
 class NewRecordWidget(QtGui.QWidget):
 	add_record_clicked = QtCore.pyqtSignal(name='new_record_click()')
-
+	back_clicked = QtCore.pyqtSignal(name = 'back_clicked()')
 	def __init__(self, pageManager, parent = None, patients=None):
 		QtGui.QWidget.__init__(self, parent)
 		self.resize(800, 480)
@@ -44,6 +44,15 @@ class NewRecordWidget(QtGui.QWidget):
 		right_header.mouseReleaseEvent = self.save_on_click_handler
 		return right_header
 
+	@property
+	def custom_left_header(self):
+		logger.debug('custom_left_header')
+		left_header = get_icon('back')
+		logger.debug('get icon for custom_left_header')
+
+		left_header.mouseReleaseEvent = lambda event:self.back_clicked.emit()
+		return left_header
+
 
 	def getPatientInfo(self):
 		'''
@@ -68,6 +77,12 @@ class NewRecordWidget(QtGui.QWidget):
 		pass
 
 	def save_on_click_handler(self, event):
+		#save if all set
+		if self.patientName.getText() == '' or self.patientId.getText() == '':
+			QtGui.QMessageBox.warning(
+				QtGui.QWidget(), "Field warning", "All text must be set!")
+			return
+
 		self.patients.add_patient(
 			name =self.patientName.getText(),
 			pid = self.patientId.getText(),

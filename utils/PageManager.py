@@ -53,6 +53,7 @@ class PageManager(QtCore.QObject):
         self.medical_record_dialog.open_camera_clicked.connect(self.open_camera_clicked)
         self.wifi_config_widget.back_clicked.connect(lambda : self.nav2(self.record_list))
         self.medical_record_dialog.back_clicked.connect(lambda : self.nav2(self.record_list))
+        self.new_record_widget.back_clicked.connect(lambda : self.nav2(self.record_list))
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.addWidget(self.head_widget)
@@ -92,6 +93,7 @@ class PageManager(QtCore.QObject):
 
     def record_list_clicked(self, item):
         logger.debug('item:{} clicked.'.format(item))
+        print ('\n\n', self.record_list.recordList)
         self.medical_record_dialog.fillRecord(self.record_list.recordList[item])
         self.nav2(self.medical_record_dialog)
 

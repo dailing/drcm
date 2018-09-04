@@ -113,8 +113,8 @@ class VideoView(QtGui.QWidget):
 
 		layout = QtGui.QGridLayout(self)
 		layout.addLayout(leftLayout, 0, 0, 8, 1)
-		layout.addWidget(self.canvas, 0, 1, 8, 8)
-		layout.addLayout(rightLayout, 0, 9, 8, 1)
+		layout.addWidget(self.canvas, 0, 1, 12, 8)
+		layout.addLayout(rightLayout, 0, 13, 8, 1)
 
 
 
