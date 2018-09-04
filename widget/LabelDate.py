@@ -26,7 +26,7 @@ class LabelDate(QtGui.QWidget):
 		self.setLayout(layout)
 
 	def getTime(self):
-		return self.datetime.dateTime().toString("yyyy-MM-dd")
+		return str(self.datetime.dateTime().toString("yyyy-MM-dd"))
 
 
 
