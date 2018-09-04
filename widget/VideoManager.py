@@ -3,12 +3,14 @@ import os
 
 from PyQt4 import QtGui, QtCore
 import cv2
+import numpy as np
 from utils.auxs import *
 from utils.CircleMask import CircleMask, RectangleMask
 from sql.DataBaseManager import DataBaseManager
 
 from widget.DiagnosisDialog import DiagnosisDialog
 from widget.PatientDataFormat import ImageInfo
+from model.patient import FundusImage
 
 DISPLAY_SIZE = (640, 480)
 
@@ -79,9 +81,10 @@ def exposureOn():
 
 from sql.RunnableFunc import RunnableFunc
 from sql.PoolWrapper import PoolWrapper
-from network.uploadClient import uploadClient
+from network.Uploader import uploadClient
 class ImageDiagnosis(QtCore.QObject):
 	remoteProcessSignal = QtCore.pyqtSignal(dict)
+
 	def __init__(self):
 		QtCore.QObject.__init__(self)
 		self.pw = PoolWrapper()
@@ -91,7 +94,7 @@ class ImageDiagnosis(QtCore.QObject):
 	def process(self, img):
 		self.pw.start(
 			RunnableFunc(
-				uploadClient(self.dbManager).remoteProcess,
+				uploadClient().remoteProcess,
 				img,
 				self.remoteProcessSignal
 				)
@@ -112,12 +115,15 @@ class VideoManager(QtCore.QObject):
 	take_picture_signal = QtCore.pyqtSignal(name='take_picture_signal()')
 	diag_image_signal = QtCore.pyqtSignal(name='diag_image_signal()')
 
+	colorTransferSignal = QtCore.pyqtSignal(object)
 
 	def __init__(self, canvas):
 		QtCore.QObject.__init__(self)
 
 		self.logger = logging.getLogger('root.video_manager')
 		self.patientInfo = None
+
+		self.pw = PoolWrapper()
 
 		self.canvas = canvas
 		self.mask = CircleMask()
@@ -133,6 +139,7 @@ class VideoManager(QtCore.QObject):
 		self.take_picture_signal.connect(self.snap)
 
 		self.diag_image_signal.connect(self.diagImage)
+		self.colorTransferSignal.connect(self.colorTransferCallback)
 
 
 
@@ -146,12 +153,7 @@ class VideoManager(QtCore.QObject):
 	def updateFrame(self):
 		ret, frame = self.camera.read()
 		# frame = self.mask.getROI(frame)
-		frame_to_display = cv2.resize(frame, DISPLAY_SIZE)
-		# assert frame_to_display.shape == frame.shape
-		# if saveTodisk:
-		# 	self.saveImage(frame)
-		mQImage = cv2ImagaeToQtImage(frame_to_display)
-		self.canvas.setImageData(mQImage)
+		self.putImageOnCanvas(frame)
 
 
 	def startCanvas(self):
@@ -174,9 +176,7 @@ class VideoManager(QtCore.QObject):
 		# 	self.saveImage(img)
 		self.saveImage(best_img)
 
-		frame_to_display = cv2.resize(best_img, DISPLAY_SIZE)
-		mQImage = cv2ImagaeToQtImage(frame_to_display)
-		self.canvas.setImageData(mQImage)
+		self.putImageOnCanvas(best_img)
 		#end
 
 	def snap(self):
@@ -202,18 +202,44 @@ class VideoManager(QtCore.QObject):
 		self.imageProcesser.process(self.preImageData)
 
 	def saveImage(self, imageData):
-		if self.patientInfo is None:
-			cv2.imwrite('default.png', imageData)
-			return
-		print ('save to database')
-		imageInfo = ImageInfo.fromPatientInfo(self.patientInfo)
-		imageInfo.setTime(getTimeStamp())
-		imageInfo.setUUID(getUUID())
-		imageInfo.setData(
-			encodeImageToDBdata(imageData)
+		try:
+			if self.patientInfo is None:
+				cv2.imwrite('default.png', imageData)
+				return
+			print ('save to database')
+			newImage = FundusImage(pid = self.patientInfo.getPid())
+			newImage.read_img(imageData)
+			newImage.save()
+			self.saveImageCallBack(True)
+			
+		except Exception as e:
+			self.saveImageCallBack(False)
+
+		try:
+			self.pw.start(
+			RunnableFunc(
+				uploadClient().transferImage,
+				imageData,
+				self.colorTransferSignal
+				)
 			)
-		print ('start to save')
-		self.dbManager.insertRecord(imageInfo, self.dbInsertSignal)
+		except Exception as e:
+			self.logger.exception('error on color transfer')
+
+	def colorTransferCallback(self, img):
+		self.logger.debug('colorTransferCallback')
+		if img is None:
+			QtGui.QMessageBox.warning(
+				QtGui.QWidget(), "Error", "weak network on image transfer!")
+		else :
+			self.putImageOnCanvas(img)
+
+	def putImageOnCanvas(self, img):
+		frame_to_display = cv2.resize(img, DISPLAY_SIZE)
+		mQImage = cv2ImagaeToQtImage(frame_to_display)
+		self.canvas.setImageData(mQImage)
+		
+		
 
 	def saveImageCallBack(self, isSucceed):
 		print(isSucceed)

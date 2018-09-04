@@ -51,7 +51,7 @@ def visulizeSignal(wifiData):
 
 	#'|' denote ten percent, '.' denote five percent
 	rem = (quality % 10) > 5
-	strQuality = '|' * (quality / 10) + ('|' if rem else '.')
+	strQuality = '|' * (quality // 10) + ('|' if rem else '.')
 	res = ['' if e is None else e for e in wifiData]
 	print (strQuality)
 	res[0] = strQuality
