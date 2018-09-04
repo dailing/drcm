@@ -36,7 +36,7 @@ class NewRecordWidget(QtGui.QWidget):
 		layout.addWidget(self.bornAt)
 		self.setStyleSheet("color : white;")
 
-		self.custom_right_header = get_icon('add_record')
+		self.custom_right_header = get_icon('save_record')
 		self.custom_right_header.mouseReleaseEvent = self.save_on_click_handler
 		self.patients = model.patient.Patients()
 
