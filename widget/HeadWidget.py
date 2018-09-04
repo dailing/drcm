@@ -48,7 +48,7 @@ class HeadWidget(QtGui.QWidget):
 
 	# TODO fix this
 	def setLeftIcon(self,icon):
-		self.allQHBoxLayout.removeItem(self.allQHBoxLayout.itemAt(0))
+		self.allQHBoxLayout.itemAt(0).widget().deleteLater()
 		if icon is not None:
 			self.allQHBoxLayout.insertWidget(0, icon)
 		else:
@@ -57,7 +57,7 @@ class HeadWidget(QtGui.QWidget):
 
 	def setRightIcon(self, icon):
 		logger.debug('set right icon:' + str(icon))
-		self.allQHBoxLayout.removeItem(self.allQHBoxLayout.itemAt(2))
+		self.allQHBoxLayout.itemAt(2).widget().deleteLater()
 		if icon is not None:
 			self.allQHBoxLayout.insertWidget(2, icon)
 			icon.setAlignment(QtCore.Qt.AlignRight | QtCore.Qt.AlignVCenter)
