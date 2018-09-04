@@ -27,8 +27,8 @@ class MedicalRecordDialog(QtGui.QWidget):
 		layout.addWidget(self.gender)
 
 		# nice widget for editing the date
-		self.patientBirthDay = LabelPair('created', '1949-01-01')
-		layout.addWidget(self.patientBirthDay)
+		self.createdAt = LabelPair('created', '1949-01-01')
+		layout.addWidget(self.createdAt)
 		layout.addStretch(1)
 		self.setStyleSheet("color : white;")
 
@@ -50,13 +50,14 @@ class MedicalRecordDialog(QtGui.QWidget):
 			)
 		self.patientId.setText(patient.getPid())
 		self.gender.setText('male' if patient.isMale() else 'female')
+		self.createdAt.setText(patient.getCreationTime())
 
 
 	# def getImageInfo(self):
 	# 	return ImageInfo(self.patientName.getText(),
 	# 		self.patientId.getText(),
 	# 		self.gender.getOption() == 'male' ,
-	# 		self.patientBirthDay.getText())
+	# 		self.createdAt.getText())
 
 	def getPatientInfo(self):
 		'''
