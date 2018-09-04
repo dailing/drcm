@@ -52,6 +52,7 @@ class PageManager(QtCore.QObject):
         self.head_widget.click_left_icon.connect(lambda : self.nev_previous())
         self.medical_record_dialog.open_camera_clicked.connect(self.open_camera_clicked)
         self.wifi_config_widget.back_clicked.connect(lambda : self.nav2(self.record_list))
+        self.medical_record_dialog.back_clicked.connect(lambda : self.nav2(self.record_list))
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.addWidget(self.head_widget)
@@ -74,8 +75,10 @@ class PageManager(QtCore.QObject):
         else:
             self.head_widget.show()
         if hasattr(self.pageId[item], 'custom_right_header'):
+            logger.debug(self.pageId[item])
             self.head_widget.setRightIcon(self.pageId[item].custom_right_header)
         if hasattr(self.pageId[item], 'custom_left_header'):
+            logger.debug(self.pageId[item])
             self.head_widget.setLeftIcon(self.pageId[item].custom_left_header)
 
     def nev_previous(self):

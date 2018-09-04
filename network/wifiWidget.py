@@ -5,7 +5,7 @@ import subprocess
 from PyQt4 import QtGui, QtCore
 
 from wifiManager import wifiManager
-
+from utils.icons import get_icon
 try:
 	from sql.RunnableFunc import RunnableFunc
 	from sql.PoolWrapper import PoolWrapper
@@ -61,12 +61,10 @@ class WifiTableView(QtGui.QTableWidget):
 	@property
 	def custom_left_header(self):
 		left_header = get_icon('back')
-		print ('back')
 		left_header.mouseReleaseEvent = lambda event:self.back_clicked.emit()
 		return left_header
 		
 	def tabCellClicked(self, i, j):
-		
 		if j != 1: # 
 			return
 		ssid = str(self.item(i, j).text())

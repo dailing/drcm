@@ -11,7 +11,7 @@ logger = setupLogger('medical_record_dialog')
 
 class MedicalRecordDialog(QtGui.QWidget):
 	open_camera_clicked = pyqtSignal(name='open_camera_clicked()')
-
+	back_clicked = pyqtSignal(name = 'back_clicked()')
 	def __init__(self, pageManager, parent = None):
 		QtGui.QWidget.__init__(self, parent)
 		# todo remove the pm dependency
@@ -37,6 +37,12 @@ class MedicalRecordDialog(QtGui.QWidget):
 		right_header = get_icon('open_camera')
 		right_header.mouseReleaseEvent = lambda event:self.open_camera_clicked.emit()
 		return right_header
+
+	@property
+	def custom_left_header(self):
+		left_header = get_icon('back')
+		left_header.mouseReleaseEvent = lambda event:self.back_clicked.emit()
+		return left_header
 
 	def fillRecord(self, patient):
 		logger.debug('filling {}'.format(patient))
