@@ -3,6 +3,7 @@ from PyQt4 import QtGui
 icon_dict={
     'add_record':'icons/new_record.png',
     'back':'icons/back_48.png',
+    'open_camera':'icons/camera_48.png'
 }
 
 def get_icon(name):

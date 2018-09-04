@@ -42,10 +42,11 @@ class PageManager(QtCore.QObject):
         self.currentPageState = None
 
         self.record_list.record_list_clicked.connect(self.record_list_clicked)
-        self.video_view.video_leave_signal.connect(lambda :self.nav2(self.record_list))
+        self.video_view.video_leave_signal.connect(lambda :self.nav2(self.medical_record_dialog))
         self.record_list.new_record_clicked.connect(lambda: self.nav2(self.new_record_widget))
         self.new_record_widget.add_record_clicked.connect(lambda: (self.nav2(self.record_list), self.record_list.refresh()))
         self.head_widget.click_left_icon.connect(lambda : self.nev_previous())
+        self.medical_record_dialog.open_camera_clicked.connect(self.open_camera_clicked)
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.addWidget(self.head_widget)
@@ -104,9 +105,9 @@ class PageManager(QtCore.QObject):
         self.pageId[1].fillRecord(patient)
         self.stacked_widget.setCurrentIndex(1)
 
-    def nav2VideoPage(self, patient):
-        self.pageId[2].fillRecord(patient)
-        self.stacked_widget.setCurrentIndex(2)
+    def open_camera_clicked(self):
+        self.video_view.fillRecord(self.medical_record_dialog.getPatientInfo())
+        self.nav2(self.video_view)
 
     def getWidget(self):
         return self.main_widget

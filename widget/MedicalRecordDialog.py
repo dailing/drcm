@@ -10,7 +10,7 @@ logger = setupLogger('medical_record_dialog')
 
 
 class MedicalRecordDialog(QtGui.QWidget):
-	open_camera_signal = pyqtSignal(name='open_camera_signal()')
+	open_camera_clicked = pyqtSignal(name='open_camera_clicked()')
 
 	def __init__(self, pageManager, parent = None):
 		QtGui.QWidget.__init__(self, parent)
@@ -32,6 +32,9 @@ class MedicalRecordDialog(QtGui.QWidget):
 		layout.addStretch(1)
 		self.setStyleSheet("color : white;")
 
+		self.custom_right_header = get_icon('open_camera')
+		self.custom_right_header.mouseReleaseEvent = lambda event:self.open_camera_clicked.emit()
+
 	def fillRecord(self, patient):
 		logger.debug('filling {}'.format(patient))
 		self.patient = patient
@@ -52,15 +55,11 @@ class MedicalRecordDialog(QtGui.QWidget):
 	# 		self.gender.getOption() == 'male' ,
 	# 		self.patientBirthDay.getText())
 
-	# def getPatientInfo(self):
-	# 	'''
-	# 		name, pid, gender, birthday, timestamp, uuid, data
-	# 	'''
-	# 	return PatientInfo(self.patientName.getText(),
-	# 		self.patientId.getText(),
-	# 		self.gender.getOption() == 'male' ,
-	# 		self.patientBirthDay.getTime(),
-	# 		self.eye.getOption() == 'left', None, None, None)
+	def getPatientInfo(self):
+		'''
+			name, pid, gender, birthday, timestamp, uuid, data
+		'''
+		return self.patient
 
 
 	# def back_on_click_handler(self, event):
@@ -70,7 +69,7 @@ class MedicalRecordDialog(QtGui.QWidget):
 	#
 	# def camera_on_click_handler(self, event):
 	# 	logger.debug ('open ca')
-	# 	self.open_camera_signal.emit()
+	# 	self.open_camera_clicked.emit()
 		# self.pm.nav2VideoPage(self.patient)
 
 	# @staticmethod
