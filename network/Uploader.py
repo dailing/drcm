@@ -33,22 +33,26 @@ class uploadClient():
 		reply.emit(res)
 
 
-	def transferImage(self, img, reply):
+	def transferImage(self, img, reply=None):
 		try:
 			print ('to transfer image')
 			
 			data = encodeImageToDBdata(img)
 			obj={'image':data}
 			resp = requests.post(url='http://111.231.144.111:7878/home/ubuntu/colortransfer', data=obj)
-			res = decodeDBImage(resp.json()['image'])
+			res = decodeDBImage(resp.data()['image'])
 			print ('get transfer image')
-			reply.emit(res)
+			if reply:
+				reply.emit(res)
 		except Exception as e:
-			reply.emit(None)
+			print(e)
+			if reply:
+				reply.emit(None)
 
 
 
 
 if __name__ == '__main__':
-	transferImage('1975537032.jpg')
+	upc = uploadClient()
+	upc.transferImage(cv2.imread('/home/d/workspace/drsys/classification_service/app/static/uploads/000623092880309.jpg'))
 	pass
