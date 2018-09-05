@@ -33,8 +33,10 @@ class MedicalRecordDialog(QtGui.QWidget):
 		self.createdAt = LabelPair('created', '1949-01-01')
 		layout.addWidget(self.createdAt)
 		layout.addStretch(1)
-		self.view_image_button = QtGui.QPushButton(parent=self,text='view images')
+		self.view_image_button = QtGui.QPushButton(parent=self,text='image viwer')
 		layout.addWidget(self.view_image_button)
+		self.view_image_button.setStyleSheet("font-size:32px;width:48px;")
+		self.view_image_button.resize(48, 48)
 		self.view_image_button.mousePressEvent = lambda e:self.view_image_signal.emit(self.patient.pid)
 		self.header_title = 'Patient'
 
