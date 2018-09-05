@@ -177,7 +177,7 @@ class VideoManager(QtCore.QObject):
 		
 		# for img in data:
 		# 	self.saveImage(img)
-		self.saveImage(best_img)
+		self.imageColorTransfer(best_img)
 
 		self.putImageOnCanvas(best_img)
 		#end
@@ -222,6 +222,8 @@ class VideoManager(QtCore.QObject):
 		except Exception as e:
 			self.saveImageCallBack(False)
 
+
+	def imageColorTransfer(self, imageData):
 		try:
 			self.pw.start(
 			RunnableFunc(
@@ -240,6 +242,7 @@ class VideoManager(QtCore.QObject):
 				QtGui.QWidget(), "Error", "weak network on image transfer!")
 		else :
 			self.putImageOnCanvas(img)
+			self.saveImage(img)
 
 	def putImageOnCanvas(self, img):
 		frame_to_display = cv2.resize(img, DISPLAY_SIZE)
