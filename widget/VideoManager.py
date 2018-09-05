@@ -247,6 +247,7 @@ class VideoManager(QtCore.QObject):
 
 	def putImageOnCanvas(self, img):
 		frame_to_display = cv2.resize(img, DISPLAY_SIZE)
+		frame_to_display = self.mask.getROI(frame_to_display)
 		mQImage = cv2ImagaeToQtImage(frame_to_display)
 		self.canvas.setImageData(mQImage)
 		
