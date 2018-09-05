@@ -20,15 +20,17 @@ class ImageViewer(QtGui.QWidget):
 
 		self.image_widget = PainterWidget()
 		self.images = None
-		self.next_icon = get_icon('back')
+		self.next_icon = get_icon('forward')
 		self.prev_icon = get_icon('back')
 		self.icons_layout = QtGui.QHBoxLayout()
 		self.icons_layout.addWidget(self.prev_icon)
+		self.icons_layout.addWidget(self.image_widget)
 		self.icons_layout.addWidget(self.next_icon)
-		self.layout = QtGui.QVBoxLayout(self)
-		self.layout.addWidget(self.image_widget)
-		self.layout.addLayout(self.icons_layout)
-		self.setLayout(self.layout)
+		self.icons_layout.setAlignment(QtCore.Qt.AlignHCenter|QtCore.Qt.AlignVCenter)
+		# self.layout = QtGui.QVBoxLayout(self)
+		# self.layout.addWidget(self.image_widget)
+		# self.layout.addLayout(self.icons_layout)
+		self.setLayout(self.icons_layout)
 		self.next_icon.mousePressEvent = self.next_image
 		self.prev_icon.mousePressEvent = self.prev_image
 		self.ps = patient.Patients()
@@ -62,7 +64,7 @@ class ImageViewer(QtGui.QWidget):
 	def show_img(self, index=0):
 		logger.debug('show {}'.format(index))
 		img = self.images[index].get_img()
-		img = cv2.resize(img,(560,400))
+		img = cv2.resize(img,(480,360))
 		self.image_widget.setImageData(
 			cv2ImagaeToQtImage(img))
 

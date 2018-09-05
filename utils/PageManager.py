@@ -58,7 +58,10 @@ class PageManager(QtCore.QObject):
         self.medical_record_dialog.back_clicked.connect(lambda : self.nav2(self.record_list))
         self.new_record_widget.back_clicked.connect(lambda : self.nav2(self.record_list))
         self.medical_record_dialog.view_image_signal.connect(
-            lambda pid:(self.image_viewer.set_pid(pid), self.nav2(self.image_viewer))
+            lambda pid:(self.image_viewer.set_pid(str(pid)), self.nav2(self.image_viewer))
+        )
+        self.image_viewer.back_clicked.connect(
+            lambda : self.nav2(self.medical_record_dialog)
         )
 
         self.main_layout = QtGui.QVBoxLayout()
