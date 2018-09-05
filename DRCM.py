@@ -125,7 +125,7 @@ class ImageCapture(QtGui.QMainWindow):
 		self.setWindowTitle('DRCM')
 		self.showFullScreen()
 		# self.setGeometry(200, 200, 800, 480)
-		# self.resize(800, 480)
+		self.setFixedSize(800, 480)
 
 
 		self.createShortCut()
