@@ -20,8 +20,8 @@ class ImageViewer(QtGui.QWidget):
 
 		self.image_widget = PainterWidget()
 		self.images = None
-		self.next_icon = get_icon('forward')
-		self.prev_icon = get_icon('back')
+		self.next_icon = get_icon('next')
+		self.prev_icon = get_icon('previous')
 		self.icons_layout = QtGui.QHBoxLayout()
 		self.icons_layout.addWidget(self.prev_icon)
 		self.icons_layout.addWidget(self.image_widget)

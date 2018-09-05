@@ -7,7 +7,10 @@ icon_dict={
     'open_camera':'icons/camera_48.png',
     'save_record':'icons/save_48.png',
     'wifi_config' : 'icons/wifi_48.png',
-    'refresh': 'icons/refresh_48.png'
+    'refresh': 'icons/refresh_48.png',
+    'next':'icons/next.png',
+    'previous':'icons/previous.png'
+
 }
 
 def get_icon(name):

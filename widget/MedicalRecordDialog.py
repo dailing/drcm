@@ -47,7 +47,7 @@ class MedicalRecordDialog(QtGui.QWidget):
 	@property
 	def custom_left_header(self):
 		left_header = get_icon('back')
-		left_header.mouseReleaseEvent = lambda event:self.back_clicked.emit(self.patient.getPid())
+		left_header.mouseReleaseEvent = lambda event:self.back_clicked.emit()
 		return left_header
 
 	def fillRecord(self, patient):
