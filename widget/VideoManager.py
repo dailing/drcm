@@ -36,6 +36,7 @@ class VideoReader():
 		logger.info('buffer size for camera : {}'.format(self.reader.get(38)))
 
 	def getParameters(self):
+		pass
 		# self.reader.set(cv2.CAP_PROP_AUTO_EXPOSURE, 3)
 		# self.reader.set(cv2.CAP_PROP_EXPOSURE, 0.1)
 		# self.reader.set(cv2.CAP_PROP_HUE, 0.5)
@@ -48,7 +49,7 @@ class VideoReader():
 		# print ('CAP_PROP_EXPOSURE', self.reader.get(cv2.CAP_PROP_EXPOSURE))
 		# print ('CAP_PROP_BUFFERSIZE', self.reader.get(cv2.CAP_PROP_BUFFERSIZE))
 		# print ('CAP_PROP_GAIN', self.reader.get(cv2.CAP_PROP_GAIN))
-		print ('CAP_PROP_HUE', self.reader.get(cv2.CAP_PROP_HUE))
+		# print ('CAP_PROP_HUE', self.reader.get(cv2.CAP_PROP_HUE))
 		# print ('CAP_PROP_ISO_SPEED', self.reader.get(cv2.CAP_PROP_ISO_SPEED))
 
 	def getDevice(self):
