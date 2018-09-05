@@ -23,9 +23,10 @@ class NewRecordWidget(QtGui.QWidget):
 
 		layout = QtGui.QVBoxLayout(self)
 		self.patientName = LabelText(' name ')
-		
+		self.patientName.setText('bob')
 		layout.addWidget(self.patientName)
 		self.patientId = LabelText('  ID  ')
+		self.patientId.setText('1212')
 		layout.addWidget(self.patientId)
 		self.gender = SingleChoiceButton('gender',  ['male', 'female'])
 		layout.addWidget(self.gender)
