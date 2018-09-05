@@ -72,6 +72,7 @@ class WifiTableView(QtGui.QTableWidget):
 		except Exception as e:
 			print(e)
 		self.setEditTriggers(QtGui.QAbstractItemView.CurrentChanged)
+		self.header_title = 'Wifi'
 
 	def refresh_clicked(self):
 		ipaddr = get_host_ip()

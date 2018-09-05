@@ -35,8 +35,8 @@ class MedicalRecordDialog(QtGui.QWidget):
 		layout.addStretch(1)
 		self.view_image_button = QtGui.QPushButton(parent=self,text='view images')
 		layout.addWidget(self.view_image_button)
-		self.setStyleSheet("color : white;")
 		self.view_image_button.mousePressEvent = lambda e:self.view_image_signal.emit(self.patient.pid)
+		self.header_title = 'Patient'
 
 	@property
 	def custom_right_header(self):

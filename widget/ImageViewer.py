@@ -34,6 +34,7 @@ class ImageViewer(QtGui.QWidget):
 		self.next_icon.mousePressEvent = self.next_image
 		self.prev_icon.mousePressEvent = self.prev_image
 		self.ps = patient.Patients()
+		self.header_title = 'ImageViewer'
 
 	@property
 	def custom_right_header(self):
