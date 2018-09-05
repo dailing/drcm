@@ -28,7 +28,7 @@ class VideoReader():
 		try:
 			self.reader.set(3,640);
 			self.reader.set(4,480);
-			# self.reader.set(38, 4)
+			self.reader.set(38, 4)
 		except Exception as e:
 			print (str(e))
 			logger.exception(e)
