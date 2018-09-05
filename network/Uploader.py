@@ -15,9 +15,14 @@ class uploadClient():
 		self.logger = logging.getLogger('root.uploadClient')
 
 	def post_test(self, b64_encoded_png_image):
+		try:
+			b64_encoded_png_image = b64_encoded_png_image.decode('utf-8')
+		except:
+			pass
 		obj = dict(data=[b64_encoded_png_image], eng=1)
 		print ('request')
-		resp = requests.post(url='http://106.14.140.203:6006/api/dr_grade_no_limit', json=obj)
+		jstr = json.dumps(obj)
+		resp = requests.post(url='http://106.14.140.203:6006/api/dr_grade_no_limit', data=jstr)
 		return resp.text
 
 	# emit signal
@@ -40,7 +45,7 @@ class uploadClient():
 			data = encodeImageToDBdata(img)
 			obj={'image':data}
 			resp = requests.post(url='http://111.231.144.111:7878/home/ubuntu/colortransfer', data=obj)
-			res = decodeDBImage(resp.data()['image'])
+			res = decodeDBImage(resp.json()['image'])
 			print ('get transfer image')
 			if reply:
 				reply.emit(res)
@@ -54,5 +59,9 @@ class uploadClient():
 
 if __name__ == '__main__':
 	upc = uploadClient()
+	print(upc.post_test(
+		encodeImageToDBdata(cv2.imread(
+			'/home/d/workspace/drsys/classification_service/app/static/uploads/000623092880309.jpg'
+		))))
 	upc.transferImage(cv2.imread('/home/d/workspace/drsys/classification_service/app/static/uploads/000623092880309.jpg'))
 	pass
