@@ -29,10 +29,6 @@ class QCustomQWidget (QtGui.QWidget):
 		
 		self.setLayout(self.allQHBoxLayout)
 
-		# TODO fix this
-		# self.custom_right_header=QtGui.QLabel()
-		# self.custom_right_header.setPixmap(get_icon('add_record'))
-
 	def getPatient(self):
 		return self.patient
 
@@ -68,8 +64,8 @@ class RecordListView(QtGui.QListWidget):
 		self.setItemWidget(item, myQCustomQWidget)
 		# myQCustomQWidget.leftLabel().mousePressEvent = self.backEvent
 		# myQCustomQWidget.rightLabel().mousePressEvent = self.newRecord
-
 		self.patients = model.patient.Patients()
+		self.header_title = 'Records'
 
 	@property
 	def custom_right_header(self):
