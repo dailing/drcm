@@ -76,6 +76,7 @@ class WifiTableView(QtGui.QTableWidget):
 
 	def refresh_clicked(self):
 		ipaddr = get_host_ip()
+		self.header_title = ipaddr
 		print (ipaddr)
 
 	@property
