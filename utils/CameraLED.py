@@ -14,7 +14,13 @@ class ViewFixationLED():
 		return idx>=0 and idx < LED_NUM
 
 	def __init__(self):
+		self.currentIndex = 0
 		self.LED_INSTANCE = [pwm(l) for l in LED_GPIO_SERIAL_NUM]
+		self.on(self.currentIndex)
+
+	def nextOn(self):
+		self.currentIndex = (self.currentIndex + 1) % ViewFixationLED.LED_NUM
+		self.on(self.currentIndex)
 
 	def numOfLED(self):
 		return ViewFixationLED.LED_NUM
@@ -47,7 +53,7 @@ class Infrared_LED():
 	def off(self):
 		self.infraredLed.off()
 class Flash_LED():
-	DUTY_CYCLE = 0.01
+	DUTY_CYCLE = 0.9
 	def __init__(self):
 		pass
 		self.flashLed = pwm(17)

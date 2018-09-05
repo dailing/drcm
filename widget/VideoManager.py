@@ -64,6 +64,7 @@ class VideoReader():
 try:
 	flashLed = Flash_LED()
 	infraredLed = Infrared_LED()
+	fixationLed = ViewFixationLED()
 except Exception as e:
 	pass
 def focusLedOn():
@@ -72,6 +73,7 @@ def focusLedOn():
 	except Exception as e:
 		pass
 	try:
+		fixationLed.next()
 		infraredLed.on()
 	except Exception as e:
 		pass
@@ -79,6 +81,7 @@ def focusLedOn():
 def exposureOn():
 	try:
 		infraredLed.off()
+		fixationLed.offAll()
 	except Exception as e:
 		pass
 	try:
