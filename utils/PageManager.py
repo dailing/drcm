@@ -91,6 +91,9 @@ class PageManager(QtCore.QObject):
         if hasattr(self.pageId[item], 'custom_left_header'):
             logger.debug(self.pageId[item])
             self.head_widget.setLeftIcon(self.pageId[item].custom_left_header)
+        if hasattr(self.pageId[item], 'header_title'):
+            logger.debug('setting header title:{}'.format(self.pageId[item].header_title))
+            self.head_widget.middleText.setText(self.pageId[item].header_title)
 
     # def nev_previous(self):
     #     logger.debug('previous')
