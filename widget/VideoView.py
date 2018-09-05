@@ -62,6 +62,7 @@ class VideoView(QtGui.QWidget):
 	def fillRecord(self, patient):
 		self.vm.fillRecord(patient)
 		self.vm.startCanvas()
+		self.resize(800, 480)
 
 	def leavePage(self):
 		#clean resource
