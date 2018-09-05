@@ -12,6 +12,7 @@ logger = setupLogger('medical_record_dialog')
 class MedicalRecordDialog(QtGui.QWidget):
 	open_camera_clicked = pyqtSignal(name='open_camera_clicked()')
 	back_clicked = pyqtSignal(name = 'back_clicked()')
+	view_image_signal = pyqtSignal(str, name = 'view_images()')
 	def __init__(self, pageManager, parent = None):
 
 		QtGui.QWidget.__init__(self, parent)
@@ -32,7 +33,10 @@ class MedicalRecordDialog(QtGui.QWidget):
 		self.createdAt = LabelPair('created', '1949-01-01')
 		layout.addWidget(self.createdAt)
 		layout.addStretch(1)
+		self.view_image_button = QtGui.QPushButton(parent=self,text='view images')
+		layout.addWidget(self.view_image_button)
 		self.setStyleSheet("color : white;")
+		self.view_image_button.mousePressEvent = lambda e:self.view_image_signal.emit(self.patient.pid)
 
 	@property
 	def custom_right_header(self):
@@ -43,7 +47,7 @@ class MedicalRecordDialog(QtGui.QWidget):
 	@property
 	def custom_left_header(self):
 		left_header = get_icon('back')
-		left_header.mouseReleaseEvent = lambda event:self.back_clicked.emit()
+		left_header.mouseReleaseEvent = lambda event:self.back_clicked.emit(self.patient.getPid())
 		return left_header
 
 	def fillRecord(self, patient):

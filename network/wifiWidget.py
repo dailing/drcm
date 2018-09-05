@@ -67,7 +67,10 @@ class WifiTableView(QtGui.QTableWidget):
 	def __init__(self):
 		QtGui.QTableWidget.__init__(self)
 		self.pw = PoolWrapper()
-		self.initTable()
+		try:
+			self.initTable()
+		except Exception as e:
+			print(e)
 		self.setEditTriggers(QtGui.QAbstractItemView.CurrentChanged)
 
 	def refresh_clicked(self):

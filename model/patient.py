@@ -25,7 +25,6 @@ class Patient(BaseModel):
     birthday = DateTimeField(null=True)
     created = DateTimeField(default=datetime.datetime.now)
 
-
     def __str__(self):
         return 'Patient:{}, id={}'.format(self.name, self.pid)
 
@@ -41,7 +40,11 @@ class Patient(BaseModel):
         image_record.save()
 
     def getCreationTime(self):
-        return str(self.created)
+        return '{}-{}-{}'.format(
+            self.created.year,
+            self.created.month,
+            self.created.day
+        )
 
     def isMale(self):
         return self.gender==1
@@ -188,7 +191,7 @@ class Patients(object):
         return None
 
 
-if __name__ == '__main__':
+def main():
     p = Patients()
     logger.info(p.add_patient('Bob', '123'))
     logger.info(p.add_patient('test_pathent1', '1234'))
@@ -205,7 +208,13 @@ if __name__ == '__main__':
 
     bob = p['123']
     bob.add_image('/home/d/workspace/drsys/classification_service/app/yanhua_test/25422_right.jpeg')
-    imgs = (bob.get_images())
+    bob.add_image('/home/d/workspace/drsys/classification_service/app/yanhua_test/33387_left.jpeg')
+    imgs = bob.get_images()
     logger.info(len(imgs))
     logger.info(imgs[0])
     imgs[0].show()
+
+
+if __name__ == '__main__':
+    main()
+

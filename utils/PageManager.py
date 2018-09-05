@@ -7,6 +7,7 @@ from widget.VideoView import VideoView
 from widget.RecordListView import RecordListView
 from widget.MedicalRecordDialog import MedicalRecordDialog
 from widget.NewRecordWidget import NewRecordWidget
+from widget.ImageViewer import ImageViewer
 from utils.logFormatter import setupLogger
 from widget.HeadWidget import HeadWidget
 from network.wifiWidget import WifiTableView
@@ -30,12 +31,14 @@ class PageManager(QtCore.QObject):
         self.video_view = VideoView(self)
         self.new_record_widget = NewRecordWidget(self)
         self.wifi_config_widget = WifiTableView()
+        self.image_viewer = ImageViewer()
         self.pageId = [
             self.record_list,
             self.medical_record_dialog,
             self.video_view,
             self.new_record_widget,
-            self.wifi_config_widget
+            self.wifi_config_widget,
+            self.image_viewer,
         ]
         self.record_list.refresh()
         for w in self.pageId:
@@ -54,10 +57,14 @@ class PageManager(QtCore.QObject):
         self.wifi_config_widget.back_clicked.connect(lambda : self.nav2(self.record_list))
         self.medical_record_dialog.back_clicked.connect(lambda : self.nav2(self.record_list))
         self.new_record_widget.back_clicked.connect(lambda : self.nav2(self.record_list))
+        self.medical_record_dialog.view_image_signal.connect(
+            lambda pid:(self.image_viewer.set_pid(pid), self.nav2(self.image_viewer))
+        )
 
         self.main_layout = QtGui.QVBoxLayout()
         self.main_layout.addWidget(self.head_widget)
         self.main_layout.addWidget(self.stacked_widget)
+        self.main_layout.setMargin(0)
         self.main_widget.setLayout(self.main_layout)
         self.nav2(self.record_list)
 
