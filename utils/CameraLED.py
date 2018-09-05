@@ -47,7 +47,7 @@ class Infrared_LED():
 	def off(self):
 		self.infraredLed.off()
 class Flash_LED():
-	DUTY_CYCLE = 0.9
+	DUTY_CYCLE = 0.01
 	def __init__(self):
 		pass
 		self.flashLed = pwm(17)

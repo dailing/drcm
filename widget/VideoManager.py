@@ -6,6 +6,7 @@ import cv2
 import numpy as np
 from utils.auxs import *
 from utils.CircleMask import CircleMask, RectangleMask
+from utils.CameraLED import Infrared_LED, Flash_LED, ViewFixationLED
 from sql.DataBaseManager import DataBaseManager
 
 from widget.DiagnosisDialog import DiagnosisDialog
@@ -60,6 +61,11 @@ class VideoReader():
 	def read(self):
 		return self.reader.read()
 
+try:
+	flashLed = Flash_LED()
+	infraredLed = Infrared_LED()
+except Exception as e:
+	pass
 def focusLedOn():
 	try:
 		flashLed.off()
