@@ -112,9 +112,9 @@ class VideoView(QtGui.QWidget):
 		rightLayout = self.createRightButtons()
 
 		layout = QtGui.QGridLayout(self)
-		layout.addLayout(leftLayout, 0, 0, 8, 1)
-		layout.addWidget(self.canvas, 0, 1, 12, 8)
-		layout.addLayout(rightLayout, 0, 13, 8, 1)
+		layout.addLayout(leftLayout, 0, 0, 6, 1)
+		layout.addWidget(self.canvas, 0, 1, 6, 8)
+		layout.addLayout(rightLayout, 0, 9, 6, 1)
 
 
 
