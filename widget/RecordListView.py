@@ -3,6 +3,7 @@ import sys
 from HeadWidget import HeadWidget
 from utils.logFormatter import setupLogger
 import model.patient
+from model.patient import Patient
 from utils.icons import get_icon
 
 logger = setupLogger('root.record_list')
@@ -83,7 +84,8 @@ class RecordListView(QtGui.QListWidget):
 		logger.debug('refresh table')
 		self.clear()
 		self.recordList = self.patients[:]
-		
+		pp = Patient('test_pathent1', '1234')
+		self.appendRow(pp)
 		for i in self.patients[:]:
 			self.appendRow(i)
 
