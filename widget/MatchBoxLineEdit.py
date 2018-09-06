@@ -9,7 +9,7 @@ class MatchBoxLineEdit(QtGui.QLineEdit):
 	def focusInEvent(self, e):
 		try:
 			logger.debug('matchbox foucus in')
-			subprocess.Popen(["matchbox-keyboard"])
+			subprocess.Popen(["matchbox-keyboard", "-i"])
 		except FileNotFoundError:
 			pass
 
