@@ -19,6 +19,7 @@ class VideoReader():
 	def __init__(self):
 		pass
 		try:
+			self.mask = CircleMask()
 			V_DES = os.environ['VIDEO_DEFAULT']
 			self.reader = cv2.VideoCapture(int(V_DES))
 		except Exception as e:
@@ -59,7 +60,9 @@ class VideoReader():
 
 
 	def read(self):
-		return self.reader.read()
+		ret, frame = self.reader.read()
+		frame = self.mask.getROI(frame)
+		return [ret, frame]
 
 try:
 	flashLed = Flash_LED()
@@ -136,7 +139,6 @@ class VideoManager(QtCore.QObject):
 		self.pw = PoolWrapper()
 
 		self.canvas = canvas
-		self.mask = CircleMask()
 		self.timer = QtCore.QTimer()
 		self.camera = VideoReader()
 		self.connect(self.timer, QtCore.SIGNAL('timeout()'), self.updateFrame)
@@ -162,7 +164,6 @@ class VideoManager(QtCore.QObject):
 
 	def updateFrame(self):
 		ret, frame = self.camera.read()
-		# frame = self.mask.getROI(frame)
 		self.putImageOnCanvas(frame)
 
 
@@ -177,7 +178,7 @@ class VideoManager(QtCore.QObject):
 
 	def flashFrame(self, num = 3):
 		exposureOn()
-		data = [self.mask.getROI(self.camera.read()[1])]
+		data = [self.camera.read()[1]]
 		focusLedOn()
 		newData = [self.camera.read()[1] for i in range(5)]
 		data.extend(newData)
@@ -256,7 +257,6 @@ class VideoManager(QtCore.QObject):
 
 	def putImageOnCanvas(self, img):
 		frame_to_display = cv2.resize(img, DISPLAY_SIZE)
-		frame_to_display = self.mask.getROI(frame_to_display)
 		mQImage = cv2ImagaeToQtImage(frame_to_display)
 		self.canvas.setImageData(mQImage)
 		
