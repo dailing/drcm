@@ -84,9 +84,7 @@ class RecordListView(QtGui.QListWidget):
 		logger.debug('refresh table')
 		self.clear()
 		self.recordList = self.patients[:]
-		pp = Patient('test_pathent1', '1234')
-		self.recordList.insert(0, pp)
-		self.appendRow(pp)
+
 		for i in self.patients[:]:
 			self.appendRow(i)
 
